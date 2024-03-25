@@ -17,14 +17,15 @@ datasource db {
 
 model Post {
     id        Int      @id @default(autoincrement())
-    name      String
+    firstName String?
+    lastName  String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 
-    @@index([name])
+    @@index([firstName])
 }
 
 // Necessary for Next auth
@@ -56,10 +57,11 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?
+    firstName     String?
+    lastName      String?
     email         String?   @unique
     emailVerified DateTime?
-    image         String?
+    companyId     String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -71,4 +73,48 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Company {
+    id            String         @id @default(cuid())
+    name          String
+    industry      String
+    eventRequests EventRequest[]
+}
+
+model EventRequest {
+    id                        String        @id @default(cuid())
+    eventId                   String
+    requester                 Company       @relation(fields: [companyId], references: [id])
+    companyId                 String
+    title                     String
+    description               String
+    eventDate                 DateTime
+    eventLocation             String
+    // sponsorByTiers            SponsorTierDetails[] @relation("EventRequestSponsorTierDetails")
+    collaboratorTypesRequired ServiceType[]
+    createdOn                 DateTime
+    expireOn                  DateTime
+    isActive                  Boolean
+    requiresSponsor           Boolean
+    eventType                 String
+}
+
+enum ServiceType {
+    FOOD
+    MUSIC
+    ART
+    DESIGN
+    SPACE
+    OTHER
+}
+
+model SponsorTierDetails {
+    id               String   @id @default(cuid())
+    sponsorTierId    String
+    details          String
+    quantity         Int
+    amountPerSponsor Float
+    responders       String[] // this should be an array of the company ids that responsed
+    companyId        String
 }
