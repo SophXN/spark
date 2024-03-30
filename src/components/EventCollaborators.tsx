@@ -39,12 +39,12 @@ export const EventCollaborators = () => {
         <Button
           onClick={() => setCollaborators(["hi", ...collaborators])}
           id="event-description"
-          className="w-24"
+          className="w-40"
         >
           <div className="mr-1">
             <PlusIcon />
           </div>
-          Add Tier
+          New Collaborator
         </Button>
       </div>
     </div>
