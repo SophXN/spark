@@ -23,11 +23,11 @@ export function EventCard({ image }: EventCardProps) {
         <Image
           src={image}
           alt="Event"
-          className="h-[200px] w-full object-cover"
+          className="h-[200px] w-full rounded object-cover"
           width={100}
           height={100}
         />
-        <div>
+        <div className="space-x-2">
           <Badge variant="secondary">Sponsor spots · 3</Badge>
           <Badge variant="secondary">Collab spots · 1</Badge>
         </div>
@@ -46,8 +46,8 @@ export function EventCard({ image }: EventCardProps) {
           className="h-8 w-8 rounded-full"
           width={20}
           height={20}
-        />{" "}
-        Larry Coffee Shop
+        />
+        Larry&apos;s Ca Phé
       </CardFooter>
     </Card>
   );
