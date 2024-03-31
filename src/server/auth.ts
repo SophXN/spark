@@ -6,9 +6,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
 
-import { env } from "~/env";
 import { db } from "~/server/db";
 
 /**
@@ -49,10 +47,27 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    {
+      id: "square",
+      name: "Square",
+      type: "oauth",
+      clientId: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_CLIENT_ID : process.env.SQUARE_TEST_CLIENT_ID,
+      clientSecret: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_APP_SECRET : process.env.SQUARE_TEST_APP_SECRET,
+      authorization: {
+        url: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/authorize" : "https://connect.squareupsandbox.com/oauth2/authorize",
+        params : { 
+          scope: "MERCHANT_PROFILE_READ BANK_ACCOUNTS_READ",
+        }
+      },
+      token: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/token" : "https://connect.squareupsandbox.com/oauth2/token",
+      profile: (profile) => {
+        return {
+          id: profile.merchant_id,
+          name: profile.business_name,
+          email: profile.email, // Make sure these fields are adjusted based on the actual Square response
+        };
+      },
+    },
     /**
      * ...add more providers here.
      *
