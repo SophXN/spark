@@ -105,12 +105,12 @@ enum Tier {
 }
 
 model Company {
-    id            String         @id @default(cuid())
-    name          String
-    industry      String
-    eventRequests EventRequest[]
-    sponsors      Sponsor[]
-    collaborators Collaborator[]
+    id                    String                 @id @default(cuid())
+    name                  String
+    industry              String
+    eventRequests         EventRequest[]
+    sponsorships          Sponsor[]
+    collaboratorResponses CollaboratorResponse[]
 }
 
 model EventRequest {
@@ -143,11 +143,22 @@ model Sponsor {
 }
 
 model Collaborator {
-    id                    String       @id @default(cuid())
-    eventRequest          EventRequest @relation(fields: [eventRequestId], references: [id])
+    id                    String                 @id @default(cuid())
+    eventRequest          EventRequest           @relation(fields: [eventRequestId], references: [id])
     eventRequestId        String
     serviceType           ServiceType
     description           String
     collaboratorsRequired Int
-    responders            Company[]
+    responses             CollaboratorResponse[]
+}
+
+model CollaboratorResponse {
+    id              String       @id @default(cuid())
+    collaborator    Collaborator @relation(fields: [collaboratorId], references: [id])
+    collaboratorId  String
+    responder       Company      @relation(fields: [responderId], references: [id])
+    responderId     String
+    isAccepted      Boolean
+    responseMessage String?
+    respondedOn     DateTime
 }
