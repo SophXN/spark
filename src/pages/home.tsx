@@ -15,12 +15,12 @@ const HomePage: React.FC<Props> = () => {
           alt="Logo"
           width={100}
           height={100}
-          className="m-5"
+          className="ml-3 my-2"
         />
       </header>
       <main>
-        <div className="mx-auto max-w-7xl px-8">
-          <div className="my-5 text-2xl font-semibold">Events</div>
+        <div className="mx-auto max-w-7xl px-3">
+          <div className="my-2 text-2xl font-semibold">Events</div>
             <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <EventCard
               image={
