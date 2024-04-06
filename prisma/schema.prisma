@@ -114,21 +114,18 @@ model Company {
 }
 
 model EventRequest {
-    id              String         @id @default(cuid())
-    eventId         String
-    requester       Company        @relation(fields: [requesterId], references: [id])
-    requesterId     String // foreign key to the company
-    title           String
-    description     String
-    eventDate       DateTime
-    eventLocation   String
-    createdOn       DateTime
-    expireOn        DateTime
-    eventType       EventType
-    requiresSponsor Boolean
-    isActive        Boolean
-    sponsors        Sponsor[]
-    collaborators   Collaborator[]
+    id            String         @id @default(cuid())
+    eventId       String
+    requester     Company        @relation(fields: [requesterId], references: [id])
+    requesterId   String // foreign key to the company
+    title         String
+    description   String
+    eventDate     DateTime
+    eventLocation String
+    createdOn     DateTime
+    eventType     EventType
+    sponsors      Sponsor[]
+    collaborators Collaborator[]
 }
 
 model Sponsor {

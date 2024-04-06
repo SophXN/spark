@@ -5,3 +5,17 @@ export type ServiceType =
   | "DESIGN"
   | "SPACE"
   | "OTHER";
+
+export enum EventType {
+  POPUP = "POPUP",
+  CONFERENCE = "CONFERENCE",
+  CONCERT = "CONCERT",
+  DINNER = "DINNER",
+  GALA = "GALA",
+  FAIR = "FAIR",
+  COMPETITION = "COMPETITION",
+  CHARITY = "CHARITY",
+  NETWORKING = "NETWORKING",
+  CELEBRATION = "CELEBRATION",
+  OTHER = "OTHER",
+}
