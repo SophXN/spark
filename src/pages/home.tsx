@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from 'next/router';
+import Navbar from '~/components/Navbar';
 
 interface Props {
   logo: string;
@@ -37,15 +38,7 @@ const HomePage: React.FC<Props> = () => {
 
   return (
     <div>
-      <header className="sticky top-0 z-10 overflow-visible border-b border-gray-200 bg-white">
-        <Image
-          src={"/spark-logo.png"}
-          alt="Logo"
-          width={100}
-          height={100}
-          className="ml-3 my-2"
-        />
-      </header>
+      <Navbar></Navbar>
       <main>
         <div className="mx-auto max-w-7xl px-3">
           <div className="my-2 text-2xl font-semibold">Events</div>
