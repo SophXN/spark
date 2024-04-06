@@ -18,7 +18,7 @@ interface EventCardProps {
 
 export function EventCard({ image }: EventCardProps) {
   return (
-    <Card className="w-[350px]">
+    <Card className="col-span-1 flex flex-col">
       <CardHeader>
         <Image
           src={image}
