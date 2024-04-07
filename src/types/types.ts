@@ -19,3 +19,12 @@ export enum EventType {
   CELEBRATION = "CELEBRATION",
   OTHER = "OTHER",
 }
+
+interface SquareEvent {
+  id: string; // Assuming id is a string, adjust type as necessary
+  image: string;
+}
+
+export interface EventsListProps {
+  events: SquareEvent[];
+}

@@ -3,18 +3,10 @@ import Image from "next/image";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from 'next/router';
 import Navbar from '~/components/Navbar';
+import { EventsListProps } from "~/types/types";
 
 interface Props {
   logo: string;
-}
-
-interface SquareEvent {
-  id: string; // Assuming id is a string, adjust type as necessary
-  image: string;
-}
-
-interface EventsListProps {
-  events: SquareEvent[];
 }
 
 const listOfEvents: EventsListProps = {
