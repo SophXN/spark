@@ -24,8 +24,8 @@ export function EventCard({ image }: EventCardProps) {
           src={image}
           alt="Event"
           className="h-[200px] w-full rounded object-cover"
-          width={100}
-          height={100}
+          width={500}
+          height={500}
         />
         <div className="py-2">
           <Badge className="mr-1" variant="secondary">Sponsor spots · 3</Badge>
@@ -41,8 +41,8 @@ export function EventCard({ image }: EventCardProps) {
             <Image className="h-5 w-5 rounded-full"
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Business Logo"
-              width="5"
-              height="5" />
+              width="100"
+              height="100" />
           </div>
           <div className="min-w-0 flex-1">
             <a href="#" className="focus:outline-none">
