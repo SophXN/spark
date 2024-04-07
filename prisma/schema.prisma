@@ -115,7 +115,7 @@ model Company {
 
 model EventRequest {
     id            String         @id @default(cuid())
-    eventId       String
+    eventId       String         @unique
     requester     Company        @relation(fields: [requesterId], references: [id])
     requesterId   String // foreign key to the company
     title         String
@@ -130,7 +130,7 @@ model EventRequest {
 
 model Sponsor {
     id               String       @id @default(cuid())
-    eventRequest     EventRequest @relation(fields: [eventRequestId], references: [id])
+    eventRequest     EventRequest @relation(fields: [eventRequestId], references: [eventId])
     eventRequestId   String
     tier             Tier
     description      String

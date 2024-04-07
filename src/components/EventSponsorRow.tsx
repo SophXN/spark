@@ -9,34 +9,60 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { type Sponsor } from "@prisma/client";
 
 interface EventSponsorRowProps {
   id: string;
+  sponsor: Sponsor;
   removeSponsor: (sponsor: string) => void;
+  updateSponsor: (sponsor: Sponsor) => void;
 }
 
 export const EventSponsorRow = ({
   id,
+  sponsor,
   removeSponsor,
+  updateSponsor,
 }: EventSponsorRowProps) => {
+  const updateSponsorProperty = (property: string, value: string | number) => {
+    updateSponsor({
+      ...sponsor,
+      [property]: value,
+    });
+  };
+
   return (
-    <div className="flex items-center justify-between gap-1">
+    <div className="flex items-center justify-between gap-1" id={id}>
       <Input
         type="text"
         id="tier-description"
         placeholder="Tier Description"
         className="max-w-sm"
+        onChange={(e) => updateSponsorProperty("description", e.target.value)}
+        value={sponsor.description}
       />
       <Input
         type="text"
         id="tier-amount"
         placeholder="$0.00"
         className="w-24"
+        onChange={(e) =>
+          updateSponsorProperty("amountPerSponsor", parseInt(e.target.value))
+        }
+        value={sponsor.amountPerSponsor.toString()}
       />
       <Select>
         <SelectTrigger className="w-[180px] min-w-[30px]">
-          {" "}
-          <SelectValue placeholder="Total number" />
+          <SelectValue
+            placeholder="Total number"
+            defaultValue="1"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const value = e.target.value;
+              if (!isNaN(parseInt(value))) {
+                updateSponsorProperty("sponsorsRequired", parseInt(value));
+              }
+            }}
+          />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="1">1</SelectItem>
@@ -46,7 +72,11 @@ export const EventSponsorRow = ({
           <SelectItem value="5">5</SelectItem>
         </SelectContent>
       </Select>
-      <Button variant="ghost" size="icon" onClick={() => removeSponsor(id)}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => removeSponsor(sponsor.id)}
+      >
         <Cross1Icon className="h-4 w-4" />
       </Button>
     </div>

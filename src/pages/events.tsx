@@ -47,11 +47,10 @@ const FormSchema = z.object({
   }),
   eventType: z.nativeEnum(EventType),
   eventLocation: z.string(),
-  sponsors: z.array(z.string()),
-  collaborators: z.array(z.string()),
 });
 
 export default function Events() {
+  const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuid(),
@@ -61,8 +60,6 @@ export default function Events() {
       eventDate: new Date(),
       eventLocation: "",
       eventType: EventType.CONFERENCE,
-      sponsors: [],
-      collaborators: [],
     },
     resolver: zodResolver(FormSchema),
   });
@@ -79,15 +76,11 @@ export default function Events() {
       eventLocation: data.eventLocation,
       createdOn: new Date(),
       eventType: data.eventType,
-      sponsors: [],
-      collaborators: [],
     };
     try {
-      console.log("current evend id", form.getValues("eventId"));
-      console.error("sending input", params);
       mutation.mutate(params);
     } catch (error) {
-      console.error("MEOWMEOW", error);
+      console.error("Error submitting event form", error);
     }
   };
 
@@ -229,15 +222,21 @@ export default function Events() {
                   </div>
                   Upload
                 </Button>
-                <EventSponsors />
-                <EventCollaborators />
               </div>
+              <EventSponsors
+                eventId={form.getValues("eventId")}
+                isReadyToSubmit={isReadyToSubmit}
+              />
+              <EventCollaborators />
               <div className=" gap-3 border-t p-5">
                 <Button variant="outline" onClick={() => console.log("yay")}>
                   Cancel
                 </Button>
               </div>
-              <Button type="submit">Create Event</Button>
+
+              <Button type="submit" onClick={() => setIsReadyToSubmit(true)}>
+                Create Event
+              </Button>
             </form>
           </Form>
         </div>

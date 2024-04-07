@@ -14,8 +14,6 @@ export const eventsRouter = createTRPCRouter({
         eventLocation: z.string(),
         createdOn: z.date(),
         eventType: z.string(),
-        sponsors: z.array(z.string()),
-        collaborators: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -29,14 +27,6 @@ export const eventsRouter = createTRPCRouter({
           eventLocation: input.eventLocation,
           createdOn: input.createdOn,
           eventType: EventType[input.eventType as keyof typeof EventType],
-          sponsors: {
-            connect: input.sponsors.map((sponsorId) => ({ id: sponsorId })),
-          },
-          collaborators: {
-            connect: input.collaborators.map((collaboratorId) => ({
-              id: collaboratorId,
-            })),
-          },
         },
       });
     }),
