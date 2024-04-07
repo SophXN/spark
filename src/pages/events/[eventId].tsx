@@ -11,11 +11,16 @@ import {
     CardHeader,
     CardTitle,
 } from "~/components/ui/card";
+import { Button } from '~/components/ui/button';
 import Image from "next/image";
+import { SquareEvent, Company } from "~/types/types";
+import SupportColumnPublicView from '~/components/SupportColumnPublicView';
+import SupportColumnHostView from '~/components/SupportColumnHostView'
 
 const EventDetails: React.FC = () => {
     const router = useRouter();
     const { eventId } = router.query; // Access the dynamic segment
+    const hostView = false;
 
     return (
         <div>
@@ -39,21 +44,11 @@ const EventDetails: React.FC = () => {
                             <h2 className='scroll-m-20 text-xl font-medium tracking-tight mt-2'>Organized by</h2>
                             <OrganizerCard></OrganizerCard>
                         </main>
-                        <div className="sticky top-8 w-96 xl:block">
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight'>Support</h2>
-                            <Card className='mt-2'>
-                                <CardHeader>
-                                    <div className='flex flex-row justify-between space-y-0'>
-                                        <CardTitle className='text-xl font-medium'>Sponsorships</CardTitle>
-                                        <CardTitle className='text-xl font-medium'>3 left</CardTitle>
-                                    </div>
-                                    <p className='text-sm'>345 Brettly Way Brooklyn, NY 12311</p>
-                                </CardHeader>
-                                <CardContent className=''>
-                                    <p className='text-sm'>345 Brettly Way Brooklyn, NY 12311</p>
-                                </CardContent>
-                            </Card>
-                        </div>
+                        {
+                            !hostView ?
+                                <SupportColumnPublicView></SupportColumnPublicView> : 
+                                <SupportColumnHostView></SupportColumnHostView>
+                            }
                     </div>
                 </div>
             </div>
