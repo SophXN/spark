@@ -7,11 +7,12 @@ import { Label } from "~/components/ui/label";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { Calendar } from "~/components/ui/calendar";
 import { EventType } from "../types/types"; // Import the enum from types.ts
+import { api } from "~/utils/api";
+import { uuid } from "uuidv4";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,6 +38,8 @@ import {
 } from "~/components/ui/select";
 
 const FormSchema = z.object({
+  eventId: z.string(),
+  requesterId: z.string(),
   title: z.string(),
   description: z.string(),
   eventDate: z.date({
@@ -44,22 +47,48 @@ const FormSchema = z.object({
   }),
   eventType: z.nativeEnum(EventType),
   eventLocation: z.string(),
+  sponsors: z.array(z.string()),
+  collaborators: z.array(z.string()),
 });
 
 export default function Events() {
   const form = useForm<z.infer<typeof FormSchema>>({
+    defaultValues: {
+      eventId: uuid(),
+      requesterId: "235khf8745",
+      title: "",
+      description: "",
+      eventDate: new Date(),
+      eventLocation: "",
+      eventType: EventType.CONFERENCE,
+      sponsors: [],
+      collaborators: [],
+    },
     resolver: zodResolver(FormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const mutation = api.events.createEvent.useMutation();
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    const params = {
+      eventId: form.getValues("eventId"),
+      requesterId: "235khf8745",
+      title: data.title,
+      description: data.description,
+      eventDate: data.eventDate,
+      eventLocation: data.eventLocation,
+      createdOn: new Date(),
+      eventType: data.eventType,
+      sponsors: [],
+      collaborators: [],
+    };
+    try {
+      console.log("current evend id", form.getValues("eventId"));
+      console.error("sending input", params);
+      mutation.mutate(params);
+    } catch (error) {
+      console.error("MEOWMEOW", error);
+    }
   };
 
   return (
@@ -76,8 +105,9 @@ export default function Events() {
                 name="title"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Event Title</FormLabel>
+                    <FormLabel htmlFor="eventTitle">Event Title</FormLabel>
                     <Input
+                      id="eventTitle"
                       type="text"
                       placeholder="Name your event"
                       {...field}
@@ -85,13 +115,17 @@ export default function Events() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Event Description</FormLabel>
+                    <FormLabel htmlFor="eventDescription">
+                      Event Description
+                    </FormLabel>
                     <Input
+                      id="eventDescription"
                       type="text"
                       placeholder="Describe your event"
                       {...field}
@@ -105,10 +139,10 @@ export default function Events() {
                   name="eventDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Event Date</FormLabel>
+                      <FormLabel htmlFor="eventDate">Event Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <FormControl>
+                          <FormControl id="eventDate">
                             <Button
                               variant={"outline"}
                               className={cn(
@@ -130,16 +164,12 @@ export default function Events() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
+                            disabled={(date) => date < new Date()}
                             initialFocus
                           />
                         </PopoverContent>
                       </Popover>
-                      {/* <FormDescription>
-                      Your date of birth is used to calculate your age.
-                    </FormDescription> */}
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -147,12 +177,15 @@ export default function Events() {
               </div>
               <FormField
                 control={form.control}
-                name="eventType" // Add a name for the field
-                render={({ field }) => (
+                name="eventType"
+                render={({ ...field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Event Type</FormLabel>
-                    <Select>
-                      <SelectTrigger className="w-[180px] min-w-[30px]">
+                    <FormLabel htmlFor="eventType">Event Type</FormLabel>
+                    <Select {...field}>
+                      <SelectTrigger
+                        id="eventType"
+                        className="w-[180px] min-w-[30px]"
+                      >
                         <SelectValue placeholder="Select an event type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -171,8 +204,11 @@ export default function Events() {
                 name="eventLocation"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Event Location</FormLabel>
+                    <FormLabel htmlFor="eventLocation">
+                      Event Location
+                    </FormLabel>
                     <Input
+                      id="eventLocation"
                       type="text"
                       placeholder="Address of event"
                       {...field}
@@ -183,18 +219,11 @@ export default function Events() {
 
               <div className="grid w-full max-w-screen-sm items-center gap-3">
                 <Label htmlFor="upload">Event Image</Label>
-                <Label
-                  htmlFor="description"
-                  className="text-xs font-normal text-gray-600"
-                >
+                <Label className="text-xs font-normal text-gray-600">
                   This will appear at the top of your event page and on the home
                   page across our platform
                 </Label>
-                <Button
-                  id="event-description"
-                  variant="outline"
-                  className="w-24"
-                >
+                <Button id="upload" variant="outline" className="w-24">
                   <div className="mr-1">
                     <UploadIcon />
                   </div>
@@ -203,17 +232,14 @@ export default function Events() {
                 <EventSponsors />
                 <EventCollaborators />
               </div>
+              <div className=" gap-3 border-t p-5">
+                <Button variant="outline" onClick={() => console.log("yay")}>
+                  Cancel
+                </Button>
+              </div>
+              <Button type="submit">Create Event</Button>
             </form>
           </Form>
-        </div>{" "}
-        {/* This is the closing tag for the div opened at line 38 */}
-        <div className=" gap-3 border-t p-5">
-          <Button variant="outline" onClick={() => console.log("yay")}>
-            Cancel
-          </Button>
-          <Button type="submit" onClick={() => console.log("yay")}>
-            Create Event
-          </Button>
         </div>
       </div>
     </>

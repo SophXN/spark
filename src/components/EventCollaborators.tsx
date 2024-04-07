@@ -16,21 +16,18 @@ export const EventCollaborators = () => {
 
   return (
     <div className="grid w-full items-center gap-3">
-      <Label htmlFor="sponsors">Collaborators</Label>
-      <Label
-        htmlFor="description"
-        className="text-xs font-normal text-gray-600"
-      >
+      <Label>Collaborators</Label>
+      <Label className="text-xs font-normal text-gray-600">
         Select as many types of collaborators needed for this event{" "}
       </Label>
 
       <div className="flex max-w-screen-md flex-col space-y-3 rounded-lg border border-gray-300 p-4">
         {hasCollaborators
-          ? collaborators.map((sponsor) => {
+          ? collaborators.map((collaborators) => {
               return (
                 <EventCollaboratorRow
-                  key={sponsor}
-                  id={sponsor}
+                  key={collaborators}
+                  id={collaborators}
                   removeCollaborator={removeCollaborator}
                 />
               );
@@ -38,7 +35,7 @@ export const EventCollaborators = () => {
           : "No collaborators added, tap below to add a one"}
         <Button
           onClick={() => setCollaborators(["hi", ...collaborators])}
-          id="event-description"
+          id="submit-collaborators"
           className="w-40"
         >
           <div className="mr-1">

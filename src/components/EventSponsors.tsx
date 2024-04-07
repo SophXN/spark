@@ -14,11 +14,8 @@ export const EventSponsors = () => {
 
   return (
     <div className="grid w-full items-center gap-3">
-      <Label htmlFor="sponsors">Sponsors</Label>
-      <Label
-        htmlFor="description"
-        className="text-xs font-normal text-gray-600"
-      >
+      <Label id="sponsors">Sponsors</Label>
+      <Label className="text-xs font-normal text-gray-600">
         Describe your tiers and how much each tier should pay
       </Label>
 
@@ -27,8 +24,8 @@ export const EventSponsors = () => {
           ? sponsors.map((sponsor) => {
               return (
                 <EventSponsorRow
-                  key={sponsor}
                   id={sponsor}
+                  key={sponsor}
                   removeSponsor={removeSponsor}
                 />
               );
@@ -36,7 +33,7 @@ export const EventSponsors = () => {
           : "No tiers added, tap below to add one"}
         <Button
           onClick={() => setSponsors(["hi", ...sponsors])}
-          id="event-description"
+          id="submit-sponsors"
           disabled={sponsors.length >= 3}
           className="w-24"
         >
