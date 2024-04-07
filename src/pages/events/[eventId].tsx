@@ -14,7 +14,7 @@ import {
 import { Button } from '~/components/ui/button';
 import Image from "next/image";
 import { SquareEvent, Company } from "~/types/types";
-import SupportColumnPublicView from '~/components/SupportColumnPublicView';
+import SupportColumnPublicView  from '~/components/SupportColumnPublicView';
 import SupportColumnHostView from '~/components/SupportColumnHostView'
 
 const EventDetails: React.FC = () => {
