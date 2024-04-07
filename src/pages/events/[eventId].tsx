@@ -20,6 +20,7 @@ import SupportColumnHostView from '~/components/SupportColumnHostView'
 const EventDetails: React.FC = () => {
     const router = useRouter();
     const { eventId } = router.query; // Access the dynamic segment
+    console.log(eventId)
     const hostView = true;
 
     return (
@@ -49,7 +50,7 @@ const EventDetails: React.FC = () => {
                             {
                                 !hostView ?
                                     <SupportColumnPublicView></SupportColumnPublicView> :
-                                    <SupportColumnHostView></SupportColumnHostView>
+                                    <SupportColumnHostView eventId={eventId as string}></SupportColumnHostView>
                             }
                         </div>
                     </div>

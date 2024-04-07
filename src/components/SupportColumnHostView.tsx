@@ -8,8 +8,22 @@ import {
 } from "~/components/ui/card";
 import { Progress } from "./ui/progress";
 import { Button } from '~/components/ui/button';
+import { useRouter } from 'next/router';
 
-export default function SupportColumnHostView() {
+interface ManageEventProps {
+    eventId: string
+}
+
+const SupportColumnHostView: React.FC<ManageEventProps> = ({eventId}) => {
+
+    const router = useRouter();
+
+    const handleEventClick = (eventId: string) => {
+      // Potentially some logic here
+      console.log(eventId)
+      router.push(`/manage/${eventId}`);
+    };
+
     return (
         <div>
             <Card className='mt-2'>
@@ -43,9 +57,11 @@ export default function SupportColumnHostView() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button className='w-full'>Manage Collaborators</Button>
+                    <Button  onClick={() => handleEventClick(eventId)} className='w-full'>Manage Collaborators</Button>
                 </CardFooter>
             </Card>
         </div>
     )
 }
+
+export default SupportColumnHostView
