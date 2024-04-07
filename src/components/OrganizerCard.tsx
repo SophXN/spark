@@ -5,7 +5,7 @@ export default function OrganizerCard() {
                 <img className="h-12 w-12 rounded-full" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
             </div>
             <div className="min-w-0 flex-1">
-                <a href="#" className="focus:outline-none">
+                <a>
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">Landon Vago-Hughes</p>
                     <p className="truncate text-sm text-gray-500">Barrista</p>

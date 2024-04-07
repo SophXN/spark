@@ -11,11 +11,17 @@ import {
     CardHeader,
     CardTitle,
 } from "~/components/ui/card";
+import { Button } from '~/components/ui/button';
 import Image from "next/image";
+import { SquareEvent, Company } from "~/types/types";
+import SupportColumnPublicView from '~/components/SupportColumnPublicView';
+import SupportColumnHostView from '~/components/SupportColumnHostView'
 
 const EventDetails: React.FC = () => {
     const router = useRouter();
     const { eventId } = router.query; // Access the dynamic segment
+    console.log(eventId)
+    const hostView = true;
 
     return (
         <div>
@@ -34,25 +40,18 @@ const EventDetails: React.FC = () => {
                         <main className="flex-grow bg-black-200">
                             <h1 className="text-4xl font-extrabold">Taxing Laughter: The Joke Tax Chronicles</h1>
                             <p className='pt-1 text-sm text-muted-foreground'>Some description of the event</p>
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight mt-2'>When and where</h2>
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight mt-2'>When and where</h2>
                             <WhenAndWhere></WhenAndWhere>
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight mt-2'>Organized by</h2>
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight mt-2'>Organized by</h2>
                             <OrganizerCard></OrganizerCard>
                         </main>
-                        <div className="sticky top-8 w-96 xl:block">
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight'>Support</h2>
-                            <Card className='mt-2'>
-                                <CardHeader>
-                                    <div className='flex flex-row justify-between space-y-0'>
-                                        <CardTitle className='text-xl font-medium'>Sponsorships</CardTitle>
-                                        <CardTitle className='text-xl font-medium'>3 left</CardTitle>
-                                    </div>
-                                    <p className='text-sm'>345 Brettly Way Brooklyn, NY 12311</p>
-                                </CardHeader>
-                                <CardContent className=''>
-                                    <p className='text-sm'>345 Brettly Way Brooklyn, NY 12311</p>
-                                </CardContent>
-                            </Card>
+                        <div className="sticky mt-2 xl:mt-0 w-full xl:w-96 xl:block">
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight'>Support needed</h2>
+                            {
+                                !hostView ?
+                                    <SupportColumnPublicView></SupportColumnPublicView> :
+                                    <SupportColumnHostView eventId={eventId as string}></SupportColumnHostView>
+                            }
                         </div>
                     </div>
                 </div>
