@@ -7,7 +7,7 @@ export default function WhenAndWhere() {
                 <div className="flex items-center space-x-2 mb-2 sm:mb-0 sm:mr-10">
                     <CalendarIcon className="text-slate-800" />
                     <div className="text-left">
-                        <h3 className="text-md font-medium">Date and time</h3>
+                        <h3 className="text-md font-semibold">Date and time</h3>
                         <p className="text-sm text-gray-600 text-muted-foreground">Fri, Mar 17 9:00am</p>
                     </div>
                 </div>
@@ -15,7 +15,7 @@ export default function WhenAndWhere() {
                 <div className="flex items-center space-x-2">
                     <Globe className="text-slate-800" />
                     <div className="text-left">
-                        <h3 className="text-md font-medium">Location</h3>
+                        <h3 className="text-md font-semibold">Location</h3>
                         <p className="text-sm text-gray-600 text-muted-foreground">500 hut st, 11211, Brooklyn</p>
                     </div>
                 </div>

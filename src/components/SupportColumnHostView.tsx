@@ -11,11 +11,10 @@ import { Button } from '~/components/ui/button';
 
 export default function SupportColumnHostView() {
     return (
-        <div className="sticky mt-2 xl:mt-0 w-full xl:w-96 xl:block">
-            <h2 className='scroll-m-20 text-xl font-medium tracking-tight'>Support needed</h2>
+        <div>
             <Card className='mt-2'>
                 <CardHeader>
-                    <CardTitle className='text-xl font-medium mb-1'>Sponsors</CardTitle>
+                    <CardTitle className='text-xl font-bold mb-1'>Sponsors</CardTitle>
                     <Progress className="h-1" value={22}></Progress>
                 </CardHeader>
                 <CardContent>
@@ -30,7 +29,7 @@ export default function SupportColumnHostView() {
             </Card>
             <Card className='mt-2'>
                 <CardHeader>
-                    <CardTitle className='text-xl font-medium mb-1'>Collaborators</CardTitle>
+                    <CardTitle className='text-xl font-bold mb-1'>Collaborators</CardTitle>
                     <Progress className="h-1" value={54}></Progress>
                 </CardHeader>
                 <CardContent>

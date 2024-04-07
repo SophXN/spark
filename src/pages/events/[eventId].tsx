@@ -14,13 +14,13 @@ import {
 import { Button } from '~/components/ui/button';
 import Image from "next/image";
 import { SquareEvent, Company } from "~/types/types";
-import SupportColumnPublicView  from '~/components/SupportColumnPublicView';
+import SupportColumnPublicView from '~/components/SupportColumnPublicView';
 import SupportColumnHostView from '~/components/SupportColumnHostView'
 
 const EventDetails: React.FC = () => {
     const router = useRouter();
     const { eventId } = router.query; // Access the dynamic segment
-    const hostView = false;
+    const hostView = true;
 
     return (
         <div>
@@ -39,16 +39,19 @@ const EventDetails: React.FC = () => {
                         <main className="flex-grow bg-black-200">
                             <h1 className="text-4xl font-extrabold">Taxing Laughter: The Joke Tax Chronicles</h1>
                             <p className='pt-1 text-sm text-muted-foreground'>Some description of the event</p>
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight mt-2'>When and where</h2>
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight mt-2'>When and where</h2>
                             <WhenAndWhere></WhenAndWhere>
-                            <h2 className='scroll-m-20 text-xl font-medium tracking-tight mt-2'>Organized by</h2>
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight mt-2'>Organized by</h2>
                             <OrganizerCard></OrganizerCard>
                         </main>
-                        {
-                            !hostView ?
-                                <SupportColumnPublicView></SupportColumnPublicView> : 
-                                <SupportColumnHostView></SupportColumnHostView>
+                        <div className="sticky mt-2 xl:mt-0 w-full xl:w-96 xl:block">
+                            <h2 className='scroll-m-20 text-xl font-bold tracking-tight'>Support needed</h2>
+                            {
+                                !hostView ?
+                                    <SupportColumnPublicView></SupportColumnPublicView> :
+                                    <SupportColumnHostView></SupportColumnHostView>
                             }
+                        </div>
                     </div>
                 </div>
             </div>
