@@ -3,6 +3,15 @@ import React from 'react';
 import Navbar from '~/components/Navbar';
 import { BreadcrumbManageCollaborators } from '~/components/ManageCollaborators/BreadcrumbManageCollaborators';
 import Tabs from '~/components/ManageCollaborators/Tabs';
+import { RequestCardInfo, RequestStatus } from '~/types/types';
+import { ServiceType } from '@prisma/client';
+
+const arrayOfRequests: RequestCardInfo[] = [
+    { organizerAddress: '484 humboldt st', organizerName: 'Landon Co', helpingCategory: ServiceType.FOOD, message: "A lovely message from the collaborator about how much they want to help", requestId: "123123", status: RequestStatus.denied },
+    { organizerAddress: '499 francis grove', organizerName: 'Landon Co', helpingCategory: ServiceType.ART, message: "A lovely message from the collaborator about how much they want to help", requestId: "123653", status: RequestStatus.pending },
+    { organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.SPACE, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.pending },
+    { organizerEmail: "landonvagohughes@gmail.com", organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.OTHER, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.accepted }
+]
 
 const ManageEvent: React.FC = () => {
     const router = useRouter();
@@ -17,7 +26,7 @@ const ManageEvent: React.FC = () => {
                     <BreadcrumbManageCollaborators name={eventName} id={eventId as string}/>
                 </div>
                 <div className="mt-2 text-3xl font-semibold">Manage Collaborators</div>
-                <Tabs/>
+                <Tabs requests={arrayOfRequests}/>
             </div>
         </div>
     )

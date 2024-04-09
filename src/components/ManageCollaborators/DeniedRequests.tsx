@@ -12,23 +12,19 @@ import { Button } from '~/components/ui/button';
 import { RequestCardInfo } from '~/types/types';
 import { MailIcon, RefreshCcwIcon } from 'lucide-react';
 
-interface AcceptedData {
-    acceptedData: RequestCardInfo[]
+interface DeniedData {
+    deniedData: RequestCardInfo[]
 }
 
-const AcceptedRequests: React.FC<AcceptedData> = ({acceptedData}) => {
+const DeniedRequests: React.FC<DeniedData> = ({deniedData}) => {
 
-    function revokeCollaboration(){
+    function revokeDenial() {
 
-    }
-
-    function openEmail() {
-        
     }
 
     return (
         <div>
-            {acceptedData.map((requests) =>
+            {deniedData.map((requests) =>
                 <Card className='mt-2'>
                 <CardHeader>
                     <div className="relative flex items-center space-x-2 rounded-lg">
@@ -41,9 +37,6 @@ const AcceptedRequests: React.FC<AcceptedData> = ({acceptedData}) => {
                                 <p className="truncate text-sm text-gray-500">{requests.organizerAddress}</p>
                             </a>
                         </div>
-                        <div className="ml-auto flex items-center gap-1">
-                            <Button onClick={() => openEmail()} size="sm" className='px-2 gap-1 w-full sm:w-auto bg-slate-900 hover:bg-slate-800'><MailIcon className='w-2'/>Contact</Button>
-                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -51,7 +44,7 @@ const AcceptedRequests: React.FC<AcceptedData> = ({acceptedData}) => {
                     <p className='mt-2 text-sm'>{requests.message}</p>
                 </CardContent>
                 <CardFooter className='flex flex-wrap flex-row justify-end gap-21'>
-                    <Button onClick={() => revokeCollaboration()} size="sm" className='px-2 gap-1 w-full sm:w-auto bg-slate-600 hover:bg-slate-500'><RefreshCcwIcon className='w-2'/>Revoke</Button>
+                    <Button onClick={() => revokeDenial()} size="sm" className='px-2 gap-1 w-full sm:w-auto bg-slate-600 hover:bg-slate-500'><RefreshCcwIcon className='w-2'/>Revoke</Button>
                 </CardFooter>
             </Card>
             )}
@@ -59,4 +52,4 @@ const AcceptedRequests: React.FC<AcceptedData> = ({acceptedData}) => {
     )
 }
 
-export default AcceptedRequests
+export default DeniedRequests

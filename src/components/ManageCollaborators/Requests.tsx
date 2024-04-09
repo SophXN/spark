@@ -11,6 +11,8 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Ewert } from 'next/font/google';
 import { RequestCardInfo, RequestStatus, RequestCardInfoArray } from '~/types/types';
+import { Cross1Icon, Cross2Icon } from '@radix-ui/react-icons';
+import { Check } from 'lucide-react';
 
 const Requests: React.FC<RequestCardInfoArray> = ({ infoCards }) => {
 
@@ -18,6 +20,7 @@ const Requests: React.FC<RequestCardInfoArray> = ({ infoCards }) => {
         <div>
             {infoCards.map((event) =>
                 <RequestCard 
+                    key={event.requestId}
                     organizerAddress={event.organizerAddress} 
                     organizerName={event.organizerName} 
                     helpingCategory={event.helpingCategory}
@@ -61,8 +64,8 @@ const RequestCard: React.FC<RequestCardInfo> = ({ ...info }: RequestCardInfo) =>
                     <p className='mt-2 text-sm'>{info.message}</p>
                 </CardContent>
                 <CardFooter className='flex flex-wrap flex-row justify-end gap-2'>
-                    <Button onClick={() => rejectCollaborator()} className='w-full sm:w-auto bg-red-600 hover:bg-red-500'>Reject request</Button>
-                    <Button onClick={() => acceptCollaborator()} className='w-full sm:w-auto'>Accept Collaborator</Button>
+                    <Button onClick={() => rejectCollaborator()} size="sm" className='px-2 gap-1 w-full sm:w-auto bg-red-600 hover:bg-red-500'><Cross2Icon className='h-2 w-2'/>Reject request</Button>
+                    <Button onClick={() => acceptCollaborator()} size="sm" className='px-2 gap-1 w-full sm:w-auto'><Check className='h-2 w-2'/>Accept Collaborator</Button>
                 </CardFooter>
             </Card>
         </div>

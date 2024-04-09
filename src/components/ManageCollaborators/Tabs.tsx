@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Request from '~/components/ManageCollaborators/Requests';
-import DeniedRequests from '~/components/DeniedRequests';
-import AcceptedRequests from '../AcceptedRequests';
+import DeniedRequests from '~/components/ManageCollaborators/DeniedRequests';
+import AcceptedRequests from './AcceptedRequests';
 import { CollaboratorResponse, ServiceType } from '@prisma/client';
 import { RequestCardInfo, RequestStatus, RequestCardInfoArray } from '~/types/types';
 
@@ -18,18 +18,15 @@ interface Tab {
     current: boolean
 }
 
-const arrayOfRequests: RequestCardInfo[] = [
-    { organizerAddress: '484 humboldt st', organizerName: 'Landon Co', helpingCategory: ServiceType.FOOD, message: "A lovely message from the collaborator about how much they want to help", requestId: "123123", status: RequestStatus.denied },
-    { organizerAddress: '499 francis grove', organizerName: 'Landon Co', helpingCategory: ServiceType.ART, message: "A lovely message from the collaborator about how much they want to help", requestId: "123653", status: RequestStatus.pending },
-    { organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.SPACE, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.pending },
-    { organizerEmail: "landonvagohughes@gmail.com", organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.OTHER, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.accepted }
-]
-
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Tabs() {
+interface RequestData {
+    requests: RequestCardInfo[]
+}
+
+const Tabs: React.FC<RequestData> = ({requests}) => {
     const [tabs, setTabs] = useState<Tab[]>(defaultTabs);
     const activeTab = tabs.find((tab) => tab.current).name
     console.log(tabs)
@@ -89,11 +86,14 @@ export default function Tabs() {
             </div>
             <div className='mt-2'>
                 {activeTab === 'Requests' && (
-                    <Request infoCards={arrayOfRequests.filter(request => request.status === RequestStatus.pending)} />
+                    <Request infoCards={requests.filter(request => request.status === RequestStatus.pending)} />
                 )}
-                {activeTab === 'Accepted' && <AcceptedRequests />}
-                {activeTab === 'Denied' && <DeniedRequests />}
+                {activeTab === 'Accepted' && 
+                    <AcceptedRequests acceptedData={requests.filter(request => request.status === RequestStatus.accepted)} />}
+                {activeTab === 'Denied' && <DeniedRequests deniedData={requests.filter(request => request.status === RequestStatus.denied)} />}
             </div>
         </div>
     )
-}
+} 
+
+export default Tabs

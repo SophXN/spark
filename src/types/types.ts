@@ -70,6 +70,7 @@ export interface EventPageDetails {
   eventDescription: string,
   location: string,
   time: string,
+  collaboratorServiceTypesNeeded: ServiceType[],
   totalSponsors?: number,
   totalSponsorsRemaining?: number,
   totalAmountRaised?: number,

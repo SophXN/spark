@@ -16,6 +16,7 @@ import Image from "next/image";
 import SupportColumnPublicView from '~/components/SupportColumnPublicView';
 import SupportColumnHostView from '~/components/SupportColumnHostView'
 import { EventPageDetails } from "~/types/types";
+import { ServiceType } from "@prisma/client";
 
 const currentEvent: EventPageDetails =
     { 
@@ -35,7 +36,8 @@ const currentEvent: EventPageDetails =
         totalAmountRaised: 3000,
         totalCollaborators: 6, 
         totalCollaboratorRequests: 12,
-        totalCollaboratorsRemain: 3
+        totalCollaboratorsRemain: 3,
+        collaboratorServiceTypesNeeded:[ServiceType.ART, ServiceType.DESIGN]
     }
 
 
