@@ -1,6 +1,11 @@
 import { CalendarIcon, Globe, LocateIcon } from "lucide-react"
+import { EventPageDetails } from "~/types/types";
 
-export default function WhenAndWhere() {
+interface LocationForEvent {
+    locationData: EventPageDetails
+}
+
+export default function WhenAndWhere({locationData}: LocationForEvent) {
     return (
         <div className="pt-2">
             <div className="flex flex-col sm:flex-row sm:items-center">
@@ -8,7 +13,7 @@ export default function WhenAndWhere() {
                     <CalendarIcon className="text-slate-800" />
                     <div className="text-left">
                         <h3 className="text-md font-semibold">Date and time</h3>
-                        <p className="text-sm text-gray-600 text-muted-foreground">Fri, Mar 17 9:00am</p>
+                        <p className="text-sm text-gray-600 text-muted-foreground">{locationData.time}</p>
                     </div>
                 </div>
                 <div className="border-t sm:border-l border-gray-200 sm:border-0 w-full sm:w-10 h-2 self-center" />
@@ -16,7 +21,7 @@ export default function WhenAndWhere() {
                     <Globe className="text-slate-800" />
                     <div className="text-left">
                         <h3 className="text-md font-semibold">Location</h3>
-                        <p className="text-sm text-gray-600 text-muted-foreground">500 hut st, 11211, Brooklyn</p>
+                        <p className="text-sm text-gray-600 text-muted-foreground">{locationData.location}</p>
                     </div>
                 </div>
             </div>

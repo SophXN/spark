@@ -9,19 +9,20 @@ import {
 import { Progress } from "./ui/progress";
 import { Button } from '~/components/ui/button';
 import { useRouter } from 'next/router';
+import { EventPageDetails } from "~/types/types";
 
-interface ManageEventProps {
-    eventId: string
+interface HostEventData {
+    hostData: EventPageDetails
 }
 
-const SupportColumnHostView: React.FC<ManageEventProps> = ({eventId}) => {
+const SupportColumnHostView: React.FC<HostEventData> = ({hostData}) => {
 
     const router = useRouter();
 
-    const handleEventClick = (eventId: string) => {
+    const manageCollaborators = () => {
       // Potentially some logic here
-      console.log(eventId)
-      router.push(`/manage/${eventId}`);
+      console.log(hostData.eventId)
+      router.push(`/manage/${hostData.eventId}`);
     };
 
     return (
@@ -29,12 +30,12 @@ const SupportColumnHostView: React.FC<ManageEventProps> = ({eventId}) => {
             <Card className='mt-2'>
                 <CardHeader>
                     <CardTitle className='text-xl font-bold mb-1'>Sponsors</CardTitle>
-                    <Progress className="h-1" value={22}></Progress>
+                    <Progress className="h-1" value={hostData.percentageRaised}></Progress>
                 </CardHeader>
                 <CardContent>
                     <div className='flex flex-row justify-between items-center'>
                         <p className='text-sm'>Amount raised for event</p>
-                        <p className='text-sm font-bold'>$3000</p>
+                        <p className='text-sm font-bold'>{hostData.totalAmountRaised}</p>
                     </div>
                 </CardContent>
                 <CardFooter>
@@ -44,20 +45,20 @@ const SupportColumnHostView: React.FC<ManageEventProps> = ({eventId}) => {
             <Card className='mt-2'>
                 <CardHeader>
                     <CardTitle className='text-xl font-bold mb-1'>Collaborators</CardTitle>
-                    <Progress className="h-1" value={54}></Progress>
+                    <Progress className="h-1" value={hostData.percentageCollaborators}></Progress>
                 </CardHeader>
                 <CardContent>
                     <div className='flex flex-row justify-between items-center'>
                         <p className='text-sm'>Total Collaborators</p>
-                        <p className='text-sm font-bold'>3/5</p>
+                        <p className='text-sm font-bold'>{hostData.totalCollaboratorsRemain}/{hostData.totalCollaborators}</p>
                     </div>
                     <div className='mt-2 flex flex-row justify-between items-center'>
                         <p className='text-sm'>Total requests</p>
-                        <p className='text-sm font-bold'>10</p>
+                        <p className='text-sm font-bold'>{hostData.totalCollaboratorRequests}</p>
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button  onClick={() => handleEventClick(eventId)} className='w-full'>Manage Collaborators</Button>
+                    <Button  onClick={() => manageCollaborators()} className='w-full'>Manage Collaborators</Button>
                 </CardFooter>
             </Card>
         </div>

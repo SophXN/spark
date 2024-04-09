@@ -1,8 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Request from '~/components/Requests';
+import Request from '~/components/ManageCollaborators/Requests';
 import DeniedRequests from '~/components/DeniedRequests';
-import AcceptedRequests from './AcceptedRequests';
+import AcceptedRequests from '../AcceptedRequests';
+import { CollaboratorResponse, ServiceType } from '@prisma/client';
+import { RequestCardInfo, RequestStatus, RequestCardInfoArray } from '~/types/types';
 
 var defaultTabs: Tab[] = [
     { name: 'Requests', href: '#requests', current: true },
@@ -16,6 +18,13 @@ interface Tab {
     current: boolean
 }
 
+const arrayOfRequests: RequestCardInfo[] = [
+    { organizerAddress: '484 humboldt st', organizerName: 'Landon Co', helpingCategory: ServiceType.FOOD, message: "A lovely message from the collaborator about how much they want to help", requestId: "123123", status: RequestStatus.denied },
+    { organizerAddress: '499 francis grove', organizerName: 'Landon Co', helpingCategory: ServiceType.ART, message: "A lovely message from the collaborator about how much they want to help", requestId: "123653", status: RequestStatus.pending },
+    { organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.SPACE, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.pending },
+    { organizerEmail: "landonvagohughes@gmail.com", organizerAddress: 'CTown markets', organizerName: 'Landon Co', helpingCategory: ServiceType.OTHER, message: "A lovely message from the collaborator about how much they want to help", requestId: "198823", status: RequestStatus.accepted }
+]
+
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
 }
@@ -26,16 +35,15 @@ export default function Tabs() {
     console.log(tabs)
 
     const handleTabClick = (clickedTab: Tab) => {
-        // Potentially some logic here
-        console.log(clickedTab)
+
         if (tabs.find((tab) => tab.current).name == clickedTab.name) {
-            // clicked an selected tab
+            // clicked the active tab
             return
         }
         const updatedTabs = tabs.map(tab =>
             tab.name === clickedTab.name ? { ...tab, current: true } : { ...tab, current: false }
         );
-        //unselected we load the data from the 
+        //unselected we load the data from the new tab
         setTabs(updatedTabs)
     };
 
@@ -80,7 +88,9 @@ export default function Tabs() {
                 </div>
             </div>
             <div className='mt-2'>
-                {activeTab === 'Requests' && <Request />}
+                {activeTab === 'Requests' && (
+                    <Request infoCards={arrayOfRequests.filter(request => request.status === RequestStatus.pending)} />
+                )}
                 {activeTab === 'Accepted' && <AcceptedRequests />}
                 {activeTab === 'Denied' && <DeniedRequests />}
             </div>
