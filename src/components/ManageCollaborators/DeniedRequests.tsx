@@ -40,7 +40,7 @@ const DeniedRequests: React.FC<DeniedData> = ({deniedData}) => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Badge>Food</Badge>
+                    <Badge>{requests.helpingCategory}</Badge>
                     <p className='mt-2 text-sm'>{requests.message}</p>
                 </CardContent>
                 <CardFooter className='flex flex-wrap flex-row justify-end gap-21'>

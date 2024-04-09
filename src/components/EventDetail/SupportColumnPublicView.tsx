@@ -7,7 +7,7 @@ import {
     CardTitle,
 } from "~/components/ui/card";
 import { Button } from '~/components/ui/button';
-import RequestCollaborationDialog from "~/components/RequestCollaborationDialog"
+import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog"
 import { EventPageDetails } from "~/types/types";
 
 interface PublicEventData {

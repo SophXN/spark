@@ -11,6 +11,7 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { RequestCardInfo } from '~/types/types';
 import { MailIcon, RefreshCcwIcon } from 'lucide-react';
+import { info } from 'console';
 
 interface AcceptedData {
     acceptedData: RequestCardInfo[]
@@ -47,7 +48,7 @@ const AcceptedRequests: React.FC<AcceptedData> = ({acceptedData}) => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Badge>Food</Badge>
+                    <Badge>{requests.helpingCategory}</Badge>
                     <p className='mt-2 text-sm'>{requests.message}</p>
                 </CardContent>
                 <CardFooter className='flex flex-wrap flex-row justify-end gap-21'>

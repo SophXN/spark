@@ -60,7 +60,7 @@ const RequestCard: React.FC<RequestCardInfo> = ({ ...info }: RequestCardInfo) =>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Badge>Food</Badge>
+                    <Badge>{info.helpingCategory}</Badge>
                     <p className='mt-2 text-sm'>{info.message}</p>
                 </CardContent>
                 <CardFooter className='flex flex-wrap flex-row justify-end gap-2'>

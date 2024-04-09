@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "~/components/ui/card";
-import { Progress } from "./ui/progress";
+import { Progress } from "../ui/progress";
 import { Button } from '~/components/ui/button';
 import { useRouter } from 'next/router';
 import { EventPageDetails } from "~/types/types";

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import Navbar from '~/components/Navbar';
 import React from 'react';
-import WhenAndWhere from '~/components/WhenAndWhere'
-import OrganizerCard from '~/components/OrganizerCard';
+import WhenAndWhere from '~/components/EventDetail/WhenAndWhere'
+import OrganizerCard from '~/components/EventDetail/OrganizerCard';
 import {
     Card,
     CardContent,
@@ -13,8 +13,8 @@ import {
 } from "~/components/ui/card";
 import { Button } from '~/components/ui/button';
 import Image from "next/image";
-import SupportColumnPublicView from '~/components/SupportColumnPublicView';
-import SupportColumnHostView from '~/components/SupportColumnHostView'
+import SupportColumnPublicView from '~/components/EventDetail/SupportColumnPublicView';
+import SupportColumnHostView from '~/components/EventDetail/SupportColumnHostView'
 import { EventPageDetails } from "~/types/types";
 import { ServiceType } from "@prisma/client";
 
