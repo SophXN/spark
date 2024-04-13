@@ -10,10 +10,10 @@ interface Props {
 
 const listOfEvents: HomePageEventDetails[] =
   [
-    { eventId: "1", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: true, totalSponsorsRemaining: 5, totalCollaboratorsRemain: 3},
-    { eventId: "2", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 3, totalCollaboratorsRemain: 3},
-    { eventId: "3", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 6, totalCollaboratorsRemain: 3},
-    { eventId: "4", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 2, totalCollaboratorsRemain: 3}, 
+    { eventId: "1", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "324 Berkin st", eventDate: "20th March 2024", isHost: true, totalSponsorsRemaining: 5, totalCollaboratorsRemain: 3},
+    { eventId: "2", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "324 Berkin st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 3, totalCollaboratorsRemain: 3},
+    { eventId: "3", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "324 Berkin st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 6, totalCollaboratorsRemain: 3},
+    { eventId: "4", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "324 Berkin st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 2, totalCollaboratorsRemain: 3}, 
   ]
 
 const HomePage: React.FC<Props> = () => {
