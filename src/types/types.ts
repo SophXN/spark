@@ -1,97 +1,14 @@
-export type ServiceType =
-  | "FOOD"
-  | "MUSIC"
-  | "ART"
-  | "DESIGN"
-  | "SPACE"
-  | "OTHER";
-
-export enum EventType {
-  POPUP = "POPUP",
-  CONFERENCE = "CONFERENCE",
-  CONCERT = "CONCERT",
-  DINNER = "DINNER",
-  GALA = "GALA",
-  FAIR = "FAIR",
-  COMPETITION = "COMPETITION",
-  CHARITY = "CHARITY",
-  NETWORKING = "NETWORKING",
-  CELEBRATION = "CELEBRATION",
-  OTHER = "OTHER",
-}
+import { type ServiceType } from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
   eventId: string;
   isReadyToSubmit: boolean;
 }
 
-export interface SquareEvent {
-  id: string;
-  image: string;
-  eventId: string;
-  requester: Company; // Assuming you have an interface for `Company`
-  requesterId: string;
-  title: string;
-  description: string;
-  eventDate: Date; // In TypeScript, dates are represented with the `Date` type
-  eventLocation: string;
-  createdOn: Date;
-  eventType: EventType; // Assuming you have an enum or type for `EventType`
-  sponsors: Sponsor[]; // Assuming you have an interface for `Sponsor`
-  collaborators: Collaborator[]; // Assuming you have an interface for `Collaborator`
-}
-
-// You would also need to define the other interfaces/enums if they are not defined yet.
-
-export interface Company {
-  id: string;
-  name: string;
-  industry: string;
-  eventRequests: SquareEvent[]; // Assuming you have an interface for `EventRequest`
-  sponsorships: Sponsor[]; // Assuming you have an interface for `Sponsor`
-  collaboratorResponses: CollaboratorResponse[]; // Assuming you have an interface for `CollaboratorResponse`
-}
-
 export enum Tier {
   ONE = "ONE",
   TWO = "TWO",
   THREE = "THREE",
-}
-
-export interface Sponsor {
-  id: string;
-  eventRequest: SquareEvent; // Assuming `EventRequest` is defined elsewhere as provided previously
-  eventRequestId: string;
-  tier: Tier;
-  description: string;
-  sponsorsRequired: number;
-  amountPerSponsor: number;
-  responders: Company[]; // Assuming you have an interface for `Company`
-}
-
-export interface Collaborator {
-  id: string;
-  eventRequest: SquareEvent; // Assuming `EventRequest` is defined elsewhere as provided previously
-  eventRequestId: string;
-  serviceType: ServiceType;
-  description: string;
-  collaboratorsRequired: number;
-  responses: CollaboratorResponse[]; // Assuming you will define `CollaboratorResponse` as below
-}
-
-export interface CollaboratorResponse {
-  id: string;
-  collaborator: Collaborator; // Assuming `Collaborator` is defined above
-  collaboratorId: string;
-  responder: Company; // Assuming you have an interface for `Company`
-  responderId: string;
-  isAccepted: boolean;
-  responseMessage?: string; // The question mark indicates that this field is optional
-  respondedOn: Date;
-}
-
-export interface EventsListProps {
-  events: SquareEvent[];
 }
 
 interface Session {
@@ -127,4 +44,45 @@ interface Account {
   id_token?: string | null;
   session_state?: string | null;
   user: User; // Assuming `User` is defined elsewhere as provided previously
+}
+
+export enum RequestStatus {
+  accepted = "ACCEPTED",
+  pending = "PENDING",
+  denied = "DENIED"
+}
+
+export interface RequestCardInfo {
+  organizerName: string,
+  organizerAddress: string,
+  organizerEmail?: string,
+  helpingCategory: ServiceType,
+  message: string,
+  requestId: string
+  status: RequestStatus
+}
+
+export interface RequestCardInfoArray {
+  infoCards: RequestCardInfo[]
+}
+
+export interface EventPageDetails {
+  eventId: string,
+  eventBannerImage?: string,
+  organizerId: string,
+  organizerCompanyName: string,
+  eventTitle: string,
+  eventDescription: string,
+  location: string,
+  time: string,
+  collaboratorServiceTypesNeeded: ServiceType[],
+  totalSponsors?: number,
+  totalSponsorsRemaining?: number,
+  totalAmountRaised?: number,
+  totalCollaborators?: number,
+  totalCollaboratorsRemain?: number,
+  totalCollaboratorRequests?: number,
+  percentageRaised?: number,
+  percentageCollaborators?: number,
+  isHost: boolean
 }

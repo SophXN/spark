@@ -3,21 +3,20 @@ import Image from "next/image";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from 'next/router';
 import Navbar from '~/components/Navbar';
-import { EventsListProps } from "~/types/types";
+import { EventPageDetails } from "~/types/types";
+import { ServiceType } from "@prisma/client";
 
 interface Props {
   logo: string;
 }
 
-const listOfEvents: EventsListProps = {
-  events: [
-    { id: "1", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: "2", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: "3", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: "4", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: "5", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+const listOfEvents: EventPageDetails[] =
+  [
+    { eventId: "1", collaboratorServiceTypesNeeded:[ServiceType.ART, ServiceType.DESIGN], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: true, percentageRaised: 30, percentageCollaborators: 50},
+    { eventId: "2", collaboratorServiceTypesNeeded:[ServiceType.FOOD, ServiceType.FOOD], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 3, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3},
+    { eventId: "3", collaboratorServiceTypesNeeded:[ServiceType.MUSIC, ServiceType.FOOD], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 6, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3},
+    { eventId: "4", collaboratorServiceTypesNeeded:[ServiceType.MUSIC, ServiceType.DESIGN], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 2, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3}, 
   ]
-}
 
 const HomePage: React.FC<Props> = () => {
   const router = useRouter();
@@ -35,13 +34,11 @@ const HomePage: React.FC<Props> = () => {
         <div className="mx-auto max-w-7xl px-3">
           <div className="my-2 text-2xl font-semibold">Events</div>
           <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {listOfEvents.events.map((event) =>
-            <div onClick={() => handleEventClick(event.id)}>
+            {listOfEvents.map((event) =>
+            <div onClick={() => handleEventClick(event.eventId)}>
               <EventCard
-                key={event.id}
-                image={
-                  event.image
-                }
+                key={event.eventId}
+                eventCardDetails={event}
               />
               </div>
             )}

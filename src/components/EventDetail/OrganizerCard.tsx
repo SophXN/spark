@@ -1,4 +1,10 @@
-export default function OrganizerCard() {
+import { EventPageDetails } from "~/types/types";
+
+interface LocationForEvent {
+    organizerData: EventPageDetails
+}
+
+export default function OrganizerCard({organizerData} : LocationForEvent) {
     return (
         <div className="relative flex items-center space-x-2 rounded-lg bg-slate-100 px-6 py-3 mt-2">
             <div className="flex-shrink-0">
@@ -7,8 +13,8 @@ export default function OrganizerCard() {
             <div className="min-w-0 flex-1">
                 <a>
                     <span className="absolute inset-0" aria-hidden="true" />
-                    <p className="text-sm font-medium text-gray-900">Landon Vago-Hughes</p>
-                    <p className="truncate text-sm text-gray-500">Barrista</p>
+                    <p className="text-sm font-medium text-gray-900">{organizerData.organizerCompanyName}</p>
+                    <p className="truncate text-sm text-gray-500">{organizerData.location}</p>
                 </a>
             </div>
         </div>
