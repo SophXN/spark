@@ -91,6 +91,10 @@ export default function Events() {
     void router.push(`/events/${eventId}`);
   };
 
+  const handleCancelEvent = () => {
+    void router.push("/home");
+  }
+
   return (
     <>
       <div className="relative w-screen h-screen flex-1 space-y-8">
@@ -252,7 +256,7 @@ export default function Events() {
           </div>
         </div>
         <div className="flex gap-2 justify-end w-full sticky bottom-0 z-11 overflow-visible border-t border-gray-200 bg-white pt-2 pb-2 pr-4">
-          <Button type="button" variant="outline" onClick={() => console.log("yay")}>
+          <Button type="button" onClick={() => handleCancelEvent()} variant="outline">
             Cancel
           </Button>
           <Button
@@ -261,11 +265,7 @@ export default function Events() {
           >
             Create Event
           </Button>
-
         </div>
-        {/* <footer className="flex items-end px-4 md:px-6 py-4 md:py-6">
-          <Button size="sm">Button</Button>
-        </footer> */}
       </div>
     </>
   );
