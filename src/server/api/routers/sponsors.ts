@@ -37,4 +37,13 @@ export const sponsorsRouter = createTRPCRouter({
         })),
       });
     }),
+  getTotalSponsors: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.sponsor.count({
+        where: {
+          eventRequestId: input,
+        },
+      });
+    }),
 });
