@@ -42,14 +42,14 @@ export const EventSponsorRow = ({
         value={sponsor.description}
       />
       <Input
-        type="text"
+        type="number"
         id="tier-amount"
         placeholder="$0.00"
         className="w-24"
         onChange={(e) =>
           updateSponsorProperty("amountPerSponsor", parseInt(e.target.value))
         }
-        value={sponsor.amountPerSponsor.toString()}
+        value={sponsor.amountPerSponsor}
       />
       <Select>
         <SelectTrigger className="w-[180px] min-w-[30px]">

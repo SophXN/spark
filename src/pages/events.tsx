@@ -227,7 +227,10 @@ export default function Events() {
                 eventId={form.getValues("eventId")}
                 isReadyToSubmit={isReadyToSubmit}
               />
-              <EventCollaborators />
+              <EventCollaborators
+                eventId={form.getValues("eventId")}
+                isReadyToSubmit={isReadyToSubmit}
+              />
               <div className=" gap-3 border-t p-5">
                 <Button variant="outline" onClick={() => console.log("yay")}>
                   Cancel

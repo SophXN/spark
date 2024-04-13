@@ -6,39 +6,32 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { Tier, type Sponsor } from "@prisma/client";
 import { uuid } from "uuidv4";
 import { api } from "~/utils/api";
-
-interface EventSponsorsProps {
-  eventId: string;
-  isReadyToSubmit: boolean;
-}
+import { type EventSponsorsAndCollaboratorProps } from "~/types/types";
 
 export const EventSponsors = ({
   eventId,
   isReadyToSubmit,
-}: EventSponsorsProps) => {
+}: EventSponsorsAndCollaboratorProps) => {
   const [sponsors, setSponsors] = React.useState<Sponsor[]>([]);
-
+  const hasSponsors = sponsors.length !== 0;
   const mutation = api.sponsors.addSponsors.useMutation();
-
   const hasSubmitted = React.useRef(false);
 
   React.useEffect(() => {
-    if (isReadyToSubmit && !hasSubmitted.current && sponsors.length > 0) {
+    if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
       const sponsorsToSubmit = sponsors.filter(
         (sponsor) =>
           sponsor.amountPerSponsor !== 0 &&
           sponsor.description.trim().length > 0,
       );
       try {
-        console.log("sending new sponsors", sponsorsToSubmit);
         mutation.mutate(sponsorsToSubmit);
         hasSubmitted.current = true;
       } catch (error) {
         console.error("Error creating new sponsors", error);
       }
     }
-  }, [isReadyToSubmit, mutation, sponsors]);
-  const hasSponsors = sponsors.length !== 0;
+  }, [hasSponsors, isReadyToSubmit, mutation, sponsors]);
 
   const removeSponsor = (sponsorId: string) => {
     const newSponsors = sponsors.filter((s: Sponsor) => s.id !== sponsorId);

@@ -20,6 +20,11 @@ export enum EventType {
   OTHER = "OTHER",
 }
 
+export interface EventSponsorsAndCollaboratorProps {
+  eventId: string;
+  isReadyToSubmit: boolean;
+}
+
 export interface SquareEvent {
   id: string;
   image: string;
@@ -50,7 +55,7 @@ export interface Company {
 export enum Tier {
   ONE = "ONE",
   TWO = "TWO",
-  THREE = "THREE"
+  THREE = "THREE",
 }
 
 export interface Sponsor {
@@ -84,7 +89,6 @@ export interface CollaboratorResponse {
   responseMessage?: string; // The question mark indicates that this field is optional
   respondedOn: Date;
 }
-
 
 export interface EventsListProps {
   events: SquareEvent[];

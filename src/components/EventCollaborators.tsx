@@ -3,15 +3,62 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { EventCollaboratorRow } from "./EventCollaboratorRow";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { uuid } from "uuidv4";
+import { api } from "~/utils/api";
+import { type EventSponsorsAndCollaboratorProps } from "~/types/types";
+import { ServiceType, type Collaborator } from "@prisma/client";
 
-export const EventCollaborators = () => {
-  const [collaborators, setCollaborators] = React.useState<string[]>([]);
+export const EventCollaborators = ({
+  eventId,
+  isReadyToSubmit,
+}: EventSponsorsAndCollaboratorProps) => {
+  const [collaborators, setCollaborators] = React.useState<Collaborator[]>([]);
   const hasCollaborators = collaborators.length !== 0;
+  const mutation = api.collaborators.addCollaborators.useMutation();
+  const hasSubmitted = React.useRef(false);
 
-  const removeCollaborator = (sponsor: string) => {
-    setCollaborators((prevSponsors) =>
-      prevSponsors.filter((s) => s !== sponsor),
+  React.useEffect(() => {
+    if (isReadyToSubmit && !hasSubmitted.current && hasCollaborators) {
+      const collaboratorsToSubmit = collaborators.filter(
+        (collaborator) =>
+          collaborator.collaboratorsRequired !== 0 &&
+          collaborator.description.trim().length > 0,
+      );
+      try {
+        mutation.mutate(collaboratorsToSubmit);
+        hasSubmitted.current = true;
+      } catch (error) {
+        console.error("Error creating new sponsors", error);
+      }
+    }
+  }, [isReadyToSubmit, mutation, collaborators, hasCollaborators]);
+
+  const removeCollaborator = (collaboratorId: string) => {
+    const newCollaborators = collaborators.filter(
+      (c: Collaborator) => c.id !== collaboratorId,
     );
+    setCollaborators(newCollaborators);
+  };
+
+  const addCollaborators = () => {
+    const newCollaborator: Collaborator = {
+      id: uuid(),
+      eventRequestId: eventId,
+      serviceType: ServiceType.FOOD,
+      description: "",
+      collaboratorsRequired: 1,
+    };
+    setCollaborators([...collaborators, newCollaborator]);
+  };
+
+  const updateCollaborator = (collaborator: Collaborator) => {
+    const newCollaborators = collaborators.map((c) => {
+      if (c.id === collaborator.id) {
+        return collaborator;
+      }
+      return c;
+    });
+    setCollaborators(newCollaborators);
   };
 
   return (
@@ -26,15 +73,16 @@ export const EventCollaborators = () => {
           ? collaborators.map((collaborators) => {
               return (
                 <EventCollaboratorRow
-                  key={collaborators}
-                  id={collaborators}
+                  key={collaborators.id}
+                  id={collaborators.id}
                   removeCollaborator={removeCollaborator}
                 />
               );
             })
           : "No collaborators added, tap below to add a one"}
         <Button
-          onClick={() => setCollaborators(["hi", ...collaborators])}
+          type="button"
+          onClick={addCollaborators}
           id="submit-collaborators"
           className="w-40"
         >
