@@ -8,10 +8,10 @@ import {
 } from "~/components/ui/card";
 import { Button } from '~/components/ui/button';
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog"
-import { EventPageDetails } from "~/types/types";
+import { HomePageEventDetails } from "~/types/types";
 
 interface PublicEventData {
-    publicData: EventPageDetails
+    publicData: HomePageEventDetails
 }
 const SupportColumnPublicView: React.FC<PublicEventData> = ({publicData}) => {
     return (

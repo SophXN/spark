@@ -66,7 +66,7 @@ export interface RequestCardInfoArray {
   infoCards: RequestCardInfo[]
 }
 
-export interface EventPageDetails {
+export interface HomePageEventDetails {
   eventId: string,
   eventBannerImage?: string,
   organizerId: string,
@@ -74,15 +74,18 @@ export interface EventPageDetails {
   eventTitle: string,
   eventDescription: string,
   location: string,
-  time: string,
-  collaboratorServiceTypesNeeded: ServiceType[],
-  totalSponsors?: number,
-  totalSponsorsRemaining?: number,
-  totalAmountRaised?: number,
-  totalCollaborators?: number,
-  totalCollaboratorsRemain?: number,
-  totalCollaboratorRequests?: number,
-  percentageRaised?: number,
-  percentageCollaborators?: number,
+  eventDate: string,
+  totalSponsorsRemaining: number,
+  totalCollaboratorsRemain: number,
   isHost: boolean
+}
+
+export interface EventPageDetails extends HomePageEventDetails {
+  totalSponsors: number,
+  totalAmountRaised: number, // by sponsors
+  totalCollaborators: number,
+  collaboratorServiceTypesNeeded: ServiceType[],
+  totalCollaboratorRequests: number,
+  percentageRaised: number,
+  percentageCollaborators: number,
 }

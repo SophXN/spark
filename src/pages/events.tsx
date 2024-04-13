@@ -6,7 +6,6 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { Calendar } from "~/components/ui/calendar";
-import { EventType } from "../types/types"; // Import the enum from types.ts
 import { api } from "~/utils/api";
 import { uuid } from "uuidv4";
 
@@ -36,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { EventType } from "@prisma/client";
 
 const FormSchema = z.object({
   eventId: z.string(),

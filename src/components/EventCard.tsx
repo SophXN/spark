@@ -11,10 +11,10 @@ import {
 } from "~/components/ui/card";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
-import { EventPageDetails } from "~/types/types";
+import { HomePageEventDetails } from "~/types/types";
 
 interface EventCardProps {
-  eventCardDetails: EventPageDetails;
+  eventCardDetails: HomePageEventDetails;
 }
 
 export function EventCard({ eventCardDetails }: EventCardProps) {
@@ -34,7 +34,7 @@ export function EventCard({ eventCardDetails }: EventCardProps) {
         </div>
         <CardTitle>{eventCardDetails.eventTitle}</CardTitle>
         <CardDescription className="py-1 text-orange-400">
-          {eventCardDetails.time}
+          {eventCardDetails.eventDate}
         </CardDescription>
         <CardDescription>{eventCardDetails.location}</CardDescription>
         <div className="relative flex items-center space-x-1 pt-2">

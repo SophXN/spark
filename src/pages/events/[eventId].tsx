@@ -3,19 +3,10 @@ import Navbar from '~/components/Navbar';
 import React from 'react';
 import WhenAndWhere from '~/components/EventDetail/WhenAndWhere'
 import OrganizerCard from '~/components/EventDetail/OrganizerCard';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "~/components/ui/card";
-import { Button } from '~/components/ui/button';
 import Image from "next/image";
 import SupportColumnPublicView from '~/components/EventDetail/SupportColumnPublicView';
 import SupportColumnHostView from '~/components/EventDetail/SupportColumnHostView'
-import { EventPageDetails } from "~/types/types";
+import { type EventPageDetails } from "~/types/types";
 import { ServiceType } from "@prisma/client";
 
 const currentEvent: EventPageDetails =
@@ -27,7 +18,7 @@ const currentEvent: EventPageDetails =
         eventDescription: "Some description of the event", 
         eventBannerImage: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         location: "484 humboldt st", 
-        time: "20th March 2024", 
+        eventDate: "20th March 2024", 
         isHost: true, 
         percentageRaised: 30,
         percentageCollaborators: 50, 
@@ -51,7 +42,7 @@ const EventDetails: React.FC = () => {
             <Navbar/>
             <div className='py-3 px-3'>
                 <Image
-                    src={currentEvent.eventBannerImage as string}
+                    src={currentEvent.eventBannerImage!}
                     alt="Event"
                     className="h-[500px] w-full rounded object-cover"
                     width={1000}

@@ -1,21 +1,19 @@
 import React from "react";
-import Image from "next/image";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from 'next/router';
 import Navbar from '~/components/Navbar';
-import { type EventPageDetails } from "~/types/types";
-import { ServiceType } from "@prisma/client";
+import { type HomePageEventDetails } from "~/types/types";
 
 interface Props {
   logo: string;
 }
 
-const listOfEvents: EventPageDetails[] =
+const listOfEvents: HomePageEventDetails[] =
   [
-    { eventId: "1", collaboratorServiceTypesNeeded:[ServiceType.ART, ServiceType.DESIGN], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: true, percentageRaised: 30, percentageCollaborators: 50},
-    { eventId: "2", collaboratorServiceTypesNeeded:[ServiceType.FOOD, ServiceType.FOOD], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 3, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3},
-    { eventId: "3", collaboratorServiceTypesNeeded:[ServiceType.MUSIC, ServiceType.FOOD], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 6, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3},
-    { eventId: "4", collaboratorServiceTypesNeeded:[ServiceType.MUSIC, ServiceType.DESIGN], organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", time: "20th March 2024", isHost: false, totalSponsorsRemaining: 2, totalSponsors: 10, totalCollaborators: 6, totalCollaboratorsRemain: 3}, 
+    { eventId: "1", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: true, totalSponsorsRemaining: 5, totalCollaboratorsRemain: 3},
+    { eventId: "2", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 3, totalCollaboratorsRemain: 3},
+    { eventId: "3", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 6, totalCollaboratorsRemain: 3},
+    { eventId: "4", organizerId: "1982931", organizerCompanyName: "Landon Co", eventTitle: "Best event of the year", eventDescription: "Some description of the event", location: "484 humboldt st", eventDate: "20th March 2024", isHost: false, totalSponsorsRemaining: 2, totalCollaboratorsRemain: 3}, 
   ]
 
 const HomePage: React.FC<Props> = () => {

@@ -1,7 +1,7 @@
-import { EventPageDetails } from "~/types/types";
+import { HomePageEventDetails } from "~/types/types";
 
 interface LocationForEvent {
-    organizerData: EventPageDetails
+    organizerData: HomePageEventDetails
 }
 
 export default function OrganizerCard({organizerData} : LocationForEvent) {
