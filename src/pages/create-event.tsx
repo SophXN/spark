@@ -93,13 +93,13 @@ export default function Events() {
 
   return (
     <>
-      <div className="relative w-screen flex-1 space-y-8">
-      <Navbar/>
-        <div className="mx-auto max-w-4xl px-3">
-          <div className="flex w-full items-center mt-4">
+      <div className="relative w-screen h-screen flex-1 space-y-8">
+        <Navbar />
+        <div className="grid justify-items-center px-3">
+          <div className="flex max-w-4xl w-full items-center">
             <h3 className="text-2xl font-bold">Create your event</h3>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 max-w-4xl w-full">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
@@ -247,22 +247,25 @@ export default function Events() {
                   eventId={form.getValues("eventId")}
                   isReadyToSubmit={isReadyToSubmit}
                 />
-                <div className=" gap-3 border-t p-5">
-                  <Button variant="outline" onClick={() => console.log("yay")}>
-                    Cancel
-                  </Button>
-                </div>
-
-                <Button
-                  type="submit"
-                  onClick={() => handleCreateEvent(form.getValues("eventId"))}
-                >
-                  Create Event
-                </Button>
               </form>
             </Form>
           </div>
         </div>
+        <div className="flex gap-2 justify-end w-full sticky bottom-0 z-11 overflow-visible border-t border-gray-200 bg-white pt-2 pb-2 pr-4">
+          <Button type="button" variant="outline" onClick={() => console.log("yay")}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            onClick={() => handleCreateEvent(form.getValues("eventId"))}
+          >
+            Create Event
+          </Button>
+
+        </div>
+        {/* <footer className="flex items-end px-4 md:px-6 py-4 md:py-6">
+          <Button size="sm">Button</Button>
+        </footer> */}
       </div>
     </>
   );
