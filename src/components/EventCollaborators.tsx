@@ -63,13 +63,13 @@ export const EventCollaborators = ({
   };
 
   return (
-    <div className="grid w-full items-center gap-3">
+    <div className="grid w-full items-center gap-2">
       <Label>Collaborators</Label>
-      <Label className="text-xs font-normal text-gray-600">
+      <Label className="text-sm font-normal text-gray-600">
         Select as many types of collaborators needed for this event{" "}
       </Label>
 
-      <div className="flex max-w-screen-md flex-col space-y-3 rounded-lg border border-gray-300 p-4">
+      <div className="flex flex-col space-y-2 rounded-lg border border-gray-300 p-3">
         {hasCollaborators
           ? collaborators.map((collaborator) => {
               return (
@@ -82,12 +82,12 @@ export const EventCollaborators = ({
                 />
               );
             })
-          : "No collaborators added, tap below to add a one"}
+          : <span className="text-sm">No collaborators added, tap below to add a one.</span>}
         <Button
           type="button"
           onClick={addCollaborators}
           id="submit-collaborators"
-          className="w-40"
+          className="w-full sm:w-44"
         >
           <div className="mr-1">
             <PlusIcon />

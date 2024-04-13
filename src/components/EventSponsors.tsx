@@ -65,13 +65,13 @@ export const EventSponsors = ({
   };
 
   return (
-    <div className="grid w-full items-center gap-3">
+    <div className="grid w-full items-center gap-2">
       <Label id="sponsors">Sponsors</Label>
-      <Label className="text-xs font-normal text-gray-600">
+      <Label className="text-sm font-normal text-gray-600">
         Describe your tiers and how much each tier should pay
       </Label>
 
-      <div className="flex max-w-screen-md flex-col space-y-3 rounded-lg border border-gray-300 p-4">
+      <div className="flex flex-col space-y-2 rounded-lg border border-gray-300 p-3">
         {hasSponsors
           ? sponsors.map((sponsor) => {
               return (
@@ -84,13 +84,14 @@ export const EventSponsors = ({
                 />
               );
             })
-          : "No tiers added, tap below to add up to three tiers."}
+          : <span className="text-sm">No tiers added, tap below to add up to three tiers.</span>}
         <Button
           type="button"
           onClick={addSponsor}
           id="submit-sponsors"
           disabled={sponsors.length >= 3}
-          className="w-24"
+          size="sm"
+          className="w-full sm:w-28"
         >
           <div className="mr-1">
             <PlusIcon />
