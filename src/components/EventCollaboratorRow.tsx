@@ -48,7 +48,7 @@ export const EventCollaboratorRow = ({
             value={collaborator.description}
           />
         </div>
-        <div className="w-full flex-none sm:w-auto">
+        <div className="w-full flex-none sm:w-64">
           <Select>
             <SelectTrigger>
               <SelectValue
