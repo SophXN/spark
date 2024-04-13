@@ -18,19 +18,21 @@ export const EventSponsors = ({
   const hasSubmitted = React.useRef(false);
 
   React.useEffect(() => {
-    if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
-      const sponsorsToSubmit = sponsors.filter(
-        (sponsor) =>
-          sponsor.amountPerSponsor !== 0 &&
-          sponsor.description.trim().length > 0,
-      );
-      try {
-        mutation.mutate(sponsorsToSubmit);
-        hasSubmitted.current = true;
-      } catch (error) {
-        console.error("Error creating new sponsors", error);
+    setTimeout(() => {
+      if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
+        const sponsorsToSubmit = sponsors.filter(
+          (sponsor) =>
+            sponsor.amountPerSponsor !== 0 &&
+            sponsor.description.trim().length > 0,
+        );
+        try {
+          mutation.mutate(sponsorsToSubmit);
+          hasSubmitted.current = true;
+        } catch (error) {
+          console.error("Error creating new sponsors", error);
+        }
       }
-    }
+    }, 3000);
   }, [hasSponsors, isReadyToSubmit, mutation, sponsors]);
 
   const removeSponsor = (sponsorId: string) => {

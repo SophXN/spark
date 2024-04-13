@@ -30,4 +30,18 @@ export const eventsRouter = createTRPCRouter({
         },
       });
     }),
+  getEvent: publicProcedure.query(async ({ ctx, input: eventId }) => {
+    const event = await ctx.db.eventRequest.findUnique({
+      where: { id: eventId },
+    });
+    return event !== null;
+  }),
+  getEventById: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: eventId }) => {
+      const event = await ctx.db.eventRequest.findUnique({
+        where: { eventId: eventId },
+      });
+      return event;
+    }),
 });

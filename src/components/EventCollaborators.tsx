@@ -16,22 +16,23 @@ export const EventCollaborators = ({
   const hasCollaborators = collaborators.length !== 0;
   const mutation = api.collaborators.addCollaborators.useMutation();
   const hasSubmitted = React.useRef(false);
-
   React.useEffect(() => {
-    if (isReadyToSubmit && !hasSubmitted.current && hasCollaborators) {
-      const collaboratorsToSubmit = collaborators.filter(
-        (collaborator) =>
-          collaborator.collaboratorsRequired !== 0 &&
-          collaborator.description.trim().length > 0,
-      );
-      try {
-        mutation.mutate(collaboratorsToSubmit);
-        hasSubmitted.current = true;
-      } catch (error) {
-        console.error("Error creating new sponsors", error);
+    setTimeout(() => {
+      if (isReadyToSubmit && !hasSubmitted.current && hasCollaborators) {
+        const collaboratorsToSubmit = collaborators.filter(
+          (collaborator) =>
+            collaborator.collaboratorsRequired !== 0 &&
+            collaborator.description.trim().length > 0,
+        );
+        try {
+          mutation.mutate(collaboratorsToSubmit);
+          hasSubmitted.current = true;
+        } catch (error) {
+          console.error("Error creating new sponsors", error);
+        }
       }
-    }
-  }, [isReadyToSubmit, mutation, collaborators, hasCollaborators]);
+    }, 3000);
+  }, [isReadyToSubmit, mutation, collaborators, hasCollaborators, eventId]);
 
   const removeCollaborator = (collaboratorId: string) => {
     const newCollaborators = collaborators.filter(
@@ -70,12 +71,14 @@ export const EventCollaborators = ({
 
       <div className="flex max-w-screen-md flex-col space-y-3 rounded-lg border border-gray-300 p-4">
         {hasCollaborators
-          ? collaborators.map((collaborators) => {
+          ? collaborators.map((collaborator) => {
               return (
                 <EventCollaboratorRow
-                  key={collaborators.id}
-                  id={collaborators.id}
+                  id={collaborator.id}
+                  key={collaborator.id}
+                  collaborator={collaborator}
                   removeCollaborator={removeCollaborator}
+                  updateCollaborator={updateCollaborator}
                 />
               );
             })

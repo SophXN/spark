@@ -8,7 +8,7 @@ import { UploadIcon } from "@radix-ui/react-icons";
 import { Calendar } from "~/components/ui/calendar";
 import { api } from "~/utils/api";
 import { uuid } from "uuidv4";
-
+import { useRouter } from "next/router";
 import {
   Form,
   FormControl,
@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,7 +50,10 @@ const FormSchema = z.object({
 });
 
 export default function Events() {
+  const router = useRouter();
   const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
+  const mutation = api.events.createEvent.useMutation();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuid(),
@@ -63,8 +66,6 @@ export default function Events() {
     },
     resolver: zodResolver(FormSchema),
   });
-
-  const mutation = api.events.createEvent.useMutation();
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const params = {
@@ -82,6 +83,11 @@ export default function Events() {
     } catch (error) {
       console.error("Error submitting event form", error);
     }
+  };
+
+  const handleCreateEvent = (eventId: string) => {
+    setIsReadyToSubmit(true);
+    void router.push(`/events/${eventId}`);
   };
 
   return (
@@ -237,7 +243,10 @@ export default function Events() {
                 </Button>
               </div>
 
-              <Button type="submit" onClick={() => setIsReadyToSubmit(true)}>
+              <Button
+                type="submit"
+                onClick={() => handleCreateEvent(form.getValues("eventId"))}
+              >
                 Create Event
               </Button>
             </form>

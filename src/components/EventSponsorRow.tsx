@@ -35,7 +35,7 @@ export const EventSponsorRow = ({
     <div className="flex items-center justify-between gap-1" id={id}>
       <Input
         type="text"
-        id="tier-description"
+        id={`tier-description${id}`}
         placeholder="Tier Description"
         className="max-w-sm"
         onChange={(e) => updateSponsorProperty("description", e.target.value)}
@@ -43,7 +43,7 @@ export const EventSponsorRow = ({
       />
       <Input
         type="number"
-        id="tier-amount"
+        id={`amount-per-sponsor${id}`}
         placeholder="$0.00"
         className="w-24"
         onChange={(e) =>

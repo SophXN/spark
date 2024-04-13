@@ -141,7 +141,7 @@ model Sponsor {
 
 model Collaborator {
     id                    String                 @id @default(cuid())
-    eventRequest          EventRequest           @relation(fields: [eventRequestId], references: [id])
+    eventRequest          EventRequest           @relation(fields: [eventRequestId], references: [eventId])
     eventRequestId        String
     serviceType           ServiceType
     description           String

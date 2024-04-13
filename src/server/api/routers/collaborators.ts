@@ -2,7 +2,7 @@ import { type ServiceType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const CollaboratorsRouter = createTRPCRouter({
+export const collaboratorsRouter = createTRPCRouter({
   getCollaborators: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
