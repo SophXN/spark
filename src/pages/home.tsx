@@ -3,7 +3,7 @@ import Image from "next/image";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from 'next/router';
 import Navbar from '~/components/Navbar';
-import { EventPageDetails } from "~/types/types";
+import { type EventPageDetails } from "~/types/types";
 import { ServiceType } from "@prisma/client";
 
 interface Props {
@@ -21,10 +21,9 @@ const listOfEvents: EventPageDetails[] =
 const HomePage: React.FC<Props> = () => {
   const router = useRouter();
 
-  const handleEventClick = (eventId: string) => {
-    // Potentially some logic here
+  const handleEventClick = async (eventId: string) => {
     console.log(eventId)
-    router.push(`/events/${eventId}`);
+    await router.push(`/events/${eventId}`);
   };
 
   return (
@@ -35,7 +34,7 @@ const HomePage: React.FC<Props> = () => {
           <div className="my-2 text-2xl font-semibold">Events</div>
           <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {listOfEvents.map((event) =>
-            <div onClick={() => handleEventClick(event.eventId)}>
+            <div key={event.eventId} onClick={() => handleEventClick(event.eventId)}>
               <EventCard
                 key={event.eventId}
                 eventCardDetails={event}
