@@ -19,7 +19,7 @@ import {
 } from "~/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, set } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -115,14 +115,17 @@ export default function Events() {
     <>
       <div>
         <Navbar />
-        <div className="relative w-screen h-screen flex-1 space-y-8">
-          <div className="grid justify-items-center mt-4 mx-3">
-            <div className="w-full sm:max-w-4xl items-center">
+        <div className="relative h-screen w-screen flex-1 space-y-8">
+          <div className="mx-3 mt-4 grid justify-items-center">
+            <div className="w-full items-center sm:max-w-4xl">
               <h3 className="text-2xl font-bold">Create your event</h3>
             </div>
-            <div className="mt-4 max-w-4xl w-full">
+            <div className="mt-4 w-full max-w-4xl">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
                   <FormField
                     control={form.control}
                     name="title"
@@ -165,7 +168,9 @@ export default function Events() {
                         name="eventDate"
                         render={({ field }) => (
                           <FormItem className="flex flex-col">
-                            <FormLabel htmlFor="eventDate">Event Date</FormLabel>
+                            <FormLabel htmlFor="eventDate">
+                              Event Date
+                            </FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>
                                 <FormControl id="eventDate">
@@ -185,7 +190,10 @@ export default function Events() {
                                   </Button>
                                 </FormControl>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
                                 <Calendar
                                   mode="single"
                                   selected={field.value}
@@ -207,7 +215,9 @@ export default function Events() {
                         name="eventType"
                         render={({ ...field }) => (
                           <FormItem className="flex flex-col">
-                            <FormLabel htmlFor="eventType">Event Type</FormLabel>
+                            <FormLabel htmlFor="eventType">
+                              Event Type
+                            </FormLabel>
                             <Select {...field}>
                               <SelectTrigger
                                 id="eventType"
@@ -250,10 +260,15 @@ export default function Events() {
                   <div className="grid w-full max-w-screen-sm items-center gap-2">
                     <Label htmlFor="upload">Event Image</Label>
                     <Label className="text-sm font-normal text-gray-600">
-                      This will appear at the top of your event page and on the home
-                      page across our platform
+                      This will appear at the top of your event page and on the
+                      home page across our platform
                     </Label>
-                    <Button id="upload" type="button" variant="outline" className="w-24">
+                    <Button
+                      id="upload"
+                      type="button"
+                      variant="outline"
+                      className="w-24"
+                    >
                       <div className="mr-1">
                         <UploadIcon />
                       </div>
@@ -281,8 +296,19 @@ export default function Events() {
           >
             Cancel
           </Button>
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-            {EventCreationProgress.IDLE ? "Create Event" : "Creating Event..."}
+          <Button
+            type="submit"
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={eventCreationProgress !== EventCreationProgress.IDLE}
+          >
+            {eventCreationProgress === EventCreationProgress.IDLE ? (
+              "Create Event"
+            ) : (
+              <>
+                <Loader2 className="mr-1 h-2 w-2 animate-spin" />
+                Creating Event
+              </>
+            )}
           </Button>
         </div>
       </div>

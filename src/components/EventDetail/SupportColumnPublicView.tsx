@@ -25,8 +25,9 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   const { data: collaborators } =
     api.collaborators.getCollaborators.useQuery(eventId);
 
-  if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)
-    return null;
+  // TODO: check for sponsors + collab and render based on that
+  //   if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)
+  //     return null;
 
   // TODO: need to count the total number of sponsors and collaborators and subtract from the total required
   const totalSponsorsRemaining = sponsors?.reduce((acc, sponsor) => {
