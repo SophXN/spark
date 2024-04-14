@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
           alt="Logo"
           width={100}
           height={100}
-          className="ml-3 my-2"
+          className="ml-3 py-2"
         />
       </header>
   );

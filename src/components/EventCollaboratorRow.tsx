@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
 import { type Collaborator } from "@prisma/client";
 
 interface EventCollaboratorRowProps {
@@ -35,63 +35,70 @@ export const EventCollaboratorRow = ({
   };
 
   return (
-    <div className="flex items-center justify-between gap-1">
-      <Input
-        type="text"
-        id={id}
-        placeholder="Tier Description"
-        className="max-w-sm"
-        onChange={(e) =>
-          updateCollaboratorProperty("description", e.target.value)
-        }
-        value={collaborator.description}
-      />
+    <div className="flex flex-row gap-2">
+      <div className="flex flex-grow flex-wrap items-center gap-2">
+        <div className="w-full flex-1 md:w-full">
+          <Input
+            type="text"
+            id={id}
+            placeholder="Tier Description"
+            onChange={(e) =>
+              updateCollaboratorProperty("description", e.target.value)
+            }
+            value={collaborator.description}
+          />
+        </div>
+        <div className="w-full flex-none sm:w-64">
+          <Select>
+            <SelectTrigger>
+              <SelectValue
+                placeholder="Category"
+                defaultValue="1"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.target.value;
+                  updateCollaboratorProperty("serviceType", value);
+                }}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Food</SelectItem>
+              <SelectItem value="2">Music</SelectItem>
+              <SelectItem value="3">Event Space</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="w-full flex-1 sm:w-auto">
+          <Select>
+            <SelectTrigger>
+              <SelectValue
+                placeholder="Total number"
+                defaultValue="1"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.target.value;
+                  updateCollaboratorProperty(
+                    "collaboratorsRequired",
+                    parseInt(value),
+                  );
+                }}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
+              <SelectItem value="3">3</SelectItem>
+              <SelectItem value="4">4</SelectItem>
+              <SelectItem value="5">5</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-      <Select>
-        <SelectTrigger className="w-[180px] min-w-[30px]">
-          <SelectValue
-            placeholder="Category"
-            defaultValue="1"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = e.target.value;
-              updateCollaboratorProperty("serviceType", value);
-            }}
-          />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="1">Food</SelectItem>
-          <SelectItem value="2">Music</SelectItem>
-          <SelectItem value="3">Event Space</SelectItem>
-        </SelectContent>
-      </Select>
-      <Select>
-        <SelectTrigger className="w-[180px] min-w-[30px]">
-          <SelectValue
-            placeholder="Total number"
-            defaultValue="1"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = e.target.value;
-              updateCollaboratorProperty(
-                "collaboratorsRequired",
-                parseInt(value),
-              );
-            }}
-          />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="1">1</SelectItem>
-          <SelectItem value="2">2</SelectItem>
-          <SelectItem value="3">3</SelectItem>
-          <SelectItem value="4">4</SelectItem>
-          <SelectItem value="5">5</SelectItem>
-        </SelectContent>
-      </Select>
-      <Button
-        variant="ghost"
+      <Button className="flex-none"
+        variant="outline"
         size="icon"
         onClick={() => removeCollaborator(collaborator.id)}
       >
-        <Cross1Icon className="h-4 w-4" />
+        <Cross2Icon className="w-3 h-3" />
       </Button>
     </div>
   );
