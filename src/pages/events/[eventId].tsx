@@ -4,10 +4,10 @@ import React from "react";
 import EventLocationAndDate from "~/components/EventDetail/WhenAndWhere";
 import OrganizerCard from "~/components/EventDetail/OrganizerCard";
 import Image from "next/image";
-import SupportColumnPublicView from "~/components/EventDetail/SupportColumnPublicView";
-import SupportColumnHostView from "~/components/EventDetail/SupportColumnHostView";
+import { SupportColumnPublicView } from "~/components/EventDetail/SupportColumnPublicView";
+import { SupportColumnHostView } from "~/components/EventDetail/SupportColumnHostView";
 import { type EventPageDetails } from "~/types/types";
-import { type EventRequest, ServiceType, EventType } from "@prisma/client";
+import { ServiceType } from "@prisma/client";
 import { api } from "~/utils/api";
 import { format } from "date-fns";
 
@@ -81,10 +81,7 @@ const EventDetails: React.FC = () => {
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>
-              <SupportColumnPublicView
-                eventId={eventId as string}
-                publicData={currentEvent}
-              />
+              <SupportColumnPublicView eventId={eventId as string} />
               <SupportColumnHostView
                 eventId={eventId as string}
                 hostData={currentEvent}

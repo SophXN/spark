@@ -7,27 +7,36 @@ import {
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
-import { type HomePageEventDetails } from "~/types/types";
 import { api } from "~/utils/api";
 
 interface PublicEventData {
   eventId: string;
-  publicData: HomePageEventDetails;
 }
-const SupportColumnPublicView: React.FC<PublicEventData> = ({
-  publicData,
+export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   eventId,
 }) => {
   const { data: totalSponsors } =
     api.sponsors.getTotalSponsors.useQuery(eventId);
   const { data: sponsors } = api.sponsors.getSponsors.useQuery(eventId);
 
-  if (!sponsors || !totalSponsors) return null;
+  const { data: totalCollaborators } =
+    api.collaborators.getTotalCollaborators.useQuery(eventId);
+
+  const { data: collaborators } =
+    api.collaborators.getCollaborators.useQuery(eventId);
+
+  if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)
+    return null;
+
   const totalSponsorsRemaining =
     sponsors?.reduce((acc, sponsor) => {
       return acc + sponsor.sponsorsRequired;
     }, 0) - totalSponsors;
-  console.log(totalSponsorsRemaining);
+
+  const totalCollaboratorsRemaining =
+    collaborators?.reduce((acc, collaborator) => {
+      return acc + collaborator.collaboratorsRequired;
+    }, 0) - totalCollaborators;
 
   return (
     <div>
@@ -62,7 +71,7 @@ const SupportColumnPublicView: React.FC<PublicEventData> = ({
           <div className="flex flex-row justify-between space-y-0">
             <CardTitle className="text-xl font-bold">Collaborators</CardTitle>
             <CardTitle className="text-xl font-medium">
-              {publicData.totalCollaboratorsRemain} spots left
+              {totalCollaboratorsRemaining} spots left
             </CardTitle>
           </div>
           <p className="text-sm">
@@ -73,15 +82,13 @@ const SupportColumnPublicView: React.FC<PublicEventData> = ({
         <CardContent>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
-            <p className="text-sm font-bold">{publicData.totalCollaborators}</p>
+            <p className="text-sm font-bold">{totalCollaborators}</p>
           </div>
         </CardContent>
         <CardFooter>
-          <RequestCollaborationDialog></RequestCollaborationDialog>
+          <RequestCollaborationDialog />
         </CardFooter>
       </Card>
     </div>
   );
 };
-
-export default SupportColumnPublicView;

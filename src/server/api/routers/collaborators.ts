@@ -35,4 +35,13 @@ export const collaboratorsRouter = createTRPCRouter({
         })),
       });
     }),
+  getTotalCollaborators: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.collaborator.count({
+        where: {
+          eventRequestId: input,
+        },
+      });
+    }),
 });

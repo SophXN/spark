@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -10,20 +9,35 @@ import { Progress } from "../ui/progress";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
 import { type HomePageEventDetails } from "~/types/types";
+import { api } from "~/utils/api";
 
 interface HostEventData {
   eventId: string;
   hostData: HomePageEventDetails;
 }
 
-const SupportColumnHostView: React.FC<HostEventData> = ({ hostData }) => {
+export const SupportColumnHostView: React.FC<HostEventData> = ({
+  hostData,
+  eventId,
+}) => {
   const router = useRouter();
 
   const manageCollaborators = () => {
-    // Potentially some logic here
-    console.log(hostData.eventId);
-    router.push(`/manage/${hostData.eventId}`);
+    void router.push(`/manage/${eventId}`);
   };
+
+  const { data: totalCollaborators } =
+    api.collaborators.getTotalCollaborators.useQuery(eventId);
+
+  const { data: collaborators } =
+    api.collaborators.getCollaborators.useQuery(eventId);
+
+  if (!totalCollaborators || !collaborators) return null;
+
+  const totalCollaboratorsRemaining =
+    collaborators?.reduce((acc, collaborator) => {
+      return acc + collaborator.collaboratorsRequired;
+    }, 0) - totalCollaborators;
 
   return (
     <div>
@@ -59,7 +73,7 @@ const SupportColumnHostView: React.FC<HostEventData> = ({ hostData }) => {
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
             <p className="text-sm font-bold">
-              {hostData.totalCollaboratorsRemain}/{hostData.totalCollaborators}
+              {totalCollaboratorsRemaining}/{totalCollaborators}
             </p>
           </div>
           <div className="mt-2 flex flex-row items-center justify-between">
@@ -78,5 +92,3 @@ const SupportColumnHostView: React.FC<HostEventData> = ({ hostData }) => {
     </div>
   );
 };
-
-export default SupportColumnHostView;
