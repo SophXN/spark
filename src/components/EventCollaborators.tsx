@@ -13,7 +13,6 @@ export const EventCollaborators = ({
   isReadyToSubmit,
 }: EventSponsorsAndCollaboratorProps) => {
   const [collaborators, setCollaborators] = React.useState<Collaborator[]>([]);
-  console.log(collaborators);
   const hasCollaborators = collaborators.length !== 0;
   const mutation = api.collaborators.addCollaborators.useMutation();
   const hasSubmitted = React.useRef(false);

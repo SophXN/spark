@@ -9,7 +9,7 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
-import { type Collaborator } from "@prisma/client";
+import { ServiceType, type Collaborator } from "@prisma/client";
 
 interface EventCollaboratorRowProps {
   id: string;
@@ -58,9 +58,12 @@ export const EventCollaboratorRow = ({
               <SelectValue placeholder="Category" defaultValue="1" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Food</SelectItem>
-              <SelectItem value="2">Music</SelectItem>
-              <SelectItem value="3">Event Space</SelectItem>
+              <SelectItem value={ServiceType.FOOD}>Food</SelectItem>
+              <SelectItem value={ServiceType.MUSIC}>Music</SelectItem>
+              <SelectItem value={ServiceType.SPACE}>Event Space</SelectItem>
+              <SelectItem value={ServiceType.ART}>Art</SelectItem>
+              <SelectItem value={ServiceType.DESIGN}>Design</SelectItem>
+              <SelectItem value={ServiceType.OTHER}>Other</SelectItem>
             </SelectContent>
           </Select>
         </div>
