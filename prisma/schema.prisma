@@ -117,7 +117,7 @@ model EventRequest {
     id            String         @id @default(cuid())
     eventId       String         @unique
     requester     Company        @relation(fields: [requesterId], references: [id])
-    requesterId   String // foreign key to the company
+    requesterId   String
     title         String
     description   String
     eventDate     DateTime

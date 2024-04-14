@@ -28,15 +28,17 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)
     return null;
 
-  const totalSponsorsRemaining =
-    sponsors?.reduce((acc, sponsor) => {
-      return acc + sponsor.sponsorsRequired;
-    }, 0) - totalSponsors;
+  // TODO: need to count the total number of sponsors and collaborators and subtract from the total required
+  const totalSponsorsRemaining = sponsors?.reduce((acc, sponsor) => {
+    return acc + sponsor.sponsorsRequired;
+  }, 0);
 
-  const totalCollaboratorsRemaining =
-    collaborators?.reduce((acc, collaborator) => {
+  const totalCollaboratorsRemaining = collaborators?.reduce(
+    (acc, collaborator) => {
       return acc + collaborator.collaboratorsRequired;
-    }, 0) - totalCollaborators;
+    },
+    0,
+  );
 
   return (
     <div>

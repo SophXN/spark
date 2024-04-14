@@ -49,16 +49,13 @@ export const EventCollaboratorRow = ({
           />
         </div>
         <div className="w-full flex-none sm:w-64">
-          <Select>
+          <Select
+            onValueChange={(value) => {
+              updateCollaboratorProperty("serviceType", value);
+            }}
+          >
             <SelectTrigger>
-              <SelectValue
-                placeholder="Category"
-                defaultValue="1"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  updateCollaboratorProperty("serviceType", value);
-                }}
-              />
+              <SelectValue placeholder="Category" defaultValue="1" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">Food</SelectItem>
@@ -68,19 +65,17 @@ export const EventCollaboratorRow = ({
           </Select>
         </div>
         <div className="w-full flex-1 sm:w-auto">
-          <Select>
+          <Select
+            defaultValue="1"
+            onValueChange={(value) => {
+              updateCollaboratorProperty(
+                "collaboratorsRequired",
+                parseInt(value),
+              );
+            }}
+          >
             <SelectTrigger>
-              <SelectValue
-                placeholder="Total number"
-                defaultValue="1"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  updateCollaboratorProperty(
-                    "collaboratorsRequired",
-                    parseInt(value),
-                  );
-                }}
-              />
+              <SelectValue placeholder="Total number" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">1</SelectItem>
@@ -93,12 +88,13 @@ export const EventCollaboratorRow = ({
         </div>
       </div>
 
-      <Button className="flex-none"
+      <Button
+        className="flex-none"
         variant="outline"
         size="icon"
         onClick={() => removeCollaborator(collaborator.id)}
       >
-        <Cross2Icon className="w-3 h-3" />
+        <Cross2Icon className="h-3 w-3" />
       </Button>
     </div>
   );

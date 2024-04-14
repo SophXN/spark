@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { EventSponsorRow } from "./EventSponsorRow";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Tier, type Sponsor } from "@prisma/client";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 import { api } from "~/utils/api";
 import { type EventSponsorsAndCollaboratorProps } from "~/types/types";
 
@@ -18,21 +18,19 @@ export const EventSponsors = ({
   const hasSubmitted = React.useRef(false);
 
   React.useEffect(() => {
-    setTimeout(() => {
-      if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
-        const sponsorsToSubmit = sponsors.filter(
-          (sponsor) =>
-            sponsor.amountPerSponsor !== 0 &&
-            sponsor.description.trim().length > 0,
-        );
-        try {
-          mutation.mutate(sponsorsToSubmit);
-          hasSubmitted.current = true;
-        } catch (error) {
-          console.error("Error creating new sponsors", error);
-        }
+    if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
+      const sponsorsToSubmit = sponsors.filter(
+        (sponsor) =>
+          sponsor.amountPerSponsor !== 0 &&
+          sponsor.description.trim().length > 0,
+      );
+      try {
+        mutation.mutate(sponsorsToSubmit);
+        hasSubmitted.current = true;
+      } catch (error) {
+        console.error("Error creating new sponsors", error);
       }
-    }, 3000);
+    }
   }, [hasSponsors, isReadyToSubmit, mutation, sponsors]);
 
   const removeSponsor = (sponsorId: string) => {
@@ -44,7 +42,7 @@ export const EventSponsors = ({
     const tier = Object.keys(Tier)[sponsors.length] as Tier;
 
     const newSponsor: Sponsor = {
-      id: uuid(),
+      id: uuidv4(),
       eventRequestId: eventId,
       tier: tier,
       description: "",
@@ -72,19 +70,23 @@ export const EventSponsors = ({
       </Label>
 
       <div className="flex flex-col space-y-2 rounded-lg border border-gray-300 p-3">
-        {hasSponsors
-          ? sponsors.map((sponsor) => {
-              return (
-                <EventSponsorRow
-                  id={sponsor.id}
-                  key={sponsor.id}
-                  sponsor={sponsor}
-                  removeSponsor={removeSponsor}
-                  updateSponsor={updateSponsor}
-                />
-              );
-            })
-          : <span className="text-sm">No tiers added, tap below to add up to three tiers.</span>}
+        {hasSponsors ? (
+          sponsors.map((sponsor) => {
+            return (
+              <EventSponsorRow
+                id={sponsor.id}
+                key={sponsor.id}
+                sponsor={sponsor}
+                removeSponsor={removeSponsor}
+                updateSponsor={updateSponsor}
+              />
+            );
+          })
+        ) : (
+          <span className="text-sm">
+            No tiers added, tap below to add up to three tiers.
+          </span>
+        )}
         <Button
           type="button"
           onClick={addSponsor}

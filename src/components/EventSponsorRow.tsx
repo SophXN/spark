@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
-import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import { type Sponsor } from "@prisma/client";
 
 interface EventSponsorRowProps {
@@ -24,7 +24,6 @@ export const EventSponsorRow = ({
   removeSponsor,
   updateSponsor,
 }: EventSponsorRowProps) => {
-
   const updateSponsorProperty = (property: string, value: string | number) => {
     updateSponsor({
       ...sponsor,
@@ -40,34 +39,35 @@ export const EventSponsorRow = ({
             type="text"
             id={`tier-description${id}`}
             placeholder="Tier Description"
-            onChange={(e) => updateSponsorProperty("description", e.target.value)}
+            onChange={(e) =>
+              updateSponsorProperty("description", e.target.value)
+            }
             value={sponsor.description}
           />
         </div>
         <div className="w-full flex-none sm:w-auto">
           <Input
+            prefix="$"
             type="number"
             id={`amount-per-sponsor${id}`}
-            placeholder="$0.00"
-            onChange={(e) =>
-              updateSponsorProperty("amountPerSponsor", parseInt(e.target.value))
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              updateSponsorProperty(
+                "amountPerSponsor",
+                parseInt(e.target.value),
+              )
             }
             value={sponsor.amountPerSponsor}
           />
         </div>
         <div className="w-full flex-1 sm:w-auto">
-          <Select>
+          <Select
+            defaultValue="1"
+            onValueChange={(value) =>
+              updateSponsorProperty("sponsorsRequired", parseInt(value))
+            }
+          >
             <SelectTrigger>
-              <SelectValue
-                placeholder="Total number"
-                defaultValue="1"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  if (!isNaN(parseInt(value))) {
-                    updateSponsorProperty("sponsorsRequired", parseInt(value));
-                  }
-                }}
-              />
+              <SelectValue placeholder="Total number" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">1</SelectItem>
@@ -80,12 +80,13 @@ export const EventSponsorRow = ({
         </div>
       </div>
 
-      <Button className="flex-none"
+      <Button
+        className="flex-none"
         variant="outline"
         size="icon"
         onClick={() => removeSponsor(sponsor.id)}
       >
-        <Cross2Icon className="w-3 h-3" />
+        <Cross2Icon className="h-3 w-3" />
       </Button>
     </div>
   );

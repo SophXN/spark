@@ -7,7 +7,7 @@ import { Label } from "~/components/ui/label";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { Calendar } from "~/components/ui/calendar";
 import { api } from "~/utils/api";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import {
   Form,
@@ -50,14 +50,25 @@ const FormSchema = z.object({
   eventLocation: z.string(),
 });
 
+enum EventCreationProgress {
+  IDLE = "IDLE",
+  IN_PROGRESS = "IN_PROGRESS",
+  SUCCESS = "SUCCESS",
+}
+
 export default function Events() {
   const router = useRouter();
   const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
-  const mutation = api.events.createEvent.useMutation();
-
+  const [eventCreationProgress, setEventCreationProgress] =
+    React.useState<EventCreationProgress>(EventCreationProgress.IDLE);
+  const mutation = api.events.createEvent.useMutation({
+    onSuccess: () => {
+      setEventCreationProgress(EventCreationProgress.SUCCESS);
+    },
+  });
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
-      eventId: uuid(),
+      eventId: uuidv4(),
       requesterId: "235khf8745",
       title: "",
       description: "",
@@ -80,32 +91,40 @@ export default function Events() {
       eventType: data.eventType,
     };
     try {
+      setEventCreationProgress(EventCreationProgress.IN_PROGRESS);
       mutation.mutate(params);
     } catch (error) {
       console.error("Error submitting event form", error);
     }
   };
 
-  const handleCreateEvent = (eventId: string) => {
-    setIsReadyToSubmit(true);
-    void router.push(`/events/${eventId}`);
-  };
+  React.useEffect(() => {
+    if (eventCreationProgress === EventCreationProgress.SUCCESS) {
+      setIsReadyToSubmit(true);
+      setTimeout(() => {
+        void router.push(`/events/${form.getValues("eventId")}`);
+      }, 3000);
+    }
+  }, [eventCreationProgress, form, router]);
 
   const handleCancelEvent = () => {
     void router.push("/home");
-  }
+  };
 
   return (
     <>
-      <div className="relative w-screen h-screen flex-1 space-y-8">
+      <div className="relative h-screen w-screen flex-1 space-y-8">
         <Navbar />
         <div className="grid justify-items-center px-3">
-          <div className="flex max-w-4xl w-full items-center">
+          <div className="flex w-full max-w-4xl items-center">
             <h3 className="text-2xl font-bold">Create your event</h3>
           </div>
-          <div className="mt-4 max-w-4xl w-full">
+          <div className="mt-4 w-full max-w-4xl">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
                 <FormField
                   control={form.control}
                   name="title"
@@ -168,7 +187,10 @@ export default function Events() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -233,10 +255,15 @@ export default function Events() {
                 <div className="grid w-full max-w-screen-sm items-center gap-2">
                   <Label htmlFor="upload">Event Image</Label>
                   <Label className="text-sm font-normal text-gray-600">
-                    This will appear at the top of your event page and on the home
-                    page across our platform
+                    This will appear at the top of your event page and on the
+                    home page across our platform
                   </Label>
-                  <Button id="upload" type="button" variant="outline" className="w-24">
+                  <Button
+                    id="upload"
+                    type="button"
+                    variant="outline"
+                    className="w-24"
+                  >
                     <div className="mr-1">
                       <UploadIcon />
                     </div>
@@ -255,15 +282,16 @@ export default function Events() {
             </Form>
           </div>
         </div>
-        <div className="flex gap-2 justify-end w-full sticky bottom-0 z-11 overflow-visible border-t border-gray-200 bg-white pt-2 pb-2 pr-4">
-          <Button type="button" onClick={() => handleCancelEvent()} variant="outline">
+        <div className="z-11 sticky bottom-0 flex w-full justify-end gap-2 overflow-visible border-t border-gray-200 bg-white pb-2 pr-4 pt-2">
+          <Button
+            type="button"
+            onClick={() => handleCancelEvent()}
+            variant="outline"
+          >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            onClick={() => handleCreateEvent(form.getValues("eventId"))}
-          >
-            Create Event
+          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+            {EventCreationProgress.IDLE ? "Create Event" : "Creating Event..."}
           </Button>
         </div>
       </div>
