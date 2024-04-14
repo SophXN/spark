@@ -32,12 +32,11 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({
   const { data: collaborators } =
     api.collaborators.getCollaborators.useQuery(eventId);
 
-  if (!totalCollaborators || !collaborators) return null;
-
-  const totalCollaboratorsRemaining =
-    collaborators?.reduce((acc, collaborator) => {
-      return acc + collaborator.collaboratorsRequired;
-    }, 0) - totalCollaborators;
+  const totalCollaboratorsRemaining = collaborators
+    ? collaborators?.reduce((acc, collaborator) => {
+        return acc + collaborator.collaboratorsRequired;
+      }, 0)
+    : 0;
 
   return (
     <div>
