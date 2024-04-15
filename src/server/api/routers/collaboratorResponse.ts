@@ -1,4 +1,4 @@
-import { CollaboratorResponseStatus } from "@prisma/client";
+import { CollaboratorResponseStatus, ServiceType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -31,4 +31,30 @@ export const collaboratorResponseRouter = createTRPCRouter({
         },
       });
     }),
+  createCollaboratorResponse: publicProcedure
+    .input(
+      z.object({
+        collaboratorId: z.string(),
+        eventRequestId: z.string(),
+        responderId: z.string(),
+        status: z.nativeEnum(CollaboratorResponseStatus),  // Assuming CollaboratorResponseStatus is an enum
+        responseMessage: z.string().optional(),
+        respondedOn: z.date(),
+        serviceType: z.nativeEnum(ServiceType)
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const newEvent = await ctx.db.collaboratorResponse.create({
+        data: {
+            collaboratorId: input.collaboratorId,
+            eventRequestId: input.eventRequestId,
+            responderId: input.responderId,
+            status: input.status,
+            responseMessage: input.responseMessage,
+            respondedOn: input.respondedOn,
+            serviceType: input.serviceType
+          },
+        });
+        return newEvent;
+      }),
 });

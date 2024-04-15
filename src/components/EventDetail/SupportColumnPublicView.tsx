@@ -17,26 +17,38 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   eventDetails,
 }) => {
 
-  const totalSponsors = eventDetails._count.sponsors;
-  const totalCollaborators = eventDetails._count.collaborators;
-  const sponsors = eventDetails.sponsors;
-  const collaborators = eventDetails.collaborators;
+  let collaboratorsExist: boolean = false;
+  let sponsorsExists: boolean = false;
+  let totalCollaboratorsRequired: number = 0;
+  let totalCollaboratorsRemaining: number = 0;
+  let totalSponsorsNeeded: number = 0;
+  let totalSponsors: number = 0;
+  let sponsorSpacesLeft: number = 0;
+  let totalSponsorsRemaining: number = 0;
+  const countOfCollaboratorResponses = eventDetails.collaboratorsResponses?.length ?? 0;
+  const acceptedCollaboratorResponsesCount = eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => { return collaborator.status === "ACCEPTED" ? acc + 1 : acc }, 0) ?? 0
 
-  // TODO: check for sponsors + collab and render based on that
-  //   if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)
-  //     return null;
+  if (eventDetails.collaborators.length > 0) {
+    collaboratorsExist = true;
+    totalCollaboratorsRequired = eventDetails.collaborators
+      ? eventDetails.collaborators?.reduce((acc, collaborator) => {
+        return acc + collaborator.collaboratorsRequired;
+      }, 0)
+      : 0;
+    totalCollaboratorsRemaining = totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
+  }
 
-  // TODO: need to count the total number of sponsors and collaborators and subtract from the total required
-  const totalSponsorsRemaining = sponsors?.reduce((acc, sponsor) => {
-    return acc + sponsor.sponsorsRequired;
-  }, 0);
+  // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
 
-  const totalCollaboratorsRemaining = collaborators?.reduce(
-    (acc, collaborator) => {
-      return acc + collaborator.collaboratorsRequired;
-    },
-    0,
-  );
+  if (eventDetails.sponsors.length > 0) {
+    sponsorsExists = true;
+    totalSponsorsNeeded = eventDetails.sponsors
+      ? eventDetails.sponsors?.reduce((acc, sponsor) => {
+        return acc + sponsor.sponsorsRequired;
+      }, 0)
+      : 0;
+      totalSponsorsRemaining = totalSponsorsNeeded - 0;
+  }
 
   return (
     <div>
@@ -82,7 +94,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
         <CardContent>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
-            <p className="text-sm font-bold">{totalCollaborators}</p>
+            <p className="text-sm font-bold">{acceptedCollaboratorResponsesCount}</p>
           </div>
         </CardContent>
         <CardFooter>

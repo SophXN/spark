@@ -1,7 +1,6 @@
-import { EventType } from "@prisma/client";
+import { EventType, CollaboratorResponseStatus } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { HomePageResponse } from "~/types/types";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -37,7 +36,7 @@ export const eventsRouter = createTRPCRouter({
     });
     return event !== null;
   }),
-  getEventById: publicProcedure
+  getEventPageDetails: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: eventId }) => {
       const event = await ctx.db.eventRequest.findUnique({
@@ -46,24 +45,28 @@ export const eventsRouter = createTRPCRouter({
           sponsors: true,
           collaborators: true,
           requester: true,
-          _count: {
-            select: { sponsors: true , collaborators: true}
-          }
+          collaboratorsResponses: true,
         },
       });
       return event;
     }),
-    getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
-      const events = await ctx.db.eventRequest.findMany({
-        include: {
-          sponsors: true,
-          collaborators: true,
-          requester: true,
-          _count: {
-            select: { sponsors: true , collaborators: true}
+  getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
+    const events = await ctx.db.eventRequest.findMany({
+      include: {
+        sponsors: true,
+        collaborators: true,
+        requester: true,
+        _count: {
+          select: {
+            collaboratorsResponses: {
+              where: {
+                status: CollaboratorResponseStatus.ACCEPTED
+              }
+            }
           }
-        },
-      });
-      return events;
-    })
+        }
+      },
+    });
+    return events;
+  })
 });

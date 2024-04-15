@@ -1,4 +1,4 @@
-import { type ServiceType, type EventRequest, type Collaborator, type Sponsor, type Company } from "@prisma/client";
+import { type ServiceType, type EventRequest, type Collaborator, type Sponsor, type Company, type CollaboratorResponse } from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
   eventId: string;
@@ -66,37 +66,12 @@ export interface RequestCardInfoArray {
   infoCards: RequestCardInfo[]
 }
 
-export interface HomePageEventDetails {
-  eventId: string,
-  eventBannerImage?: string,
-  organizerId: string,
-  organizerCompanyName: string,
-  eventTitle: string,
-  eventDescription: string,
-  location: string,
-  eventDate: string,
-  totalSponsorsNeeded: number,
-  totalCollaboratorsNeeded: number,
-  totalSponsorsRemaining: number,
-  totalCollaboratorsRemain: number,
-}
-
-export interface EventPageDetails extends HomePageEventDetails {
-  totalSponsors: number,
-  totalAmountRaised: number, // by sponsors
-  totalCollaborators: number,
-  collaboratorServiceTypesNeeded: ServiceType[],
-  totalCollaboratorRequests: number,
-  percentageRaised: number,
-  percentageCollaborators: number,
-}
-
 export type HomePageResponse = EventRequest & {
-  _count: {
-    sponsors: number,
-    collaborators: number
+  _count?: {
+    collaboratorsResponses: number
   },
   collaborators: Collaborator[],
+  collaboratorsResponses?: CollaboratorResponse[],
   sponsors: Sponsor[],
   requester: Company
 }

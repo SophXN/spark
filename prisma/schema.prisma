@@ -169,4 +169,5 @@ model CollaboratorResponse {
     status          CollaboratorResponseStatus @default(PENDING)
     responseMessage String?
     respondedOn     DateTime
+    serviceType     ServiceType
 }

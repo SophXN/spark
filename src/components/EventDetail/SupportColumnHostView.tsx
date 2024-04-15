@@ -19,28 +19,38 @@ interface HostEventData {
 export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails }) => {
   const router = useRouter();
 
+  let collaboratorsExist: boolean = false;
+  let sponsorsExists: boolean = false;
+  let totalCollaboratorsRequired: number = 0;
+  let totalCollaboratorsRemaining: number = 0;
+  let totalSponsorsNeeded: number = 0;
+  let sponsorSpacesLeft: number = 0;
+  const countOfCollaboratorResponses = eventDetails.collaboratorsResponses?.length ?? 0;
+  const acceptedCollaboratorResponsesCount = eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => { return collaborator.status === "ACCEPTED" ? acc + 1 : acc }, 0) ?? 0
+
+  if (eventDetails.collaborators.length > 0) {
+    collaboratorsExist = true;
+    totalCollaboratorsRequired = eventDetails.collaborators
+      ? eventDetails.collaborators?.reduce((acc, collaborator) => {
+        return acc + collaborator.collaboratorsRequired;
+      }, 0)
+      : 0;
+    totalCollaboratorsRemaining = totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
+  }
+
+  // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
+
+  if (eventDetails.sponsors.length > 0) {
+    sponsorsExists = true;
+  }
+
   const manageCollaborators = () => {
     void router.push(`/manage/${eventDetails.eventId}`);
   };
 
-  const { data: totalApprovedCollaborators } =
-    api.collaboratorResponse.getCountOfApprovedCollaboratorResponses.useQuery(
-      eventDetails.eventId,
-    );
-
-  const { data: countOfCollaboratorResponses } =
-    api.collaboratorResponse.getCountOfCollaboratorResponses.useQuery(eventDetails.eventId);
-
-
-  const totalCollaboratorsRemaining = eventDetails.collaborators
-    ? eventDetails.collaborators?.reduce((acc, collaborator) => {
-        return acc + collaborator.collaboratorsRequired;
-      }, 0)
-    : 0;
-
   return (
     <div>
-      <Card className="mt-2">
+      {sponsorsExists ? <Card className="mt-2">
         <CardHeader>
           <CardTitle className="mb-1 text-xl font-bold">Sponsors</CardTitle>
           <Progress
@@ -57,8 +67,8 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails })
         <CardFooter>
           <Button className="w-full">View Sponsors</Button>
         </CardFooter>
-      </Card>
-      <Card className="mt-2">
+      </Card> : <div />}
+      {collaboratorsExist ? <Card className="mt-2">
         <CardHeader>
           <CardTitle className="mb-1 text-xl font-bold">
             Collaborators
@@ -66,7 +76,7 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails })
           <Progress
             className="h-1"
             value={
-              ((totalApprovedCollaborators ?? 0) /
+              ((acceptedCollaboratorResponsesCount ?? 0) /
                 totalCollaboratorsRemaining) *
               100
             }
@@ -76,11 +86,11 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails })
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
             <p className="text-sm font-bold">
-              {totalApprovedCollaborators ?? 0}/{totalCollaboratorsRemaining}
+              {acceptedCollaboratorResponsesCount ?? 0}/{totalCollaboratorsRequired}
             </p>
           </div>
           <div className="mt-2 flex flex-row items-center justify-between">
-            <p className="text-sm">Total requests</p>
+            <p className="text-sm">Total responses</p>
             <p className="text-sm font-bold">{countOfCollaboratorResponses}</p>
           </div>
         </CardContent>
@@ -89,7 +99,7 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails })
             Manage Collaborators
           </Button>
         </CardFooter>
-      </Card>
+      </Card> : <div />}
     </div>
   );
 };

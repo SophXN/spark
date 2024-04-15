@@ -28,6 +28,8 @@ const HomePage: React.FC<Props> = () => {
 
   if (!eventData) return <div/>;
 
+  console.log(eventData);
+
   return (
     <div>
       <Navbar></Navbar>
