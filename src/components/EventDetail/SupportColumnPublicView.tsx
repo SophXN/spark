@@ -96,6 +96,10 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
             <p className="text-sm">Total Collaborators</p>
             <p className="text-sm font-bold">{acceptedCollaboratorResponsesCount}</p>
           </div>
+          <div className="mt-2 flex flex-row items-center justify-between">
+            <p className="text-sm">Total Responses</p>
+            <p className="text-sm font-bold">{countOfCollaboratorResponses}</p>
+          </div>
         </CardContent>
         <CardFooter>
           <RequestCollaborationDialog eventDetails={eventDetails} />

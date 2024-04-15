@@ -84,7 +84,6 @@ export default function RequestCollaborationDialog({ eventDetails }: PublicEvent
             });
           } catch (error) {
             if (error instanceof z.ZodError) {
-              // Transform Zod errors to a more friendly format
               console.log(error);
             }
           }
