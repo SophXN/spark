@@ -59,7 +59,6 @@ export default function RequestCollaborationDialog() {
         // })
     }
 
-
     return (
         <Dialog>
             <DialogTrigger asChild>

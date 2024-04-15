@@ -42,10 +42,18 @@ export const eventsRouter = createTRPCRouter({
     .query(async ({ ctx, input: eventId }) => {
       const event = await ctx.db.eventRequest.findUnique({
         where: { eventId: eventId },
+        include: {
+          sponsors: true,
+          collaborators: true,
+          requester: true,
+          _count: {
+            select: { sponsors: true , collaborators: true}
+          }
+        },
       });
       return event;
     }),
-    getAllEvents: publicProcedure.query(async ({ ctx }) => {
+    getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
       const events = await ctx.db.eventRequest.findMany({
         include: {
           sponsors: true,

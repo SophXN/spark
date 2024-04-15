@@ -26,9 +26,7 @@ const HomePage: React.FC<Props> = () => {
     void router.push(`/create-event`);
   }
 
-  const { data: eventData, isLoading, error } = api.events.getAllEvents.useQuery();
-
-  console.log(eventData);
+  const { data: eventData, isLoading, error } = api.events.getHomePageEvents.useQuery();
 
   if (!eventData) return <div/>;
 
