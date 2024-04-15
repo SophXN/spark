@@ -1,12 +1,13 @@
 import { api } from "~/utils/api";
+import { EventRequest } from "@prisma/client";
 
 interface OrganizerCardProps {
-  eventCompanyId: string;
+  eventDetails: EventRequest;
 }
 
-export default function OrganizerCard({ eventCompanyId }: OrganizerCardProps) {
+export default function OrganizerCard({ eventDetails }: OrganizerCardProps) {
   const { data: organizerData } =
-    api.company.getCompany.useQuery(eventCompanyId);
+    api.company.getCompany.useQuery(eventDetails.requester.id);
 
   if (!organizerData) return "Loading...";
   console.log(organizerData);

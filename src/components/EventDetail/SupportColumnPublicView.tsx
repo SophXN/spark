@@ -8,22 +8,19 @@ import {
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
 import { api } from "~/utils/api";
+import { EventRequest } from "@prisma/client";
 
 interface PublicEventData {
-  eventId: string;
+  eventDetails: EventRequest;
 }
 export const SupportColumnPublicView: React.FC<PublicEventData> = ({
-  eventId,
+  eventDetails,
 }) => {
-  const { data: totalSponsors } =
-    api.sponsors.getTotalSponsors.useQuery(eventId);
-  const { data: sponsors } = api.sponsors.getSponsors.useQuery(eventId);
 
-  const { data: totalCollaborators } =
-    api.collaborators.getTotalCollaborators.useQuery(eventId);
-
-  const { data: collaborators } =
-    api.collaborators.getCollaborators.useQuery(eventId);
+  const totalSponsors = eventDetails._count.sponsors;
+  const totalCollaborators = eventDetails._count.collaborators;
+  const sponsors = eventDetails.sponsors;
+  const collaborators = eventDetails.collaborators;
 
   // TODO: check for sponsors + collab and render based on that
   //   if (!sponsors || !totalSponsors || !totalCollaborators || !collaborators)

@@ -75,9 +75,10 @@ export interface HomePageEventDetails {
   eventDescription: string,
   location: string,
   eventDate: string,
+  totalSponsorsNeeded: number,
+  totalCollaboratorsNeeded: number,
   totalSponsorsRemaining: number,
   totalCollaboratorsRemain: number,
-  isHost: boolean
 }
 
 export interface EventPageDetails extends HomePageEventDetails {

@@ -13,7 +13,7 @@ const EventDetails: React.FC = () => {
   const router = useRouter();
   const { eventId } = router.query; // Access the dynamic segment
 
-  const { data: eventData } = api.events.getEventById.useQuery(
+  const { data: eventData, isLoading, error } = api.events.getEventById.useQuery(
     eventId as string,
   );
 
@@ -21,6 +21,8 @@ const EventDetails: React.FC = () => {
   const formattedDate = format(eventData?.eventDate, "MMMM do, yyyy");
 
   const eventCompanyId = eventData?.requesterId;
+
+  console.log(eventData)
 
   return (
     <div>
@@ -51,14 +53,14 @@ const EventDetails: React.FC = () => {
               <h2 className="mt-2 scroll-m-20 text-xl font-bold tracking-tight">
                 Organized by
               </h2>
-              <OrganizerCard eventCompanyId={eventCompanyId} />
+              <OrganizerCard eventDetails={eventData} />
             </main>
             <div className="sticky mt-2 w-full xl:mt-0 xl:block xl:w-96">
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>
-              <SupportColumnPublicView eventId={eventId as string} />
-              <SupportColumnHostView eventId={eventId as string} />
+              <SupportColumnPublicView eventDetails={eventData} />
+              <SupportColumnHostView eventDetails={eventData} />
             </div>
           </div>
         </div>

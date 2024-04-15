@@ -9,31 +9,30 @@ import { Progress } from "../ui/progress";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import { EventRequest } from "@prisma/client";
 
 interface HostEventData {
-  eventId: string;
+  eventDetails: EventRequest;
 }
 
-export const SupportColumnHostView: React.FC<HostEventData> = ({ eventId }) => {
+export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails }) => {
   const router = useRouter();
 
   const manageCollaborators = () => {
-    void router.push(`/manage/${eventId}`);
+    void router.push(`/manage/${eventDetails.eventId}`);
   };
 
   const { data: totalApprovedCollaborators } =
     api.collaboratorResponse.getCountOfApprovedCollaboratorResponses.useQuery(
-      eventId,
+      eventDetails.eventId,
     );
 
   const { data: countOfCollaboratorResponses } =
-    api.collaboratorResponse.getCountOfCollaboratorResponses.useQuery(eventId);
+    api.collaboratorResponse.getCountOfCollaboratorResponses.useQuery(eventDetails.eventId);
 
-  const { data: collaborators } =
-    api.collaborators.getCollaborators.useQuery(eventId);
 
-  const totalCollaboratorsRemaining = collaborators
-    ? collaborators?.reduce((acc, collaborator) => {
+  const totalCollaboratorsRemaining = eventDetails.collaborators
+    ? eventDetails.collaborators?.reduce((acc, collaborator) => {
         return acc + collaborator.collaboratorsRequired;
       }, 0)
     : 0;
@@ -76,7 +75,7 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventId }) => {
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
             <p className="text-sm font-bold">
-              {totalApprovedCollaborators}/{totalCollaboratorsRemaining}
+              {totalApprovedCollaborators ?? 0}/{totalCollaboratorsRemaining}
             </p>
           </div>
           <div className="mt-2 flex flex-row items-center justify-between">
