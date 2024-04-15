@@ -47,23 +47,23 @@ export const eventsRouter = createTRPCRouter({
           collaborators: true,
           requester: true,
           _count: {
-            select: { sponsors: true , collaborators: true}
-          }
+            select: { sponsors: true, collaborators: true },
+          },
         },
       });
       return event;
     }),
-    getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
-      const events = await ctx.db.eventRequest.findMany({
-        include: {
-          sponsors: true,
-          collaborators: true,
-          requester: true,
-          _count: {
-            select: { sponsors: true , collaborators: true}
-          }
+  getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
+    const events = await ctx.db.eventRequest.findMany({
+      include: {
+        sponsors: true,
+        collaborators: true,
+        requester: true,
+        _count: {
+          select: { sponsors: true, collaborators: true },
         },
-      })
-      return events;
-    })
+      },
+    });
+    return events;
+  }),
 });
