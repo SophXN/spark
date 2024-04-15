@@ -7,12 +7,12 @@ import {
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
-import { api } from "~/utils/api";
-import { EventRequest } from "@prisma/client";
+import { HomePageResponse } from "~/types/types";
 
 interface PublicEventData {
-  eventDetails: EventRequest;
+  eventDetails: HomePageResponse;
 }
+
 export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   eventDetails,
 }) => {
@@ -86,7 +86,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           </div>
         </CardContent>
         <CardFooter>
-          <RequestCollaborationDialog />
+          <RequestCollaborationDialog eventDetails={eventDetails} />
         </CardFooter>
       </Card>
     </div>

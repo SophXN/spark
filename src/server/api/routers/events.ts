@@ -1,7 +1,7 @@
 import { EventType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { HomePageEventDetails } from "~/types/types";
+import { HomePageResponse } from "~/types/types";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure

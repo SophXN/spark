@@ -32,6 +32,7 @@ import {
     FormLabel,
     FormMessage,
 } from "~/components/ui/form"
+import { EventRequest } from "@prisma/client";
 
 
 const FormSchema = z.object({
@@ -42,7 +43,11 @@ const FormSchema = z.object({
         .email(),
 })
 
-export default function RequestCollaborationDialog() {
+interface PublicEventData {
+    eventDetails: EventRequest;
+  }
+
+export default function RequestCollaborationDialog({eventDetails}: PublicEventData) {
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -58,6 +63,8 @@ export default function RequestCollaborationDialog() {
         //     ),
         // })
     }
+
+    console.log(eventDetails, "become");
 
     return (
         <Dialog>
@@ -79,7 +86,7 @@ export default function RequestCollaborationDialog() {
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="grid w-full items-center gap-2">
-                                        <Label htmlFor="email">Select collaborator option</Label>
+                                        <Label htmlFor="email">Select how you could help</Label>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -87,9 +94,9 @@ export default function RequestCollaborationDialog() {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                                <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                                <SelectItem value="m@support.com">m@support.com</SelectItem>
+                                                {eventDetails.collaborators.map((collaborator) => {
+                                                    return <SelectItem value={collaborator.serviceType}>{collaborator.serviceType} - {collaborator.description}</SelectItem>
+                                                })}
                                             </SelectContent>
                                         </Select>
                                     </div>

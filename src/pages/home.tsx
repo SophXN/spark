@@ -3,11 +3,9 @@ import { useState, useEffect } from "react";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from "next/router";
 import Navbar from "~/components/Navbar";
-import { type HomePageEventDetails } from "~/types/types";
 import { Button } from "~/components/ui/button";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
-import { EventType } from "@prisma/client";
 
 interface Props {
   logo: string;

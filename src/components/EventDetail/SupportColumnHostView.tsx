@@ -9,10 +9,10 @@ import { Progress } from "../ui/progress";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import { type EventRequest } from "@prisma/client";
+import { type HomePageResponse } from "~/types/types";
 
 interface HostEventData {
-  eventDetails: EventRequest;
+  eventDetails: HomePageResponse;
 }
 
 export const SupportColumnHostView: React.FC<HostEventData> = ({

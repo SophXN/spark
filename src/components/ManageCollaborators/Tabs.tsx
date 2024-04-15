@@ -25,11 +25,11 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-interface RequestData {
+interface CollaboratorResponses {
   collaboratorResponses: CollaboratorResponse[];
 }
 
-const Tabs: React.FC<RequestData> = ({ collaboratorResponses: requests }) => {
+const Tabs: React.FC<CollaboratorResponses> = ({ collaboratorResponses }) => {
   const [tabs, setTabs] = useState<Tab[]>(defaultTabs);
   const activeTab = tabs.find((tab) => tab.current)?.name;
 
@@ -90,7 +90,7 @@ const Tabs: React.FC<RequestData> = ({ collaboratorResponses: requests }) => {
       <div className="mt-2">
         {activeTab === "Requests" && (
           <Request
-            infoCards={requests.filter(
+            collaboratorResponses={collaboratorResponses.filter(
               (request) =>
                 request.status === CollaboratorResponseStatus.PENDING,
             )}

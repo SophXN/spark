@@ -1,24 +1,17 @@
 import * as React from "react";
-
-import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
-  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
-import { HomePageEventDetails } from "~/types/types";
-import { EventRequest } from "@prisma/client";
 import { format } from "date-fns";
-import { api } from "~/utils/api";
-import { useState } from "react";
+import { HomePageResponse } from "~/types/types";
 
 interface EventCardProps {
-  eventDetails: EventRequest;
+  eventDetails: HomePageResponse;
 }
 
 export function EventCard({ eventDetails }: EventCardProps) {
