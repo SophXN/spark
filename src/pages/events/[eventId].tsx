@@ -13,16 +13,20 @@ const EventDetails: React.FC = () => {
   const router = useRouter();
   const { eventId } = router.query; // Access the dynamic segment
 
-  const { data: eventData, isLoading, error } = api.events.getEventById.useQuery(
-    eventId as string,
-  );
+  const {
+    data: eventData,
+    isLoading,
+    error,
+  } = api.events.getEventById.useQuery(eventId as string, {
+    enabled: !!eventId,
+  });
 
   if (!eventData || !eventId) return null;
   const formattedDate = format(eventData?.eventDate, "MMMM do, yyyy");
 
   const eventCompanyId = eventData?.requesterId;
 
-  console.log(eventData)
+  console.log(eventData);
 
   return (
     <div>
