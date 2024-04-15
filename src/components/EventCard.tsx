@@ -12,12 +12,30 @@ import {
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { HomePageEventDetails } from "~/types/types";
+import { EventRequest } from "@prisma/client";
+import { format } from "date-fns";
+import { api } from "~/utils/api";
+import { useState } from "react";
 
 interface EventCardProps {
-  eventCardDetails: HomePageEventDetails;
+  eventDetails: EventRequest;
 }
 
-export function EventCard({ eventCardDetails }: EventCardProps) {
+export function EventCard({ eventDetails }: EventCardProps) {
+
+  const formattedDate = format(eventDetails?.eventDate, "MMMM do, yyyy");
+
+  const totalCollaboratorsNeeded = eventDetails.collaborators?.reduce((acc, collaborator) => {
+    return acc + collaborator.collaboratorsRequired;
+  }, 0);
+
+  const totalSponsorsNeeded = eventDetails.sponsors?.reduce((acc, sponsor) => {
+    return acc + sponsor.sponsorsRequired;
+  }, 0);
+
+  const collaboratorSpacesLeft = totalCollaboratorsNeeded - eventDetails._count.collaborators;
+  const sponsorSpacesLeft = totalSponsorsNeeded - eventDetails._count.sponsors;
+
   return (
     <Card className="col-span-1 flex flex-col">
       <CardContent className="py-3 px-3">
@@ -29,14 +47,16 @@ export function EventCard({ eventCardDetails }: EventCardProps) {
           height={500}
         />
         <div className="py-2">
-          <Badge className="mr-1" variant="secondary">Sponsor spots · {eventCardDetails.totalSponsorsRemaining?.toString()}</Badge>
-          <Badge variant="secondary">Collab spots · {eventCardDetails.totalCollaboratorsRemain?.toString()}</Badge>
+          {/* <Badge className="mr-1" variant="secondary">Sponsor spots · {eventCardDetails.totalSponsorsRemaining?.toString()}</Badge> */}
+          {/* <Badge variant="secondary">Collab spots · {eventCardDetails.totalCollaboratorsRemain?.toString()}</Badge> */}
+          <Badge className="mr-1" variant="secondary">Sponsor spots · {sponsorSpacesLeft}</Badge>
+          <Badge variant="secondary">Collab spots · {collaboratorSpacesLeft}</Badge>
         </div>
-        <CardTitle>{eventCardDetails.eventTitle}</CardTitle>
+        <CardTitle>{eventDetails.title}</CardTitle>
         <CardDescription className="py-1 text-orange-400">
-          {eventCardDetails.eventDate}
+          {formattedDate}
         </CardDescription>
-        <CardDescription>{eventCardDetails.location}</CardDescription>
+        <CardDescription>{eventDetails.eventLocation}</CardDescription>
         <div className="relative flex items-center space-x-1 pt-2">
           <div className="flex-shrink-0">
             <Image className="h-5 w-5 rounded-full"
@@ -48,7 +68,7 @@ export function EventCard({ eventCardDetails }: EventCardProps) {
           <div className="min-w-0 flex-1">
             <a href="#" className="focus:outline-none">
               <span className="absolute inset-0" aria-hidden="true" />
-              <p className="text-sm font-medium text-gray-900">{eventCardDetails.organizerCompanyName}</p>
+              <p className="text-sm font-medium text-gray-900">{eventDetails.requester.name}</p>
             </a>
           </div>
         </div>

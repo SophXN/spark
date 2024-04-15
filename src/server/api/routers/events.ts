@@ -1,6 +1,7 @@
 import { EventType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { HomePageEventDetails } from "~/types/types";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -44,4 +45,17 @@ export const eventsRouter = createTRPCRouter({
       });
       return event;
     }),
+    getAllEvents: publicProcedure.query(async ({ ctx }) => {
+      const events = await ctx.db.eventRequest.findMany({
+        include: {
+          sponsors: true,
+          collaborators: true,
+          requester: true,
+          _count: {
+            select: { sponsors: true , collaborators: true}
+          }
+        },
+      })
+      return events;
+    })
 });
