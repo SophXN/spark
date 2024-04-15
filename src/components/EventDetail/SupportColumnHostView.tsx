@@ -9,13 +9,15 @@ import { Progress } from "../ui/progress";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import { EventRequest } from "@prisma/client";
+import { type EventRequest } from "@prisma/client";
 
 interface HostEventData {
   eventDetails: EventRequest;
 }
 
-export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails }) => {
+export const SupportColumnHostView: React.FC<HostEventData> = ({
+  eventDetails,
+}) => {
   const router = useRouter();
 
   const manageCollaborators = () => {
@@ -28,10 +30,11 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({ eventDetails })
     );
 
   const { data: countOfCollaboratorResponses } =
-    api.collaboratorResponse.getCountOfCollaboratorResponses.useQuery(eventDetails.eventId);
+    api.collaboratorResponse.getCountOfCollaboratorResponses.useQuery(
+      eventDetails.eventId,
+    );
 
-
-  const totalCollaboratorsRemaining = eventDetails.collaborators
+  const totalCollaboratorsRemaining = eventDetails?.collaborators
     ? eventDetails.collaborators?.reduce((acc, collaborator) => {
         return acc + collaborator.collaboratorsRequired;
       }, 0)

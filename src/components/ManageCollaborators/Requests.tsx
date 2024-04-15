@@ -7,14 +7,20 @@ import {
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { type RequestCardInfo, type RequestCardInfoArray } from "~/types/types";
+import { type RequestCardInfo } from "~/types/types";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Check } from "lucide-react";
 
-const Requests: React.FC<RequestCardInfoArray> = ({ infoCards }) => {
+interface RequestCardInfoArray {
+  collaboratorResponses: RequestCardInfo[];
+}
+
+const Requests: React.FC<RequestCardInfoArray> = ({
+  collaboratorResponses,
+}) => {
   return (
     <div>
-      {infoCards.map((event) => (
+      {collaboratorResponses.map((event) => (
         <RequestCard
           key={event.requestId}
           organizerAddress={event.organizerAddress}

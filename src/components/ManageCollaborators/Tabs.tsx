@@ -88,14 +88,14 @@ const Tabs: React.FC<RequestData> = ({ collaboratorResponses: requests }) => {
         </div>
       </div>
       <div className="mt-2">
-        {/* {activeTab === "Requests" && (
+        {activeTab === "Requests" && (
           <Request
             infoCards={requests.filter(
               (request) =>
                 request.status === CollaboratorResponseStatus.PENDING,
             )}
           />
-        )} */}
+        )}
         {/* {activeTab === "Accepted" && (
           <AcceptedRequests
             acceptedData={requests.filter(
