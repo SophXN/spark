@@ -1,4 +1,4 @@
-import { type ServiceType } from "@prisma/client";
+import { type ServiceType, type EventRequest, type Collaborator, type Sponsor, type Company } from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
   eventId: string;
@@ -89,4 +89,14 @@ export interface EventPageDetails extends HomePageEventDetails {
   totalCollaboratorRequests: number,
   percentageRaised: number,
   percentageCollaborators: number,
+}
+
+export type HomePageResponse = EventRequest & {
+  _count: {
+    sponsors: number,
+    collaborators: number
+  },
+  collaborators: Collaborator[],
+  sponsors: Sponsor[],
+  requester: Company
 }
