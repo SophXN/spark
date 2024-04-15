@@ -1,3 +1,4 @@
+import { CollaboratorResponseStatus } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -17,7 +18,7 @@ export const collaboratorResponseRouter = createTRPCRouter({
       return await ctx.db.collaboratorResponse.count({
         where: {
           eventRequestId: input,
-          isAccepted: true,
+          status: CollaboratorResponseStatus.ACCEPTED,
         },
       });
     }),

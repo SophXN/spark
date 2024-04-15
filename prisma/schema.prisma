@@ -104,6 +104,12 @@ enum Tier {
     THREE
 }
 
+enum CollaboratorResponseStatus {
+    ACCEPTED
+    PENDING
+    DENIED
+}
+
 model Company {
     id                    String                 @id @default(cuid())
     name                  String
@@ -152,14 +158,14 @@ model Collaborator {
 }
 
 model CollaboratorResponse {
-    id              String       @id @default(cuid())
-    collaborator    Collaborator @relation(fields: [collaboratorId], references: [id])
+    id              String                     @id @default(cuid())
+    collaborator    Collaborator               @relation(fields: [collaboratorId], references: [id])
     collaboratorId  String
-    eventRequest    EventRequest @relation(fields: [eventRequestId], references: [eventId])
+    eventRequest    EventRequest               @relation(fields: [eventRequestId], references: [eventId])
     eventRequestId  String
-    responder       Company      @relation(fields: [responderId], references: [id])
+    responder       Company                    @relation(fields: [responderId], references: [id])
     responderId     String
-    isAccepted      Boolean
+    status          CollaboratorResponseStatus @default(PENDING)
     responseMessage String?
     respondedOn     DateTime
 }
