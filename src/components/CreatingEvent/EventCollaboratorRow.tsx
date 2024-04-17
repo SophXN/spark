@@ -1,13 +1,13 @@
 import React from "react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Button } from "./ui/button";
+} from "../ui/select";
+import { Button } from "../ui/button";
 import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
 import { ServiceType, type Collaborator } from "@prisma/client";
 

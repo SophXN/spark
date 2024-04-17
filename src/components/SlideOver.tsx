@@ -4,7 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { EventSponsors } from "./EventSponsors";
+import { EventSponsors } from "./CreatingEvent/EventSponsors";
 
 interface SlideOverProps {
   open: boolean;

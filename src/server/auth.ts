@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         ...session.user,
         id: user.id,
       },
-    }),
+    })
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -51,15 +51,26 @@ export const authOptions: NextAuthOptions = {
       id: "square",
       name: "Square",
       type: "oauth",
-      clientId: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_CLIENT_ID : process.env.SQUARE_TEST_CLIENT_ID,
-      clientSecret: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_APP_SECRET : process.env.SQUARE_TEST_APP_SECRET,
+      version: "2.0",
+      clientId: "sandbox-sq0idb-EliNaXZfoGHTspHimS01Cw",
+      clientSecret: "sandbox-sq0csb-ea7cSIhqgt37Zp8oNiFOwW8uSBljxvYGajalQL8mAbc",
+      // clientId: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_CLIENT_ID : process.env.SQUARE_TEST_CLIENT_ID,
+      // clientSecret: process.env.NODE_ENV === "production" ? process.env.SQUARE_PROD_APP_SECRET : process.env.SQUARE_TEST_APP_SECRET,
       authorization: {
-        url: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/authorize" : "https://connect.squareupsandbox.com/oauth2/authorize",
-        params : { 
-          scope: "MERCHANT_PROFILE_READ BANK_ACCOUNTS_READ",
+        // url: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/authorize" : "https://connect.squareupsandbox.com/oauth2/authorize",
+        url: "https://connect.squareupsandbox.com/oauth2/authorize",
+        params: {
+          scope: "MERCHANT_PROFILE_READ",
         }
       },
-      token: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/token" : "https://connect.squareupsandbox.com/oauth2/token",
+      checks: ["state"],
+      token: {
+        // url: process.env.NODE_ENV === "production" ? "https://connect.squareup.com/oauth2/token" : "https://connect.squareupsandbox.com/oauth2/token",
+        url: "https://connect.squareupsandbox.com/oauth2/token",
+        params: {
+          scope: "MERCHANT_PROFILE_READ",
+        }        
+      },
       profile: (profile) => {
         return {
           id: profile.merchant_id,
