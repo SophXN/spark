@@ -9,7 +9,11 @@ import {
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { MailIcon, RefreshCcwIcon } from "lucide-react";
-import { type CollaboratorResponse } from "@prisma/client";
+import {
+  CollaboratorResponseStatus,
+  type CollaboratorResponse,
+} from "@prisma/client";
+import { updateCollaboratorResponseStatus } from "./Requests";
 
 interface AcceptedDataProps {
   acceptedCollaborators: CollaboratorResponse[];
@@ -18,8 +22,6 @@ interface AcceptedDataProps {
 export const AcceptedCollaborators = ({
   acceptedCollaborators,
 }: AcceptedDataProps) => {
-  const revokeCollaboration = () => console.log("hi");
-
   const openEmail = () => console.log("hi");
 
   return (
@@ -63,7 +65,13 @@ export const AcceptedCollaborators = ({
           </CardContent>
           <CardFooter className="gap-21 flex flex-row flex-wrap justify-end">
             <Button
-              onClick={() => revokeCollaboration()}
+              onClick={() =>
+                updateCollaboratorResponseStatus(
+                  item.eventRequestId,
+                  item.id,
+                  CollaboratorResponseStatus.PENDING,
+                )
+              }
               size="sm"
               className="w-full gap-1 bg-slate-600 px-2 hover:bg-slate-500 sm:w-auto"
             >

@@ -9,7 +9,11 @@ import {
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { RefreshCcwIcon } from "lucide-react";
-import { type CollaboratorResponse } from "@prisma/client";
+import {
+  CollaboratorResponseStatus,
+  type CollaboratorResponse,
+} from "@prisma/client";
+import { updateCollaboratorResponseStatus } from "./Requests";
 
 interface DeniedData {
   deniedCollaborators: CollaboratorResponse[];
@@ -18,7 +22,6 @@ interface DeniedData {
 export const DeniedCollaborators: React.FC<DeniedData> = ({
   deniedCollaborators,
 }) => {
-  const revokeDenial = () => console.log("Revoke denial");
   return (
     <div>
       {deniedCollaborators.map((item) => (
@@ -50,7 +53,13 @@ export const DeniedCollaborators: React.FC<DeniedData> = ({
           </CardContent>
           <CardFooter className="gap-21 flex flex-row flex-wrap justify-end">
             <Button
-              onClick={() => revokeDenial()}
+              onClick={() =>
+                updateCollaboratorResponseStatus(
+                  item.eventRequestId,
+                  item.id,
+                  CollaboratorResponseStatus.PENDING,
+                )
+              }
               size="sm"
               className="w-full gap-1 bg-slate-600 px-2 hover:bg-slate-500 sm:w-auto"
             >

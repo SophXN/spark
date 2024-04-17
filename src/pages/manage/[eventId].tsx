@@ -3,12 +3,7 @@ import React from "react";
 import Navbar from "~/components/Navbar";
 import { BreadcrumbManageCollaborators } from "~/components/ManageCollaborators/BreadcrumbManageCollaborators";
 import Tabs from "~/components/ManageCollaborators/Tabs";
-import {
-  type RequestCardInfo,
-  RequestStatus,
-  type CollaboratorResponseExtended,
-} from "~/types/types";
-import { ServiceType } from "@prisma/client";
+import { type CollaboratorResponseExtended } from "~/types/types";
 import { api } from "~/utils/api";
 
 const ManageEvent: React.FC = () => {
