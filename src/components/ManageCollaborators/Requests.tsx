@@ -15,26 +15,28 @@ import {
   type CollaboratorResponse,
 } from "@prisma/client";
 import { api } from "~/utils/api";
+import { useQueryClient as UseQueryClient } from "@tanstack/react-query";
+import { on } from "events";
 
 interface RequestsProps {
   collaboratorResponses: CollaboratorResponse[];
 }
 
-export const Requests = ({ collaboratorResponses }: RequestsProps) => {
-  const mutation =
-    api.collaboratorResponse.updateStatusOfCollaboratorResponse.useMutation();
-  const updateCollaboratorResponseStatus = (
-    eventRequestId: string,
-    collaboratorResponseId: string,
-    status: CollaboratorResponseStatus,
-  ) => {
-    mutation.mutate({
+export const updateCollaboratorResponseStatus = (
+  eventRequestId: string,
+  collaboratorResponseId: string,
+  status: CollaboratorResponseStatus,
+) => {
+  api.collaboratorResponse.updateStatusOfCollaboratorResponse
+    .useMutation()
+    .mutate({
       eventRequestId: eventRequestId,
       collaboratorResponseId: collaboratorResponseId,
       status: status,
     });
-  };
+};
 
+export const Requests = ({ collaboratorResponses }: RequestsProps) => {
   return (
     <div>
       {collaboratorResponses.map((item) => {
