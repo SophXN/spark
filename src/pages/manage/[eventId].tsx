@@ -19,7 +19,7 @@ const ManageEvent: React.FC = () => {
     eventId as string,
   );
 
-  const { data: event } = api.events.getEventById.useQuery(eventId as string);
+  const { data: event } = api.events.getEventPageDetails.useQuery(eventId as string);
 
   return (
     <div>

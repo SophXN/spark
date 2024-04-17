@@ -1,6 +1,6 @@
 import React from "react";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 import { EventCollaboratorRow } from "./EventCollaboratorRow";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { v4 as uuidv4 } from "uuid";

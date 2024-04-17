@@ -1,6 +1,6 @@
 import * as React from "react";
-import { EventCollaborators } from "~/components/EventCollaborators";
-import { EventSponsors } from "~/components/EventSponsors";
+import { EventCollaborators } from "~/components/CreatingEvent/EventCollaborators";
+import { EventSponsors } from "~/components/CreatingEvent/EventSponsors";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -115,7 +115,7 @@ export default function Events() {
     <>
       <div>
         <Navbar />
-        <div className="relative h-screen w-screen flex-1 space-y-8">
+        <div className="relative w-screen flex-1 space-y-8 mb-4">
           <div className="mx-3 mt-4 grid justify-items-center">
             <div className="w-full items-center sm:max-w-4xl">
               <h3 className="text-2xl font-bold">Create your event</h3>

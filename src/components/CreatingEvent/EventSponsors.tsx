@@ -1,6 +1,6 @@
 import React from "react";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 import { EventSponsorRow } from "./EventSponsorRow";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Tier, type Sponsor } from "@prisma/client";
