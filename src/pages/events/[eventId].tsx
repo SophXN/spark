@@ -17,14 +17,12 @@ const EventDetails: React.FC = () => {
     data: eventData,
     isLoading,
     error,
-  } = api.events.getEventById.useQuery(eventId as string, {
+  } = api.events.getEventPageDetails.useQuery(eventId as string, {
     enabled: !!eventId,
   });
 
   if (!eventData || !eventId) return null;
   const formattedDate = format(eventData?.eventDate, "MMMM do, yyyy");
-
-  const eventCompanyId = eventData?.requesterId;
 
   console.log(eventData);
 

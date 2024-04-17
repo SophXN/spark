@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   type ServiceType,
   type EventRequest,
@@ -6,6 +7,9 @@ import {
   type Company,
   type CollaboratorResponse,
 } from "@prisma/client";
+=======
+import { type ServiceType, type EventRequest, type Collaborator, type Sponsor, type Company, type CollaboratorResponse } from "@prisma/client";
+>>>>>>> 1259f7557c0141c4563e048d0f13d51a002734f9
 
 export interface EventSponsorsAndCollaboratorProps {
   eventId: string;
@@ -73,6 +77,7 @@ export interface RequestCardInfoArray {
   infoCards: RequestCardInfo[];
 }
 
+<<<<<<< HEAD
 export interface HomePageEventDetails {
   eventId: string;
   eventBannerImage?: string;
@@ -113,3 +118,14 @@ export type CollaboratorResponseExtended = EventRequest & {
   requester: Company;
   collaboratorsResponses: CollaboratorResponse[];
 };
+=======
+export type HomePageResponse = EventRequest & {
+  _count?: {
+    collaboratorsResponses: number
+  },
+  collaborators: Collaborator[],
+  collaboratorsResponses?: CollaboratorResponse[],
+  sponsors: Sponsor[],
+  requester: Company
+}
+>>>>>>> 1259f7557c0141c4563e048d0f13d51a002734f9

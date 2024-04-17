@@ -17,17 +17,28 @@ interface EventCardProps {
 export function EventCard({ eventDetails }: EventCardProps) {
 
   const formattedDate = format(eventDetails?.eventDate, "MMMM do, yyyy");
+  let collaboratorsExist: boolean = false;
+  let sponsorsExists: boolean = false;
+  let totalCollaboratorsNeeded: number = 0;
+  let collaboratorSpacesLeft: number = 0;
+  let totalSponsorsNeeded: number = 0;
+  let sponsorSpacesLeft: number = 0;
+  let acceptedCollaboratorResponsesCount = eventDetails._count?.collaboratorsResponses ?? 0;
 
-  const totalCollaboratorsNeeded = eventDetails.collaborators?.reduce((acc, collaborator) => {
-    return acc + collaborator.collaboratorsRequired;
-  }, 0);
+  if(eventDetails.collaborators.length > 0) {
+    collaboratorsExist = true;
+    totalCollaboratorsNeeded = eventDetails.collaborators?.reduce((acc, collaborator) => {
+      return acc + collaborator.collaboratorsRequired;
+    }, 0);
+    collaboratorSpacesLeft = totalCollaboratorsNeeded - acceptedCollaboratorResponsesCount;
+  }
 
-  const totalSponsorsNeeded = eventDetails.sponsors?.reduce((acc, sponsor) => {
-    return acc + sponsor.sponsorsRequired;
-  }, 0);
+  // TODO: replace sponsor count below with sponsors that have actually paid, bottom calculation currently
+  // doesn't make sense
 
-  const collaboratorSpacesLeft = totalCollaboratorsNeeded - eventDetails._count.collaborators;
-  const sponsorSpacesLeft = totalSponsorsNeeded - eventDetails._count.sponsors;
+  if(eventDetails.sponsors.length > 0) {
+    sponsorsExists = true;
+  }
 
   return (
     <Card className="col-span-1 flex flex-col">
@@ -40,10 +51,8 @@ export function EventCard({ eventDetails }: EventCardProps) {
           height={500}
         />
         <div className="py-2">
-          {/* <Badge className="mr-1" variant="secondary">Sponsor spots · {eventCardDetails.totalSponsorsRemaining?.toString()}</Badge> */}
-          {/* <Badge variant="secondary">Collab spots · {eventCardDetails.totalCollaboratorsRemain?.toString()}</Badge> */}
-          <Badge className="mr-1" variant="secondary">Sponsor spots · {sponsorSpacesLeft}</Badge>
-          <Badge variant="secondary">Collab spots · {collaboratorSpacesLeft}</Badge>
+          {sponsorsExists ? <Badge className="mr-1" variant="secondary">Sponsor spots · {sponsorSpacesLeft}</Badge> : <div/>}
+          {collaboratorsExist ? <Badge variant="secondary">Collab spots · {collaboratorSpacesLeft}</Badge> : <div/>}
         </div>
         <CardTitle>{eventDetails.title}</CardTitle>
         <CardDescription className="py-1 text-orange-400">
