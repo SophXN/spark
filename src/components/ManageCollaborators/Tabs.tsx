@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React from "react";
 import { useState } from "react";
-import Request from "~/components/ManageCollaborators/Requests";
-import DeniedRequests from "~/components/ManageCollaborators/DeniedRequests";
-import AcceptedRequests from "./AcceptedRequests";
-import { type RequestCardInfo, RequestStatus } from "~/types/types";
+import { Requests } from "~/components/ManageCollaborators/Requests";
+import { type CollaboratorResponseExtended } from "~/types/types";
 import {
   type CollaboratorResponse,
   CollaboratorResponseStatus,
 } from "@prisma/client";
+import { AcceptedCollaborators } from "./AcceptedCollaborators";
+import { DeniedCollaborators } from "./DeniedCollaborators";
 
 const defaultTabs: Tab[] = [
   { name: "Requests", href: "#requests", current: true },
@@ -21,17 +25,20 @@ interface Tab {
   current: boolean;
 }
 
-function classNames(...classes: any[]) {
+function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-interface CollaboratorResponses {
-  collaboratorResponses: CollaboratorResponse[];
+interface TabsProps {
+  eventData: CollaboratorResponseExtended;
 }
 
-const Tabs: React.FC<CollaboratorResponses> = ({ collaboratorResponses }) => {
+const Tabs: React.FC<TabsProps> = ({ eventData }: TabsProps) => {
   const [tabs, setTabs] = useState<Tab[]>(defaultTabs);
   const activeTab = tabs.find((tab) => tab.current)?.name;
+
+  const collaboratorResponses: CollaboratorResponse[] =
+    eventData[0].collaboratorsResponses;
 
   const handleTabClick = (clickedTab: Tab) => {
     if (tabs.find((tab) => tab.current)?.name === clickedTab.name) {
@@ -89,28 +96,26 @@ const Tabs: React.FC<CollaboratorResponses> = ({ collaboratorResponses }) => {
       </div>
       <div className="mt-2">
         {activeTab === "Requests" && (
-          <Request
+          <Requests
             collaboratorResponses={collaboratorResponses.filter(
-              (request) =>
-                request.status === CollaboratorResponseStatus.PENDING,
+              (item) => item.status === CollaboratorResponseStatus.PENDING,
             )}
           />
         )}
-        {/* {activeTab === "Accepted" && (
-          <AcceptedRequests
-            acceptedData={requests.filter(
-              (request) =>
-                request.status === CollaboratorResponseStatus.ACCEPTED,
+        {activeTab === "Accepted" && (
+          <AcceptedCollaborators
+            acceptedCollaborators={collaboratorResponses.filter(
+              (item) => item.status === CollaboratorResponseStatus.ACCEPTED,
             )}
           />
         )}
         {activeTab === "Denied" && (
-          <DeniedRequests
-            deniedData={requests.filter(
-              (request) => request.status === CollaboratorResponseStatus.DENIED,
+          <DeniedCollaborators
+            deniedCollaborators={collaboratorResponses.filter(
+              (item) => item.status === CollaboratorResponseStatus.DENIED,
             )}
           />
-        )} */}
+        )}
       </div>
     </div>
   );

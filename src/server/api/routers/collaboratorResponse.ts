@@ -31,4 +31,22 @@ export const collaboratorResponseRouter = createTRPCRouter({
         },
       });
     }),
+  updateStatusOfCollaboratorResponse: publicProcedure
+    .input(
+      z.object({
+        eventRequestId: z.string(),
+        collaboratorResponseId: z.string(),
+        status: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.collaboratorResponse.update({
+        where: {
+          id: input.collaboratorResponseId,
+        },
+        data: {
+          status: input.status as CollaboratorResponseStatus,
+        },
+      });
+    }),
 });

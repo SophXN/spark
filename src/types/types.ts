@@ -1,4 +1,11 @@
-import { type ServiceType, type EventRequest, type Collaborator, type Sponsor, type Company } from "@prisma/client";
+import {
+  type ServiceType,
+  type EventRequest,
+  type Collaborator,
+  type Sponsor,
+  type Company,
+  type CollaboratorResponse,
+} from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
   eventId: string;
@@ -49,54 +56,60 @@ interface Account {
 export enum RequestStatus {
   accepted = "ACCEPTED",
   pending = "PENDING",
-  denied = "DENIED"
+  denied = "DENIED",
 }
 
 export interface RequestCardInfo {
-  organizerName: string,
-  organizerAddress: string,
-  organizerEmail?: string,
-  helpingCategory: ServiceType,
-  message: string,
-  requestId: string
-  status: RequestStatus
+  organizerName: string;
+  organizerAddress: string;
+  organizerEmail?: string;
+  helpingCategory: ServiceType;
+  message: string;
+  requestId: string;
+  status: RequestStatus;
 }
 
 export interface RequestCardInfoArray {
-  infoCards: RequestCardInfo[]
+  infoCards: RequestCardInfo[];
 }
 
 export interface HomePageEventDetails {
-  eventId: string,
-  eventBannerImage?: string,
-  organizerId: string,
-  organizerCompanyName: string,
-  eventTitle: string,
-  eventDescription: string,
-  location: string,
-  eventDate: string,
-  totalSponsorsNeeded: number,
-  totalCollaboratorsNeeded: number,
-  totalSponsorsRemaining: number,
-  totalCollaboratorsRemain: number,
+  eventId: string;
+  eventBannerImage?: string;
+  organizerId: string;
+  organizerCompanyName: string;
+  eventTitle: string;
+  eventDescription: string;
+  location: string;
+  eventDate: string;
+  totalSponsorsNeeded: number;
+  totalCollaboratorsNeeded: number;
+  totalSponsorsRemaining: number;
+  totalCollaboratorsRemain: number;
 }
 
 export interface EventPageDetails extends HomePageEventDetails {
-  totalSponsors: number,
-  totalAmountRaised: number, // by sponsors
-  totalCollaborators: number,
-  collaboratorServiceTypesNeeded: ServiceType[],
-  totalCollaboratorRequests: number,
-  percentageRaised: number,
-  percentageCollaborators: number,
+  totalSponsors: number;
+  totalAmountRaised: number; // by sponsors
+  totalCollaborators: number;
+  collaboratorServiceTypesNeeded: ServiceType[];
+  totalCollaboratorRequests: number;
+  percentageRaised: number;
+  percentageCollaborators: number;
 }
 
 export type HomePageResponse = EventRequest & {
   _count: {
-    sponsors: number,
-    collaborators: number
-  },
-  collaborators: Collaborator[],
-  sponsors: Sponsor[],
-  requester: Company
-}
+    sponsors: number;
+    collaborators: number;
+  };
+  collaborators: Collaborator[];
+  sponsors: Sponsor[];
+  requester: Company;
+};
+
+export type CollaboratorResponseExtended = EventRequest & {
+  collaborators: Collaborator[];
+  requester: Company;
+  collaboratorsResponses: CollaboratorResponse[];
+};
