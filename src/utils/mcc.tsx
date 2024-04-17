@@ -1,4 +1,10 @@
-export const mcc = 
+export interface mccObject {
+    label: string,
+    value: string,
+    mcc: string
+}
+
+export const mcc: mccObject[] = 
 [
     {"label": "Veterinary", "value": "Veterinary", "mcc": "0742"},
     {"label": "Trade Contractor", "value": "Trade Contractor", "mcc": "1520"},
