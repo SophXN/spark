@@ -1,10 +1,19 @@
 "use client"
 
 import React from "react";
+import { useState, useEffect } from "react";
 import Navbar from "~/components/Navbar";
 import Filters from "~/components/BrowseBusinesses/filters";
+import { filterObject, BusinessType } from "~/types/types";
 
 const BrowseMerchantsPage: React.FC = () => {
+
+  const [filterObject, setFilterObject] = React.useState<filterObject>({location: "", categoryCode: "", businessType: BusinessType.PHYSICAL})
+
+  useEffect(() => {
+    console.log(filterObject, "<= parent");
+    //fetchData();
+}, [filterObject]);
 
   return (
     <div>
@@ -15,9 +24,9 @@ const BrowseMerchantsPage: React.FC = () => {
             <h3 className="text-2xl font-bold">Explore businesses to work with</h3>
           </div>
           <div className="mt-3 w-full max-w-4xl">
-          <Filters/>
+          <Filters onChange={setFilterObject} />
           <div>
-            
+
           </div>
           </div>
         </div>

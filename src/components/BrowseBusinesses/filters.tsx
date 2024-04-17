@@ -2,7 +2,7 @@
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { mcc } from "~/utils/mcc";
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Check, ChevronsUpDown } from "lucide-react"
 
 import {
@@ -30,15 +30,40 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "~/components/ui/popover"
+import { BusinessType, filterObject } from "~/types/types";
 
 import React from "react";
 
-const Filters: React.FC = () => {
+interface filterProps {
+    onChange: (value: filterObject) => void;
+}
+
+const Filters: React.FC<filterProps> = ({ onChange }) => {
 
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+    const [inputValue, setInputValue] = useState('');
+    const [filterObject, setFilterObject] = React.useState<filterObject>({ location: "", categoryCode: "", businessType: BusinessType.PHYSICAL })
 
-    console.log(mcc)
+    useEffect(() => {
+        console.log("updated")
+        onChange(filterObject);
+    }, [filterObject])
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+        console.log(event)
+        if (event.key === 'Enter') {
+            filterObject.location = event.currentTarget.value;
+            setFilterObject(prevState => ({
+                ...prevState,
+                location: filterObject.location
+            }));
+        }
+    };
+
+    const handleInputChange = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+        setInputValue(event.currentTarget.value); // Update the temporary input value
+    };
 
     return (
         <div className="flex flex-row flex-wrap gap-2">
@@ -50,19 +75,22 @@ const Filters: React.FC = () => {
                         type="text"
                         placeholder="Type a city"
                         className="pl-2"
+                        defaultValue={filterObject.location}
+                        onKeyDown={handleKeyDown}
+                        onChange={() => handleInputChange}
                     />
                 </div>
             </div>
             <div className="w-full sm:w-64">
                 <div className="grid items-center gap-1.5">
-                    <Label>Category</Label>
+                    <Label>Filter by category</Label>
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
-                                className="justify-between w-64 overflow-hidden px-2"
+                                className="justify-between sm:w-64 overflow-hidden px-2"
                             >
                                 {value
                                     ? mcc.find((framework) => framework.value === value)?.label
@@ -72,9 +100,9 @@ const Filters: React.FC = () => {
                         </PopoverTrigger>
                         <PopoverContent className="p-0 w-auto">
                             <Command>
-                                <CommandInput placeholder="Search framework..." className='border-0 focus:ring-0'/>
+                                <CommandInput placeholder="Search framework..." className='border-0 focus:ring-0' />
                                 <CommandList>
-                                    <CommandEmpty>No framework found.</CommandEmpty>
+                                    <CommandEmpty>No category found, try again.</CommandEmpty>
                                     <CommandGroup>
                                         {mcc.map((framework) => (
                                             <CommandItem
@@ -83,6 +111,11 @@ const Filters: React.FC = () => {
                                                 onSelect={(currentValue) => {
                                                     setValue(currentValue === value ? "" : currentValue)
                                                     setOpen(false)
+                                                    filterObject.categoryCode = currentValue;
+                                                    setFilterObject(prevState => ({
+                                                        ...prevState,
+                                                        categoryCode: currentValue
+                                                    }));
                                                 }}
                                             >
                                                 <Check
@@ -103,16 +136,21 @@ const Filters: React.FC = () => {
             </div>
             <div className="w-full sm:w-64">
                 <div className="grid items-center gap-1.5">
-                    <Label>Store type</Label>
-                    <Select>
+                    <Label>Filter by business type</Label>
+                    <Select onValueChange={(e) => {
+                        setFilterObject(prevState => ({
+                            ...prevState,
+                            businessType: e as BusinessType
+                        }));
+                    }}>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a fruit" />
+                            <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="apple">Apple</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
-                                <SelectItem value="blueberry">Blueberry</SelectItem>
+                                <SelectItem value={BusinessType.MOBILE}>{BusinessType.MOBILE}</SelectItem>
+                                <SelectItem value={BusinessType.PHYSICAL}>{BusinessType.PHYSICAL}</SelectItem>
+                                <SelectItem value={BusinessType.VIRTUAL}>{BusinessType.VIRTUAL}</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

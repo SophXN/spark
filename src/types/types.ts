@@ -104,6 +104,7 @@ export type HomePageResponse = EventRequest & {
     collaborators: number;
   };
   collaborators: Collaborator[];
+  collaboratorsResponses: CollaboratorResponse[];
   sponsors: Sponsor[];
   requester: Company;
 };
@@ -113,3 +114,15 @@ export type CollaboratorResponseExtended = EventRequest & {
   requester: Company;
   collaboratorsResponses: CollaboratorResponse[];
 };
+
+export enum BusinessType {
+  PHYSICAL = "physical",
+  VIRTUAL = "virtual",
+  MOBILE = "mobile",
+}
+
+export interface filterObject {
+  location: string,
+  categoryCode: string,
+  businessType: BusinessType,
+}
