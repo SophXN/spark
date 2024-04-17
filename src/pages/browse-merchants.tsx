@@ -16,6 +16,9 @@ const BrowseMerchantsPage: React.FC = () => {
           </div>
           <div className="mt-3 w-full max-w-4xl">
           <Filters/>
+          <div>
+            
+          </div>
           </div>
         </div>
       </div>
