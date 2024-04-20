@@ -30,7 +30,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "~/components/ui/popover"
-import { BusinessType, filterObject } from "~/types/types";
+import { BusinessType, filterObject, BrowseMerchantsQuery } from "~/types/types";
 
 import React from "react";
 
@@ -43,10 +43,17 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
     const [inputValue, setInputValue] = useState('');
-    const [filterObject, setFilterObject] = React.useState<filterObject>({ location: "", categoryCode: "", businessType: BusinessType.PHYSICAL })
+    const [filterObject, setFilterObject] = React.useState<filterObject>({ location: "", merchantCode: "", type: BusinessType.PHYSICAL })
 
     useEffect(() => {
         console.log("updated")
+        console.log(filterObject, "<= before query");
+        if (filterObject.location === "") {
+            delete filterObject.location;
+        }
+        if (filterObject.merchantCode === "") {
+            delete filterObject.merchantCode
+        }
         onChange(filterObject);
     }, [filterObject])
 
@@ -111,10 +118,10 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
                                                 onSelect={(currentValue) => {
                                                     setValue(currentValue === value ? "" : currentValue)
                                                     setOpen(false)
-                                                    filterObject.categoryCode = currentValue;
+                                                    filterObject.merchantCode = currentValue;
                                                     setFilterObject(prevState => ({
                                                         ...prevState,
-                                                        categoryCode: currentValue
+                                                        merchantCode: framework.mcc
                                                     }));
                                                 }}
                                             >
@@ -140,7 +147,7 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
                     <Select onValueChange={(e) => {
                         setFilterObject(prevState => ({
                             ...prevState,
-                            businessType: e as BusinessType
+                            type: e as BusinessType
                         }));
                     }}>
                         <SelectTrigger>

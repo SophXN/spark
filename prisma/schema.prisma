@@ -114,11 +114,26 @@ enum CollaboratorResponseStatus {
 model Company {
     id                    String                 @id @default(cuid())
     name                  String
-    industry              String
-    address               String                 @default("123 Main St, Anytown, USA")
+    squareMerchantId      String
+    squareLocationId      String
     eventRequests         EventRequest[]
     sponsorships          Sponsor[]
+    businessDescription   String
+    facebookUrl           String?
+    twitterUrl            String?
+    instagramUrl          String?
     collaboratorResponses CollaboratorResponse[]
+    locations             MerchantLocation[]
+}
+
+model MerchantLocation {
+    id                    String                  @id @default(cuid())
+    company               Company                 @relation(fields: [companyId], references: [id])
+    companyId             String
+    squareLocationId      String
+    city                  String
+    type                  String
+    merchantCode          String
 }
 
 model EventRequest {
