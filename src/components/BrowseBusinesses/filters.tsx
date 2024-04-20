@@ -43,7 +43,7 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
     const [inputValue, setInputValue] = useState('');
-    const [filterObject, setFilterObject] = React.useState<filterObject>({ city: "", merchantCode: "", type: BusinessType.PHYSICAL })
+    const [filterObject, setFilterObject] = React.useState<filterObject>({ city: "", merchantCode: "", type: "" })
 
     useEffect(() => {
         console.log("updated")
