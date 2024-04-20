@@ -7,6 +7,9 @@ import Filters from "~/components/BrowseBusinesses/filters";
 import { filterObject, BusinessType, BrowseMerchantsQuery } from "~/types/types";
 import { mcc } from "~/utils/mcc";
 import { api } from "~/utils/api";
+import BusinessCard from "~/components/BrowseBusinesses/businessCard";
+import { Skeleton } from "~/components/ui/skeleton"
+import { BrowseCompanies } from "~/types/types";
 
 const BrowseMerchantsPage: React.FC = () => {
 
@@ -29,9 +32,17 @@ const BrowseMerchantsPage: React.FC = () => {
           </div>
           <div className="mt-3 w-full max-w-4xl">
           <Filters onChange={setQuery} />
-          <div>
-            
-          </div>
+          { isLoading ? (
+            <div>
+              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
+              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
+              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
+            </div> ) : 
+            (
+              companyData?.map((company) => {
+                console.log(company)
+                return <BusinessCard companyData={company} ></BusinessCard>
+            }))}
           </div>
         </div>
       </div>

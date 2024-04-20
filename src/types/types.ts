@@ -5,6 +5,7 @@ import {
   type Sponsor,
   type Company,
   type CollaboratorResponse,
+  type MerchantLocation,
 } from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
@@ -130,14 +131,16 @@ export enum BusinessType {
 export interface filterObject {
   city?: string,
   merchantCode?: string,
-  type?: BusinessType,
+  type?: BusinessType | "",
 };
 
-export type BrowseCompanies = Company & {
+export interface BrowseCompanies extends Company {
   _count: {
     eventRequests: number;
+    collaboratorResponses: number
   }
-  collaboratorsResponses: CollaboratorResponse[]
+  collaboratorResponses: CollaboratorResponse[],
+  locations: MerchantLocation[]
 };
 
 export interface BrowseMerchantsQuery {
