@@ -40,7 +40,6 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt(context) {
-      // console.log('jwt context', context);
       const { token, user } = context;
 
       if (user) {
@@ -49,8 +48,8 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session(context) {
-      // console.log('session context', context);
       const { session, token } = context;
+      console.log("HI SESSION", session, token);
       const user = token.user as User;
 
       if (session && user) {
@@ -58,6 +57,13 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    // async session(context) {
+    //   const { session, user } = context;
+    //   if (session.user) {
+    //     session.user.id = user.id;
+    //   }
+    //   return session;
+    // },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -71,41 +77,6 @@ export const authOptions: NextAuthOptions = {
           ? process.env.SQUARE_PROD_APP_SECRET
           : process.env.SQR_SANDBOX_APPLICATION_SECRET,
     }),
-    // {
-    //   id: "square",
-    //   name: "Square",
-    //   type: "oauth",
-    //   version: "2.0",
-    //   clientId:
-    //     process.env.NODE_ENV === "production"
-    //       ? process.env.SQUARE_PROD_CLIENT_ID
-    //       : process.env.SQR_SANDBOX_APPLICATION_ID,
-    //   clientSecret:
-    //     process.env.NODE_ENV === "production"
-    //       ? process.env.SQUARE_PROD_APP_SECRET
-    //       : process.env.SQR_SANDBOX_APPLICATION_SECRET,
-    //   authorization: {
-    //     url: "https://connect.squareupsandbox.com/oauth2/authorize",
-    //     params: {
-    //       scope: "MERCHANT_PROFILE_READ",
-    //     },
-    //   },
-
-    //   // checks: ["state"],
-    //   token: {
-    //     url: "https://connect.squareupsandbox.com/oauth2/token",
-    //     params: {
-    //       scope: "MERCHANT_PROFILE_READ",
-    //     },
-    //   },
-    //   profile: (profile) => {
-    //     return {
-    //       id: profile.merchant_id,
-    //       name: profile.business_name,
-    //       email: profile.email, // Make sure these fields are adjusted based on the actual Square response
-    //     };
-    //   },
-    // },
 
     /**
      * ...add more providers here.

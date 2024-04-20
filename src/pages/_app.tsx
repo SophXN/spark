@@ -17,12 +17,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  console.log("session", session);
   return (
     <SessionProvider session={session}>
-      <main className={cn(
+      <main
+        className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}>
+          fontSans.variable,
+        )}
+      >
         <Component {...pageProps} />
       </main>
     </SessionProvider>

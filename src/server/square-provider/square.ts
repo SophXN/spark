@@ -29,7 +29,7 @@ const SquareProvider = (
       // must match Prisma User model
       return {
         id: profile.id, // id will be overwritten
-        firstName: profile.businessName,
+        companyId: profile.id,
         email: `${profile.businessName.replace(/\s+/g, "-").toLowerCase()}@square.com`, // dummy email
       };
     },

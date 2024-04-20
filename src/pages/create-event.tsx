@@ -108,14 +108,14 @@ export default function Events() {
   }, [eventCreationProgress, form, router]);
 
   const handleCancelEvent = () => {
-    void router.push("/home");
+    void router.push("/");
   };
 
   return (
     <>
       <div>
         <Navbar />
-        <div className="relative w-screen flex-1 space-y-8 mb-4">
+        <div className="relative mb-4 w-screen flex-1 space-y-8">
           <div className="mx-3 mt-4 grid justify-items-center">
             <div className="w-full items-center sm:max-w-4xl">
               <h3 className="text-2xl font-bold">Create your event</h3>
