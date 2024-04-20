@@ -1,0 +1,122 @@
+export const merchants = [
+    {
+        "id": "ML5TRQXY4ZAZW",
+        "name": "Asterix Technologies",
+        "sponsorships": [],
+        "businessCityLocation": ["San Francisco", "New York"],
+        "businessStoreType": ["Physical", "Virtual"],
+        "businessDescription": "A leading retailer of consumer and professional technology products.",
+        "facebookUrl": "https://facebook.com/asterixtech",
+        "twitterUrl": "https://twitter.com/asterixtech",
+        "instagramUrl": "https://instagram.com/asterixtech",
+        "merchantCodes": ["7298", "5678", "6300"]
+    },
+    {
+        "id": "c00a12f2",
+        "name": "Bev's Beverages",
+        "sponsorships": [],
+        "businessCityLocation": ["Chicago", "Atlanta"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "Distributor of fine wines and craft beers in the Midwest and South.",
+        "facebookUrl": "https://facebook.com/bevsbeverages",
+        "twitterUrl": "https://twitter.com/bevsbeverages",
+        "instagramUrl": "https://instagram.com/bevsbeverages",
+        "merchantCodes": ["7298", "6789", "6300"]
+    },
+    {
+        "id": "c00a12f3",
+        "name": "Crystalline Cleaners",
+        "sponsorships": [],
+        "businessCityLocation": ["Seattle", "Portland"],
+        "businessStoreType": ["Physical", "Virtual"],
+        "businessDescription": "Eco-friendly and sustainable residential and commercial cleaning services.",
+        "facebookUrl": "https://facebook.com/crystallinecleaners",
+        "twitterUrl": "https://twitter.com/crystacleaners",
+        "instagramUrl": "https://instagram.com/crystacleaners",
+        "merchantCodes": ["7273", "5499"]
+    },
+    {
+        "id": "c00a12f4",
+        "name": "Delta Designs",
+        "sponsorships": [],
+        "businessCityLocation": ["Dallas", "Houston"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "Innovative interior design services that transform your living spaces.",
+        "facebookUrl": "https://facebook.com/deltadesigns",
+        "twitterUrl": "https://twitter.com/deltadesigns",
+        "instagramUrl": "https://instagram.com/deltadesigns",
+        "merchantCodes": ["7298", "8901", "6300"]
+    },
+    {
+        "id": "c00a12f5",
+        "name": "Eclipse Events",
+        "sponsorships": [],
+        "businessCityLocation": ["Los Angeles", "San Diego"],
+        "businessStoreType": ["Physical", "Virtual"],
+        "businessDescription": "Creating memorable events that capture the essence of your occasion.",
+        "facebookUrl": "https://facebook.com/eclipseevents",
+        "twitterUrl": "https://twitter.com/eclipseevents",
+        "instagramUrl": "https://instagram.com/eclipseevents",
+        "merchantCodes": ["5678", "9012"]
+    },
+    {
+        "id": "c00a12f6",
+        "name": "Flora Gardens",
+        "sponsorships": [],
+        "businessCityLocation": ["Phoenix", "Tucson"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "We bring your garden dreams to life with our expert landscaping services.",
+        "facebookUrl": "https://facebook.com/floragardens",
+        "twitterUrl": "https://twitter.com/floragardens",
+        "instagramUrl": "https://instagram.com/floragardens",
+        "merchantCodes": ["6789", "5499", "6300"]
+    },
+    {
+        "id": "c00a12f7",
+        "name": "Gusto Grills",
+        "sponsorships": [],
+        "businessCityLocation": ["Miami", "Tampa"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "A modern culinary experience focusing on grilled gourmet dishes.",
+        "facebookUrl": "https://facebook.com/gustogrills",
+        "twitterUrl": "https://twitter.com/gustogrills",
+        "instagramUrl": "https://instagram.com/gustogrills",
+        "merchantCodes": ["8111", "5499", "6300"]
+    },
+    {
+        "id": "c00a12f8",
+        "name": "Harbor Health",
+        "sponsorships": [],
+        "businessCityLocation": ["Boston", "Providence"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "Dedicated to enhancing your health and wellness with our comprehensive services.",
+        "facebookUrl": "https://facebook.com/harborhealth",
+        "twitterUrl": "https://twitter.com/harborhealth",
+        "instagramUrl": "https://instagram.com/harborhealth",
+        "merchantCodes": ["7273", "5812"]
+    },
+    {
+        "id": "c00a12f9",
+        "name": "Innova IT Solutions",
+        "sponsorships": [],
+        "businessCityLocation": ["San Jose", "Palo Alto"],
+        "businessStoreType": ["Physical", "Virtual"],
+        "businessDescription": "Cutting-edge IT solutions that drive progress and efficiency in your business.",
+        "facebookUrl": "https://facebook.com/innovait",
+        "twitterUrl": "https://twitter.com/innovait",
+        "instagramUrl": "https://instagram.com/innovait",
+        "merchantCodes": ["8111", "5499"]
+    },
+    {
+        "id": "c00a12fa",
+        "name": "Jive Jazz Club",
+        "sponsorships": [],
+        "businessCityLocation": ["New Orleans"],
+        "businessStoreType": ["Physical"],
+        "businessDescription": "Experience the best of live jazz music in a vibrant and lively atmosphere.",
+        "facebookUrl": "https://facebook.com/jivejazzclub",
+        "twitterUrl": "https://twitter.com/jivejazzclub",
+        "instagramUrl": "https://instagram.com/jivejazzclub",
+        "merchantCodes": ["5499", "8111"]
+    }
+]

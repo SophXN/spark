@@ -4,16 +4,20 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Navbar from "~/components/Navbar";
 import Filters from "~/components/BrowseBusinesses/filters";
-import { filterObject, BusinessType } from "~/types/types";
+import { filterObject, BusinessType, BrowseMerchantsQuery } from "~/types/types";
+import { mcc } from "~/utils/mcc";
+import { api } from "~/utils/api";
 
 const BrowseMerchantsPage: React.FC = () => {
 
-  const [filterObject, setFilterObject] = React.useState<filterObject>({location: "", categoryCode: "", businessType: BusinessType.PHYSICAL})
-
-  useEffect(() => {
-    console.log(filterObject, "<= parent");
-    //fetchData();
-}, [filterObject]);
+  const [query, setQuery] = React.useState<BrowseMerchantsQuery>({})
+  console.log(query, "<= final query")
+  
+  const {
+    data: companyData,
+    isLoading,
+    error,
+  } = api.company.filterCompanies.useQuery(query)
 
   return (
     <div>
@@ -24,9 +28,9 @@ const BrowseMerchantsPage: React.FC = () => {
             <h3 className="text-2xl font-bold">Explore businesses to work with</h3>
           </div>
           <div className="mt-3 w-full max-w-4xl">
-          <Filters onChange={setFilterObject} />
+          <Filters onChange={setQuery} />
           <div>
-
+            
           </div>
           </div>
         </div>

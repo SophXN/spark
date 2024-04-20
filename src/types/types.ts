@@ -102,6 +102,7 @@ export type HomePageResponse = EventRequest & {
   _count: {
     sponsors: number;
     collaborators: number;
+    collaboratorsResponses: number
   };
   collaborators: Collaborator[];
   collaboratorsResponses: CollaboratorResponse[];
@@ -121,13 +122,26 @@ export type CollaboratorResponseExtended = CollaboratorResponse & {
 };
 
 export enum BusinessType {
-  PHYSICAL = "physical",
-  VIRTUAL = "virtual",
-  MOBILE = "mobile",
-}
+  PHYSICAL = "Physical",
+  VIRTUAL = "Virtual",
+  MOBILE = "Mobile",
+};
 
 export interface filterObject {
-  location: string;
-  categoryCode: string;
-  businessType: BusinessType;
+  city?: string,
+  merchantCode?: string,
+  type?: BusinessType,
+};
+
+export type BrowseCompanies = Company & {
+  _count: {
+    eventRequests: number;
+  }
+  collaboratorsResponses: CollaboratorResponse[]
+};
+
+export interface BrowseMerchantsQuery {
+  city?: string,
+  type?: string,
+  merchantCode?: string,
 }

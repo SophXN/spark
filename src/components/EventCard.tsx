@@ -23,7 +23,7 @@ export function EventCard({ eventDetails }: EventCardProps) {
   let collaboratorSpacesLeft: number = 0;
   let totalSponsorsNeeded: number = 0;
   let sponsorSpacesLeft: number = 0;
-  let acceptedCollaboratorResponsesCount = eventDetails._count?.collaboratorsResponses ?? 0;
+  let acceptedCollaboratorResponsesCount = eventDetails._count.collaboratorsResponses ?? 0;
 
   if(eventDetails.collaborators.length > 0) {
     collaboratorsExist = true;

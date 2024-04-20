@@ -6,6 +6,7 @@ import Navbar from "~/components/Navbar";
 import { Button } from "~/components/ui/button";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
+import { HomePageResponse } from "~/types/types";
 
 interface Props {
   logo: string;
@@ -61,7 +62,7 @@ const HomePage: React.FC<Props> = () => {
                   key={event.eventId}
                   onClick={() => handleEventClick(event.eventId)}
                 >
-                  <EventCard key={event.eventId} eventDetails={event} />
+                  <EventCard key={event.eventId} eventDetails={event as HomePageResponse} />
                 </div>
               ))}
             </ul>
