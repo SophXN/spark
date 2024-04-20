@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { CollaboratorResponseStatus } from "@prisma/client";
 
 export const companyRouter = createTRPCRouter({
   getCompany: publicProcedure
@@ -52,8 +53,19 @@ export const companyRouter = createTRPCRouter({
           }
         },
         include: {
-          locations: true
-        }
+          locations: true,
+          collaboratorResponses: true,
+          _count: {
+            select: {
+              eventRequests: true,
+              collaboratorResponses: {
+                where: {
+                  status: CollaboratorResponseStatus.ACCEPTED,
+                },
+              },
+            }
+          }
+        },
       });
     }),
 });

@@ -19,21 +19,6 @@ const BrowseMerchantsPage: React.FC = () => {
     error,
   } = api.company.filterCompanies.useQuery(query)
 
-//   useEffect(() => {
-//     console.log(filterObject, "<= parent");
-//     if(filterObject.location !== ""){
-//       query.city = filterObject.location
-//     }
-//     if(filterObject.categoryCode !== ""){
-//       query.merchantCode = filterObject.categoryCode
-//     }
-//     query.type = filterObject.businessType
-    
-//     console.log(query, "<= final query");
-  
-//     //fetchData();
-// }, [filterObject]);
-
   return (
     <div>
       <Navbar />

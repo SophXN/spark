@@ -43,13 +43,13 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
     const [inputValue, setInputValue] = useState('');
-    const [filterObject, setFilterObject] = React.useState<filterObject>({ location: "", merchantCode: "", type: BusinessType.PHYSICAL })
+    const [filterObject, setFilterObject] = React.useState<filterObject>({ city: "", merchantCode: "", type: BusinessType.PHYSICAL })
 
     useEffect(() => {
         console.log("updated")
         console.log(filterObject, "<= before query");
-        if (filterObject.location === "") {
-            delete filterObject.location;
+        if (filterObject.city === "") {
+            delete filterObject.city;
         }
         if (filterObject.merchantCode === "") {
             delete filterObject.merchantCode
@@ -60,10 +60,10 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         console.log(event)
         if (event.key === 'Enter') {
-            filterObject.location = event.currentTarget.value;
+            filterObject.city = event.currentTarget.value;
             setFilterObject(prevState => ({
                 ...prevState,
-                location: filterObject.location
+                city: filterObject.city
             }));
         }
     };
@@ -82,7 +82,7 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
                         type="text"
                         placeholder="Type a city"
                         className="pl-2"
-                        defaultValue={filterObject.location}
+                        defaultValue={filterObject.city}
                         onKeyDown={handleKeyDown}
                         onChange={() => handleInputChange}
                     />

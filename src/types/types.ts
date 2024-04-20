@@ -128,7 +128,7 @@ export enum BusinessType {
 };
 
 export interface filterObject {
-  location?: string,
+  city?: string,
   merchantCode?: string,
   type?: BusinessType,
 };
