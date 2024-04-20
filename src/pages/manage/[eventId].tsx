@@ -3,7 +3,6 @@ import React from "react";
 import Navbar from "~/components/Navbar";
 import { BreadcrumbManageCollaborators } from "~/components/ManageCollaborators/BreadcrumbManageCollaborators";
 import Tabs from "~/components/ManageCollaborators/Tabs";
-import { type CollaboratorResponseExtended } from "~/types/types";
 import { api } from "~/utils/api";
 
 const ManageEvent: React.FC = () => {
@@ -29,11 +28,7 @@ const ManageEvent: React.FC = () => {
           />
         </div>
         <div className="mt-2 text-3xl font-semibold">Manage Collaborators</div>
-        {eventData ? (
-          <Tabs
-            eventData={eventData as unknown as CollaboratorResponseExtended}
-          />
-        ) : null}
+        {eventData ? <Tabs eventData={eventData} /> : null}
       </div>
     </div>
   );

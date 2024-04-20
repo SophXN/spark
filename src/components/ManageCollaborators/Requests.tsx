@@ -11,30 +11,14 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Check } from "lucide-react";
-import {
-  CollaboratorResponseStatus,
-  type CollaboratorResponse,
-} from "@prisma/client";
+import { CollaboratorResponseStatus } from "@prisma/client";
 import { api } from "~/utils/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { type CollaboratorResponseExtended } from "~/types/types";
 
 interface RequestsProps {
-  collaboratorResponses: CollaboratorResponse[];
+  collaboratorResponses: CollaboratorResponseExtended[];
 }
-
-export const updateCollaboratorResponseStatus = (
-  eventRequestId: string,
-  collaboratorResponseId: string,
-  status: CollaboratorResponseStatus,
-) => {
-  api.collaboratorResponse.updateStatusOfCollaboratorResponse
-    .useMutation()
-    .mutate({
-      eventRequestId: eventRequestId,
-      collaboratorResponseId: collaboratorResponseId,
-      status: status,
-    });
-};
 
 export const Requests = ({ collaboratorResponses }: RequestsProps) => {
   const collaboratorResponseMutatation =

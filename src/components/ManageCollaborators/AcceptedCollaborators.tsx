@@ -9,15 +9,13 @@ import {
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { MailIcon, RefreshCcwIcon } from "lucide-react";
-import {
-  CollaboratorResponseStatus,
-  type CollaboratorResponse,
-} from "@prisma/client";
+import { CollaboratorResponseStatus } from "@prisma/client";
 import { api } from "~/utils/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { type CollaboratorResponseExtended } from "~/types/types";
 
 interface AcceptedDataProps {
-  acceptedCollaborators: CollaboratorResponse[];
+  acceptedCollaborators: CollaboratorResponseExtended[];
 }
 
 export const AcceptedCollaborators = ({

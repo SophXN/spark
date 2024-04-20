@@ -109,10 +109,15 @@ export type HomePageResponse = EventRequest & {
   requester: Company;
 };
 
-export type CollaboratorResponseExtended = EventRequest & {
-  collaborators: Collaborator[];
+export type EventRequestExtended = EventRequest & {
   requester: Company;
+  collaborators: Collaborator[];
   collaboratorsResponses: CollaboratorResponse[];
+};
+
+export type CollaboratorResponseExtended = CollaboratorResponse & {
+  responder: Company;
+  responseMessage: string;
 };
 
 export enum BusinessType {
@@ -122,7 +127,7 @@ export enum BusinessType {
 }
 
 export interface filterObject {
-  location: string,
-  categoryCode: string,
-  businessType: BusinessType,
+  location: string;
+  categoryCode: string;
+  businessType: BusinessType;
 }

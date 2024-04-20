@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React from "react";
 import { useState } from "react";
 import { Requests } from "~/components/ManageCollaborators/Requests";
-import { type CollaboratorResponseExtended } from "~/types/types";
+import {
+  type CollaboratorResponseExtended,
+  type EventRequestExtended,
+} from "~/types/types";
 import {
   type CollaboratorResponse,
   CollaboratorResponseStatus,
@@ -30,15 +29,20 @@ function classNames(...classes: unknown[]) {
 }
 
 interface TabsProps {
-  eventData: CollaboratorResponseExtended;
+  eventData: EventRequestExtended[];
 }
 
 const Tabs: React.FC<TabsProps> = ({ eventData }: TabsProps) => {
   const [tabs, setTabs] = useState<Tab[]>(defaultTabs);
   const activeTab = tabs.find((tab) => tab.current)?.name;
 
-  const collaboratorResponses: CollaboratorResponse[] =
-    eventData[0].collaboratorsResponses;
+  const collaboratorResponses: CollaboratorResponseExtended[] = [];
+
+  eventData.forEach((event) => {
+    event.collaboratorsResponses.forEach((response) => {
+      collaboratorResponses.push(response as CollaboratorResponseExtended);
+    });
+  });
 
   const handleTabClick = (clickedTab: Tab) => {
     if (tabs.find((tab) => tab.current)?.name === clickedTab.name) {
