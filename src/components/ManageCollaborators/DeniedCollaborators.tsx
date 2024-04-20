@@ -13,7 +13,8 @@ import {
   CollaboratorResponseStatus,
   type CollaboratorResponse,
 } from "@prisma/client";
-import { updateCollaboratorResponseStatus } from "./Requests";
+import { api } from "~/utils/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DeniedData {
   deniedCollaborators: CollaboratorResponse[];
@@ -22,6 +23,27 @@ interface DeniedData {
 export const DeniedCollaborators: React.FC<DeniedData> = ({
   deniedCollaborators,
 }) => {
+  const queryClient = useQueryClient();
+  const collaboratorResponseMutatation =
+    api.collaboratorResponse.updateStatusOfCollaboratorResponse.useMutation();
+  const updateCollaboratorResponseStatusV2 = (
+    eventRequestId: string,
+    collaboratorResponseId: string,
+    status: CollaboratorResponseStatus,
+  ) => {
+    collaboratorResponseMutatation.mutate(
+      {
+        eventRequestId: eventRequestId,
+        collaboratorResponseId: collaboratorResponseId,
+        status: status,
+      },
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries();
+        },
+      },
+    );
+  };
   return (
     <div>
       {deniedCollaborators.map((item) => (
@@ -54,7 +76,7 @@ export const DeniedCollaborators: React.FC<DeniedData> = ({
           <CardFooter className="gap-21 flex flex-row flex-wrap justify-end">
             <Button
               onClick={() =>
-                updateCollaboratorResponseStatus(
+                updateCollaboratorResponseStatusV2(
                   item.eventRequestId,
                   item.id,
                   CollaboratorResponseStatus.PENDING,

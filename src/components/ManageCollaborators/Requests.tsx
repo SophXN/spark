@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import {
@@ -15,8 +16,7 @@ import {
   type CollaboratorResponse,
 } from "@prisma/client";
 import { api } from "~/utils/api";
-import { useQueryClient as UseQueryClient } from "@tanstack/react-query";
-import { on } from "events";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RequestsProps {
   collaboratorResponses: CollaboratorResponse[];
@@ -37,6 +37,27 @@ export const updateCollaboratorResponseStatus = (
 };
 
 export const Requests = ({ collaboratorResponses }: RequestsProps) => {
+  const collaboratorResponseMutatation =
+    api.collaboratorResponse.updateStatusOfCollaboratorResponse.useMutation();
+  const queryClient = useQueryClient();
+  const updateCollaboratorResponseStatusV2 = (
+    eventRequestId: string,
+    collaboratorResponseId: string,
+    status: CollaboratorResponseStatus,
+  ) => {
+    collaboratorResponseMutatation.mutate(
+      {
+        eventRequestId: eventRequestId,
+        collaboratorResponseId: collaboratorResponseId,
+        status: status,
+      },
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries();
+        },
+      },
+    );
+  };
   return (
     <div>
       {collaboratorResponses.map((item) => {
@@ -72,7 +93,7 @@ export const Requests = ({ collaboratorResponses }: RequestsProps) => {
               <CardFooter className="flex flex-row flex-wrap justify-end gap-2">
                 <Button
                   onClick={() =>
-                    updateCollaboratorResponseStatus(
+                    updateCollaboratorResponseStatusV2(
                       item.eventRequestId,
                       item.id,
                       CollaboratorResponseStatus.DENIED,
@@ -86,7 +107,7 @@ export const Requests = ({ collaboratorResponses }: RequestsProps) => {
                 </Button>
                 <Button
                   onClick={() =>
-                    updateCollaboratorResponseStatus(
+                    updateCollaboratorResponseStatusV2(
                       item.eventRequestId,
                       item.id,
                       CollaboratorResponseStatus.ACCEPTED,

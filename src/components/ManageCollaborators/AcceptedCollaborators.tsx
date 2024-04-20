@@ -13,7 +13,8 @@ import {
   CollaboratorResponseStatus,
   type CollaboratorResponse,
 } from "@prisma/client";
-import { updateCollaboratorResponseStatus } from "./Requests";
+import { api } from "~/utils/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AcceptedDataProps {
   acceptedCollaborators: CollaboratorResponse[];
@@ -23,7 +24,27 @@ export const AcceptedCollaborators = ({
   acceptedCollaborators,
 }: AcceptedDataProps) => {
   const openEmail = () => console.log("hi");
-
+  const queryClient = useQueryClient();
+  const collaboratorResponseMutatation =
+    api.collaboratorResponse.updateStatusOfCollaboratorResponse.useMutation();
+  const updateCollaboratorResponseStatusV2 = (
+    eventRequestId: string,
+    collaboratorResponseId: string,
+    status: CollaboratorResponseStatus,
+  ) => {
+    collaboratorResponseMutatation.mutate(
+      {
+        eventRequestId: eventRequestId,
+        collaboratorResponseId: collaboratorResponseId,
+        status: status,
+      },
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries();
+        },
+      },
+    );
+  };
   return (
     <div>
       {acceptedCollaborators.map((item) => (
@@ -66,7 +87,7 @@ export const AcceptedCollaborators = ({
           <CardFooter className="gap-21 flex flex-row flex-wrap justify-end">
             <Button
               onClick={() =>
-                updateCollaboratorResponseStatus(
+                updateCollaboratorResponseStatusV2(
                   item.eventRequestId,
                   item.id,
                   CollaboratorResponseStatus.PENDING,
