@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { EventCard } from "~/components/EventCard";
 import { useRouter } from "next/router";
 import Navbar from "~/components/Navbar";
