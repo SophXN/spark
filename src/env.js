@@ -12,7 +12,7 @@ export const env = createEnv({
       .url()
       .refine(
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
+        "You forgot to change the default URL",
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -26,7 +26,7 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string() : z.string().url()
+      process.env.VERCEL ? z.string() : z.string().url(),
     ),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
@@ -34,7 +34,7 @@ export const env = createEnv({
     SQUARE_TEST_APP_SECRET: z.string(),
     SQUARE_TEST_AUTH_TOKEN: z.string(),
     SQUARE_PROD_CLIENT_ID: z.string(),
-    SQUARE_PROD_APP_SECRET: z.string()
+    SQUARE_PROD_APP_SECRET: z.string(),
   },
 
   /**
@@ -57,11 +57,11 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    SQUARE_TEST_CLIENT_ID: process.env.SQUARE_TEST_CLIENT_ID,
-    SQUARE_TEST_APP_SECRET: process.env.SQUARE_TEST_APP_SECRET,
+    SQUARE_TEST_CLIENT_ID: process.env.SQR_SANDBOX_APPLICATION_ID,
+    SQUARE_TEST_APP_SECRET: process.env.SQR_SANDBOX_APPLICATION_SECRET,
     SQUARE_PROD_CLIENT_ID: process.env.SQUARE_PROD_CLIENT_ID,
     SQUARE_PROD_APP_SECRET: process.env.SQUARE_PROD_APP_SECRET,
-    SQUARE_TEST_AUTH_TOKEN: process.env.SQUARE_TEST_AUTH_TOKEN
+    SQUARE_TEST_AUTH_TOKEN: process.env.SQUARE_TEST_AUTH_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -22,24 +22,36 @@ const HomePage: React.FC<Props> = () => {
 
   const handleCreateEventClick = () => {
     void router.push(`/create-event`);
-  }
+  };
 
-  const { data: eventData, isLoading, error } = api.events.getHomePageEvents.useQuery();
+  const {
+    data: eventData,
+    isLoading,
+    error,
+  } = api.events.getHomePageEvents.useQuery();
 
-  if (!eventData) return <div/>;
+  if (!eventData) return <div />;
 
   console.log(eventData);
 
   return (
     <div>
-      <Navbar></Navbar>
+      <Navbar />
       <main>
         <div className="mx-auto max-w-7xl px-3">
-          <div className="flex flex-row justify-between my-2">
+          <div className="my-2 flex flex-row justify-between">
             <div className="text-2xl font-semibold">Events</div>
-            <Button onClick={() => handleCreateEventClick()} size="sm" className="p-2"><StarFilledIcon className="mr-1" ></StarFilledIcon>Create Event</Button>
+            <Button
+              onClick={() => handleCreateEventClick()}
+              size="sm"
+              className="p-2"
+            >
+              <StarFilledIcon className="mr-1"></StarFilledIcon>Create Event
+            </Button>
           </div>
-          {isLoading ? <p>Loading...</p> :
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
             <ul
               role="list"
               className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
@@ -53,7 +65,7 @@ const HomePage: React.FC<Props> = () => {
                 </div>
               ))}
             </ul>
-          }
+          )}
         </div>
       </main>
     </div>
