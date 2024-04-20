@@ -14,17 +14,19 @@ interface Props {
 }
 
 const HomePage: React.FC<Props> = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   console.log("sessionData", sessionData);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  console.log("sessionData", sessionData);
-  // React.useEffect(() => {
-  //   if (!sessionData) {
-  //     void router.push("/login");
-  //   }
-  // }, [sessionData, router]);
+  // if user is not in the db
+  // add them and theys company + locations
+
+  React.useEffect(() => {
+    if (status !== "authenticated" && status !== "loading") {
+      void router.push("/login");
+    }
+  }, [sessionData, router, status]);
 
   const handleEventClick = (eventId: string) => {
     console.log(eventId);

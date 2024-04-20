@@ -37,6 +37,7 @@ import {
 } from "~/components/ui/select";
 import { EventType } from "@prisma/client";
 import Navbar from "~/components/Navbar";
+import { useSession } from "next-auth/react";
 
 const FormSchema = z.object({
   eventId: z.string(),
@@ -58,6 +59,8 @@ enum EventCreationProgress {
 
 export default function Events() {
   const router = useRouter();
+  const { data: sessionData, status } = useSession();
+  console.log("sessionData", sessionData, status);
   const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
   const [eventCreationProgress, setEventCreationProgress] =
     React.useState<EventCreationProgress>(EventCreationProgress.IDLE);
