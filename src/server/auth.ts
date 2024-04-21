@@ -10,6 +10,7 @@ import { type Adapter } from "next-auth/adapters";
 
 import { db } from "~/server/db";
 import SquareProvider from "./square-provider/square";
+import { randomUUID, randomBytes } from "crypto";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -25,11 +26,6 @@ declare module "next-auth" {
       // role: UserRole;
     };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -48,22 +44,15 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session(context) {
-      const { session, token } = context;
-      console.log("HI SESSION", session, token);
-      const user = token.user as User;
+      // const { session, token } = context;
+      const { session, user } = context;
+      console.log("HI SESSION", session, user);
 
       if (session && user) {
         session.user = user;
       }
       return session;
     },
-    // async session(context) {
-    //   const { session, user } = context;
-    //   if (session.user) {
-    //     session.user.id = user.id;
-    //   }
-    //   return session;
-    // },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -100,8 +89,12 @@ export const authOptions: NextAuthOptions = {
     },
   },
   session: {
-    strategy: "jwt",
-    maxAge: 60 * 60, // 1h
+    strategy: "database",
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+    generateSessionToken: () => {
+      return randomUUID?.() ?? randomBytes(32).toString("hex")
+    }
   },
 };
 
