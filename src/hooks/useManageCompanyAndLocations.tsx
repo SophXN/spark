@@ -17,7 +17,7 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string, opt
         console.log(data, "<= locations created")
         setLoading(false);
     },});
-    const findLocations = api.merchantLocations.getLocations.useQuery(accountId, {enabled: options.enabled}).data || [];
+    const findLocations = api.merchantLocations.getLocations.useQuery(accountId, {enabled: findCompanyByMerchantId.data === null}).data || [];
     const createCompany = api.company.createCompany.useMutation({onSuccess(data, variables, context) {
         console.log(data, "<= company created")
         const updatedLocations = findLocations.map(location => ({
@@ -39,6 +39,7 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string, opt
         if(findCompanyByMerchantId.data){
             console.log("company found, no further action")
             setLoading(false);
+            return
         }
 
         if (!findCompanyByMerchantId.isLoading && !findCompanyByMerchantId.data && !findCompanyByMerchantId.error) {
