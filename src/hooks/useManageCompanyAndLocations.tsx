@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '~/utils/api';
-import { getServerSession } from "next-auth/next"
+import { z } from 'zod';
+import { MerchantLocation } from '@prisma/client';
+import { randomUUID } from "crypto";
 
 function useManageCompanyAndLocations(merchantId: string, accountId: string) {
     const [loading, setLoading] = useState(true);
@@ -10,12 +12,19 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string) {
     const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId);
     const createCompany = api.company.createCompany.useMutation();
     const createLocations = api.merchantLocations.addLocations.useMutation();
-    const findLocations = api.merchantLocations.getLocations.useQuery(accountId);
+    const findLocations = api.merchantLocations.getLocations.useQuery(accountId).data || [];
 
     useEffect(() => {
         if (!findCompanyByMerchantId.isLoading && !findCompanyByMerchantId.data && !findCompanyByMerchantId.error) {
             // No user found, let's create a company
             console.log("No company found");
+            
+            const companyParams = {
+                id: randomUUID(),
+                name: findLocations[0]?.name,
+                address: findLocations[0]?.address,
+                squareMerchantId: findLocations[0]?.companyId
+            }
             createCompany.mutate({ merchantId });
         }
 

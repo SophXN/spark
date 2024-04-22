@@ -118,7 +118,7 @@ model Company {
     squareMerchantId      String                 @unique
     eventRequests         EventRequest[]
     sponsorships          Sponsor[]
-    businessDescription   String
+    businessDescription   String?
     facebookUrl           String?
     twitterUrl            String?
     instagramUrl          String?

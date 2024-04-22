@@ -30,6 +30,8 @@ const locationSchema = z.object({
 
 const locationDisplaySchema = locationSchema.transform(location => ({
   id: randomUUID(),
+  name: location.name,
+  address: location.address.address_line_1 + ", " + location.address.postal_code + ", " + location.address.country,
   companyId: location.merchant_id,
   city: location.address.locality,
   type: location.type,
@@ -84,7 +86,7 @@ export const merchantLocationRouter = createTRPCRouter({
           }
         });
         
-        const displayLocations = locationsArraySchema.parse(response.data.locations) as MerchantLocation[];
+        const displayLocations = locationsArraySchema.parse(response.data.locations);
         
         console.log(displayLocations, ", <= location square data")
 
