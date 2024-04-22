@@ -116,7 +116,6 @@ model Company {
     name                  String
     address               String
     squareMerchantId      String                 @unique
-    squareLocationId      String
     eventRequests         EventRequest[]
     sponsorships          Sponsor[]
     businessDescription   String

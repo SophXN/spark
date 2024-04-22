@@ -6,9 +6,9 @@ export const companyRouter = createTRPCRouter({
   getCompany: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      return await ctx.db.company.findUnique({
+      return await ctx.db.company.findFirst({
         where: {
-          id: input,
+          squareMerchantId: input,
         },
       });
     }),
@@ -16,9 +16,9 @@ export const companyRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
+        address: z.string().optional(),
         squareMerchantId: z.string(),
-        squareLocationId: z.string(),
-        businessDescription: z.string(), 
+        businessDescription: z.string().optional(), 
         facebookUrl: z.string().optional(),
         twitterUrl: z.string().optional(),
         instagramUrl: z.string().optional()
@@ -28,9 +28,9 @@ export const companyRouter = createTRPCRouter({
       const company = await ctx.db.company.create({
         data: {
           name: input.name,
+          address: input.address as string,
           squareMerchantId: input.squareMerchantId,
-          squareLocationId: input.squareLocationId,
-          businessDescription: input.businessDescription,
+          businessDescription: input.businessDescription as string,
           facebookUrl: input.facebookUrl,
           twitterUrl: input.twitterUrl,
           instagramUrl: input.instagramUrl,

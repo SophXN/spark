@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
 import { type HomePageResponse } from "~/types/types";
+import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
 
 interface Props {
   logo: string;
@@ -17,7 +18,8 @@ const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
   console.log("sessionData", sessionData);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
+  const { loading, error } = useManageCompanyAndLocations(sessionData?.user.companyId, sessionData?.user.id as string);
 
   // if user is not in the db
   // add them and theys company + locations
@@ -26,7 +28,13 @@ const HomePage: React.FC<Props> = () => {
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
     }
-  }, [sessionData, router, status]);
+
+    if(!loading){
+      // stop page loading
+      setLoadingPage(false);
+    }
+
+  }, [sessionData, router, status, loading]);
 
   const handleEventClick = (eventId: string) => {
     console.log(eventId);
@@ -40,7 +48,6 @@ const HomePage: React.FC<Props> = () => {
   const {
     data: eventData,
     isLoading,
-    error,
   } = api.events.getHomePageEvents.useQuery();
 
   if (!eventData) return <div />;

@@ -33,6 +33,7 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
+    "@types/axios": "^0.14.0",
     "@types/next-auth": "^3.15.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

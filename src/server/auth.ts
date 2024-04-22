@@ -23,6 +23,7 @@ declare module "next-auth" {
     user: DefaultSession["user"] & {
       id: string;
       companyId?: string;
+      locationId?: string;
     };
   }
 }
@@ -34,22 +35,13 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async jwt(context) {
-      const { token, user } = context;
-
-      if (user) {
-        token.user = user;
-      }
-      return token;
-    },
-    async session(context) {
+    async session({ session, user }) {
       // const { session, token } = context;
-      const { session, user } = context;
-      console.log("HI SESSION", session, user);
 
       if (session && user) {
-        session.user = user;
+        session.user = user; 
       }
+      console.log("HI SESSION", session);
       return session;
     },
   },

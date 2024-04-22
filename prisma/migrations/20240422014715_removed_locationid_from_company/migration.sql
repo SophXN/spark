@@ -1,14 +1,17 @@
 /*
   Warnings:
 
-  - A unique constraint covering the columns `[squareMerchantId]` on the table `Company` will be added. If there are existing duplicate values, this will fail.
+  - You are about to drop the column `squareLocationId` on the `Company` table. All the data in the column will be lost.
 
 */
 -- DropForeignKey
 ALTER TABLE "EventRequest" DROP CONSTRAINT "EventRequest_requesterId_fkey";
 
--- CreateIndex
-CREATE UNIQUE INDEX "Company_squareMerchantId_key" ON "Company"("squareMerchantId");
+-- DropIndex
+DROP INDEX "Company_squareLocationId_key";
+
+-- AlterTable
+ALTER TABLE "Company" DROP COLUMN "squareLocationId";
 
 -- AddForeignKey
 ALTER TABLE "EventRequest" ADD CONSTRAINT "EventRequest_requesterId_fkey" FOREIGN KEY ("requesterId") REFERENCES "Company"("squareMerchantId") ON DELETE RESTRICT ON UPDATE CASCADE;

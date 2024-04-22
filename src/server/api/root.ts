@@ -5,6 +5,7 @@ import { collaboratorsRouter } from "~/server/api/routers/collaborators";
 import { companyRouter } from "~/server/api/routers/company";
 import { collaboratorResponseRouter } from "~/server/api/routers/collaboratorResponse";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { merchantLocationRouter } from "./routers/merchantLocations";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   collaborators: collaboratorsRouter,
   company: companyRouter,
   collaboratorResponse: collaboratorResponseRouter,
+  merchantLocations: merchantLocationRouter,
 });
 
 // export type definition of API
