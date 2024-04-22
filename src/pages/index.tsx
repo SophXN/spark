@@ -9,6 +9,8 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
 import { type HomePageResponse } from "~/types/types";
 import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
+import { Session } from "next-auth";
+import { Skeleton } from "~/components/ui/skeleton";
 
 interface Props {
   logo: string;
@@ -22,21 +24,24 @@ const HomePage: React.FC<Props> = () => {
   const { loading, error } = useManageCompanyAndLocations(
     sessionData?.user.companyId,
     sessionData?.user.id!,
+    { enabled: !!sessionData },
   );
 
-  // if user is not in the db
-  // add them and theys company + locations
+  const { data: eventData, isLoading } =
+    api.events.getHomePageEvents.useQuery();
+
+  console.log(eventData);
 
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
     }
 
-    if (!loading) {
+    if (!loading && !isLoading) {
       // stop page loading
       setLoadingPage(false);
     }
-  }, [sessionData, router, status, loading]);
+  }, [sessionData, router, status, loading, isLoading]);
 
   const handleEventClick = (eventId: string) => {
     console.log(eventId);
@@ -46,13 +51,6 @@ const HomePage: React.FC<Props> = () => {
   const handleCreateEventClick = () => {
     void router.push(`/create-event`);
   };
-
-  const { data: eventData, isLoading } =
-    api.events.getHomePageEvents.useQuery();
-
-  if (!eventData) return <div />;
-
-  console.log(eventData);
 
   return (
     <div>
@@ -69,15 +67,15 @@ const HomePage: React.FC<Props> = () => {
               <StarFilledIcon className="mr-1"></StarFilledIcon>Create Event
             </Button>
           </div>
-          <form id="payment-form">
-            <div id="card-container"></div>
-            <button id="card-button" type="button">
-              Pay $1.00
-            </button>
-          </form>
-          <div id="payment-status-container"></div>
-          {isLoading ? (
-            <p>Loading...</p>
+          {loadingPage ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              <Skeleton className="h-[400px] rounded-md" />
+              <Skeleton className="h-[400px] rounded-md" />
+              <Skeleton className="h-[400px] rounded-md" />
+              <Skeleton className="h-[400px] rounded-md" />
+              <Skeleton className="h-[400px] rounded-md" />
+              <Skeleton className="h-[400px] rounded-md" />
+            </div>
           ) : (
             <ul
               role="list"
