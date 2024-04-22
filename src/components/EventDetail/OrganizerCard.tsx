@@ -7,7 +7,7 @@ interface OrganizerCardProps {
 
 export default function OrganizerCard({ eventDetails }: OrganizerCardProps) {
   const { data: organizerData } =
-    api.company.getCompany.useQuery(eventDetails.requester.id);
+    api.company.getCompany.useQuery(eventDetails.requesterId);
 
   if (!organizerData) return "Loading...";
   console.log(organizerData);
