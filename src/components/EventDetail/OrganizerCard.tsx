@@ -27,7 +27,7 @@ export default function OrganizerCard({ eventDetails }: OrganizerCardProps) {
             {organizerData.name}
           </p>
           <p className="truncate text-sm text-gray-500">
-            Temporary Location: Brooklyn
+            {organizerData.address}
           </p>
         </a>
       </div>

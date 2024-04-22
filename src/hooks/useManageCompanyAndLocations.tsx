@@ -57,7 +57,7 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string, opt
                 createCompany.mutate(companyParams);
             }
         }
-    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId, findLocations]);
+    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId]);
 
     // Handle errors
     useEffect(() => {

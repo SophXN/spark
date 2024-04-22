@@ -48,11 +48,20 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     useEffect(() => {
         console.log("updated")
         console.log(filterObject, "<= before query");
+
+        if(filterObject.city === "" && filterObject.merchantCode === "" && filterObject.type === "") {
+            onChange(filterObject);
+            return;
+        }
+
         if (filterObject.city === "") {
             delete filterObject.city;
         }
         if (filterObject.merchantCode === "") {
             delete filterObject.merchantCode
+        }
+        if (filterObject.type === "") {
+            delete filterObject.type
         }
         onChange(filterObject);
     }, [filterObject])
@@ -155,9 +164,9 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value={BusinessType.MOBILE}>{BusinessType.MOBILE}</SelectItem>
-                                <SelectItem value={BusinessType.PHYSICAL}>{BusinessType.PHYSICAL}</SelectItem>
-                                <SelectItem value={BusinessType.VIRTUAL}>{BusinessType.VIRTUAL}</SelectItem>
+                                <SelectItem value={BusinessType.MOBILE}>{BusinessType.MOBILE.toUpperCase() + BusinessType.MOBILE.slice(1).toLowerCase()}</SelectItem>
+                                <SelectItem value={BusinessType.PHYSICAL}>{BusinessType.PHYSICAL.toUpperCase() + BusinessType.PHYSICAL.slice(1).toLowerCase()}</SelectItem>
+                                <SelectItem value={BusinessType.VIRTUAL}>{BusinessType.VIRTUAL.toUpperCase() + BusinessType.VIRTUAL.slice(1).toLowerCase()}</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

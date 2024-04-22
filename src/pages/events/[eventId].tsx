@@ -42,7 +42,7 @@ const EventDetails: React.FC = () => {
 
   }, [sessionData, router, status, isLoading]);
 
-  if(!eventData) { return  <div></div> }
+  if(!eventData) { return }
 
   const formattedDate = eventData ? format(eventData?.eventDate, "MMMM do, yyyy") : "no date found";
 
