@@ -115,7 +115,7 @@ model Company {
     id                    String                 @id @default(cuid())
     name                  String
     address               String
-    squareMerchantId      String
+    squareMerchantId      String                 @unique
     squareLocationId      String
     eventRequests         EventRequest[]
     sponsorships          Sponsor[]
@@ -128,18 +128,18 @@ model Company {
 }
 
 model MerchantLocation {
-    id                    String                  @id @default(cuid())
-    company               Company                 @relation(fields: [companyId], references: [id])
-    companyId             String
-    city                  String
-    type                  String
-    merchantCode          String
+    id           String  @id @default(cuid())
+    company      Company @relation(fields: [companyId], references: [id])
+    companyId    String
+    city         String
+    type         String
+    merchantCode String
 }
 
 model EventRequest {
     id                     String                 @id @default(cuid())
     eventId                String                 @unique
-    requester              Company                @relation(fields: [requesterId], references: [id])
+    requester              Company                @relation(fields: [requesterId], references: [squareMerchantId])
     requesterId            String
     title                  String
     description            String

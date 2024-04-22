@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -72,7 +72,7 @@ export default function Events() {
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuidv4(),
-      requesterId: "235khf8745",
+      requesterId: sessionData?.user?.companyId,
       title: "",
       description: "",
       eventDate: new Date(),
@@ -85,7 +85,7 @@ export default function Events() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const params = {
       eventId: form.getValues("eventId"),
-      requesterId: "235khf8745",
+      requesterId: sessionData?.user?.companyId ?? "",
       title: data.title,
       description: data.description,
       eventDate: data.eventDate,

@@ -7,7 +7,7 @@ import {
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
-import { HomePageResponse } from "~/types/types";
+import { type HomePageResponse } from "~/types/types";
 
 interface PublicEventData {
   eventDetails: HomePageResponse;
@@ -16,26 +16,30 @@ interface PublicEventData {
 export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   eventDetails,
 }) => {
-
-  let collaboratorsExist: boolean = false;
-  let sponsorsExists: boolean = false;
-  let totalCollaboratorsRequired: number = 0;
-  let totalCollaboratorsRemaining: number = 0;
-  let totalSponsorsNeeded: number = 0;
-  let totalSponsors: number = 0;
-  let sponsorSpacesLeft: number = 0;
-  let totalSponsorsRemaining: number = 0;
-  const countOfCollaboratorResponses = eventDetails.collaboratorsResponses?.length ?? 0;
-  const acceptedCollaboratorResponsesCount = eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => { return collaborator.status === "ACCEPTED" ? acc + 1 : acc }, 0) ?? 0
+  let collaboratorsExist = false;
+  let sponsorsExists = false;
+  let totalCollaboratorsRequired = 0;
+  let totalCollaboratorsRemaining = 0;
+  let totalSponsorsNeeded = 0;
+  const totalSponsors = 0;
+  const sponsorSpacesLeft = 0;
+  let totalSponsorsRemaining = 0;
+  const countOfCollaboratorResponses =
+    eventDetails.collaboratorsResponses?.length ?? 0;
+  const acceptedCollaboratorResponsesCount =
+    eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => {
+      return collaborator.status === "ACCEPTED" ? acc + 1 : acc;
+    }, 0) ?? 0;
 
   if (eventDetails.collaborators.length > 0) {
     collaboratorsExist = true;
     totalCollaboratorsRequired = eventDetails.collaborators
       ? eventDetails.collaborators?.reduce((acc, collaborator) => {
-        return acc + collaborator.collaboratorsRequired;
-      }, 0)
+          return acc + collaborator.collaboratorsRequired;
+        }, 0)
       : 0;
-    totalCollaboratorsRemaining = totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
+    totalCollaboratorsRemaining =
+      totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
   }
 
   // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
@@ -44,10 +48,10 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
     sponsorsExists = true;
     totalSponsorsNeeded = eventDetails.sponsors
       ? eventDetails.sponsors?.reduce((acc, sponsor) => {
-        return acc + sponsor.sponsorsRequired;
-      }, 0)
+          return acc + sponsor.sponsorsRequired;
+        }, 0)
       : 0;
-      totalSponsorsRemaining = totalSponsorsNeeded - 0;
+    totalSponsorsRemaining = totalSponsorsNeeded - 0;
   }
 
   return (
@@ -94,7 +98,9 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
         <CardContent>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total Collaborators</p>
-            <p className="text-sm font-bold">{acceptedCollaboratorResponsesCount}</p>
+            <p className="text-sm font-bold">
+              {acceptedCollaboratorResponsesCount}
+            </p>
           </div>
           <div className="mt-2 flex flex-row items-center justify-between">
             <p className="text-sm">Total Responses</p>

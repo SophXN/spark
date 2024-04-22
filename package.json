@@ -46,6 +46,7 @@
     "react-day-picker": "^8.10.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.2",
+    "react-square-web-payments-sdk": "^3.2.1",
     "recharts": "^2.12.3",
     "square": "^36.0.0",
     "superjson": "^2.2.1",

@@ -22,8 +22,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      companyId?: string;
     };
   }
 }
@@ -93,8 +92,8 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
     generateSessionToken: () => {
-      return randomUUID?.() ?? randomBytes(32).toString("hex")
-    }
+      return randomUUID?.() ?? randomBytes(32).toString("hex");
+    },
   },
 };
 
