@@ -19,7 +19,10 @@ const HomePage: React.FC<Props> = () => {
   console.log("sessionData", sessionData);
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
-  const { loading, error } = useManageCompanyAndLocations(sessionData?.user.companyId, sessionData?.user.id as string);
+  const { loading, error } = useManageCompanyAndLocations(
+    sessionData?.user.companyId,
+    sessionData?.user.id!,
+  );
 
   // if user is not in the db
   // add them and theys company + locations
@@ -29,11 +32,10 @@ const HomePage: React.FC<Props> = () => {
       void router.push("/login");
     }
 
-    if(!loading){
+    if (!loading) {
       // stop page loading
       setLoadingPage(false);
     }
-
   }, [sessionData, router, status, loading]);
 
   const handleEventClick = (eventId: string) => {
@@ -45,10 +47,8 @@ const HomePage: React.FC<Props> = () => {
     void router.push(`/create-event`);
   };
 
-  const {
-    data: eventData,
-    isLoading,
-  } = api.events.getHomePageEvents.useQuery();
+  const { data: eventData, isLoading } =
+    api.events.getHomePageEvents.useQuery();
 
   if (!eventData) return <div />;
 
@@ -69,6 +69,13 @@ const HomePage: React.FC<Props> = () => {
               <StarFilledIcon className="mr-1"></StarFilledIcon>Create Event
             </Button>
           </div>
+          <form id="payment-form">
+            <div id="card-container"></div>
+            <button id="card-button" type="button">
+              Pay $1.00
+            </button>
+          </form>
+          <div id="payment-status-container"></div>
           {isLoading ? (
             <p>Loading...</p>
           ) : (
