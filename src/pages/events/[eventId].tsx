@@ -11,12 +11,14 @@ import { api } from "~/utils/api";
 import { format } from "date-fns";
 import { HomePageResponse } from "~/types/types";
 import { useSession } from "next-auth/react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 const EventDetails: React.FC = () => {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
   const { eventId } = router.query; // Access the dynamic segment
   const [pageLoading, setLoadingPage] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const {
     data: eventData,
@@ -25,8 +27,6 @@ const EventDetails: React.FC = () => {
   } = api.events.getEventPageDetails.useQuery(eventId as string, {
     enabled: !!eventId,
   });
-
-  // if (!eventData || !eventId) return <div></div>;
 
   console.log(eventData);
 
@@ -42,7 +42,7 @@ const EventDetails: React.FC = () => {
 
   }, [sessionData, router, status, isLoading]);
 
-  if(!eventData) { return }
+  if (!eventData) { return }
 
   const formattedDate = eventData ? format(eventData?.eventDate, "MMMM do, yyyy") : "no date found";
 
@@ -50,13 +50,15 @@ const EventDetails: React.FC = () => {
     <div>
       <Navbar />
       <div className="px-3 py-3">
-        <Image
-          src={eventData.image}
-          alt="Event"
-          className="h-[500px] w-full rounded object-cover"
-          width={1000}
-          height={1000}
-        />
+        <div className="flex justify-center w-full">
+          <Image
+            src={eventData.image}
+            alt="Event"
+            className="h-[500px] w-full rounded object-cover"
+            width={1000}
+            height={1000}
+          />
+        </div>
 
         <div className="flex min-h-full flex-col py-3">
           <div className="mx-auto flex w-full max-w-7xl flex-wrap items-start gap-x-3">

@@ -65,7 +65,7 @@ export default function Events() {
   const [eventCreationProgress, setEventCreationProgress] =
     React.useState<EventCreationProgress>(EventCreationProgress.IDLE);
   const mutation = api.events.createEvent.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setEventCreationProgress(EventCreationProgress.SUCCESS);
     },
   });
@@ -259,25 +259,6 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
-
-                  <div className="grid w-full max-w-screen-sm items-center gap-2">
-                    <Label htmlFor="upload">Event Image</Label>
-                    <Label className="text-sm font-normal text-gray-600">
-                      This will appear at the top of your event page and on the
-                      home page across our platform
-                    </Label>
-                    <Button
-                      id="upload"
-                      type="button"
-                      variant="outline"
-                      className="w-24"
-                    >
-                      <div className="mr-1">
-                        <UploadIcon />
-                      </div>
-                      Upload
-                    </Button>
-                  </div>
                   <EventSponsors
                     eventId={form.getValues("eventId")}
                     isReadyToSubmit={isReadyToSubmit}
