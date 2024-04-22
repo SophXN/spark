@@ -9,6 +9,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
 import { type HomePageResponse } from "~/types/types";
 import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
+import { Session } from "next-auth";
 
 interface Props {
   logo: string;
@@ -19,10 +20,7 @@ const HomePage: React.FC<Props> = () => {
   console.log("sessionData", sessionData);
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
-  const { loading, error } = useManageCompanyAndLocations(sessionData?.user.companyId, sessionData?.user.id as string);
-
-  // if user is not in the db
-  // add them and theys company + locations
+  const { loading, error } = useManageCompanyAndLocations(sessionData?.user.companyId, sessionData?.user.id as string, {enabled : !!sessionData});
 
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {

@@ -4,17 +4,20 @@ import { z } from 'zod';
 import { MerchantLocation } from '@prisma/client';
 import { v4 as uuidv4 } from "uuid";
 
-function useManageCompanyAndLocations(merchantId: string, accountId: string) {
+type FetchOptions = {
+    enabled: boolean;
+  };
+
+function useManageCompanyAndLocations(merchantId: string, accountId: string, options: FetchOptions) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>("");
 
-    // tRPC hooks for operations
-    const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId);
+    const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId, {enabled: options.enabled});
     const createLocations = api.merchantLocations.addLocations.useMutation({onSuccess(data) {
         console.log(data, "<= locations created")
         setLoading(false);
     },});
-    const findLocations = api.merchantLocations.getLocations.useQuery(accountId).data || [];
+    const findLocations = api.merchantLocations.getLocations.useQuery(accountId, {enabled: options.enabled}).data || [];
     const createCompany = api.company.createCompany.useMutation({onSuccess(data, variables, context) {
         console.log(data, "<= company created")
         const updatedLocations = findLocations.map(location => ({
@@ -25,9 +28,19 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string) {
             merchantCode: location.merchantCode
         }));
         createLocations.mutate(updatedLocations)
-    },});
+    }});
 
     useEffect(() => {
+        if(!options.enabled){
+            console.log("not calling, no session data")
+            return
+        }
+
+        if(findCompanyByMerchantId.data){
+            console.log("company found, no further action")
+            setLoading(false);
+        }
+
         if (!findCompanyByMerchantId.isLoading && !findCompanyByMerchantId.data && !findCompanyByMerchantId.error) {
             // No user found, let's create a company
             console.log("No company found");
@@ -43,13 +56,7 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string) {
                 createCompany.mutate(companyParams);
             }
         }
-
-        if(findCompanyByMerchantId.data){
-            // user exists
-            console.log(findCompanyByMerchantId.data, ", <= found company data");
-            setLoading(false);
-        }
-    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId, findLocations.data]);
+    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId, findLocations]);
 
     // Handle errors
     useEffect(() => {
