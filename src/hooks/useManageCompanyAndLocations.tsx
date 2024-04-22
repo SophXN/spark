@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '~/utils/api';
 import { z } from 'zod';
 import { MerchantLocation } from '@prisma/client';
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 function useManageCompanyAndLocations(merchantId: string, accountId: string) {
     const [loading, setLoading] = useState(true);
@@ -10,64 +10,46 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string) {
 
     // tRPC hooks for operations
     const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId);
-    const createCompany = api.company.createCompany.useMutation();
-    const createLocations = api.merchantLocations.addLocations.useMutation();
+    const createLocations = api.merchantLocations.addLocations.useMutation({onSuccess(data) {
+        console.log(data, "<= locations created")
+        setLoading(false);
+    },});
     const findLocations = api.merchantLocations.getLocations.useQuery(accountId).data || [];
+    const createCompany = api.company.createCompany.useMutation({onSuccess(data, variables, context) {
+        console.log(data, "<= company created")
+        const updatedLocations = findLocations.map(location => ({
+            id: location.id,
+            companyId: data.id,
+            city: location.city as string,
+            type: location.type,
+            merchantCode: location.merchantCode
+        }));
+        createLocations.mutate(updatedLocations)
+    },});
 
     useEffect(() => {
         if (!findCompanyByMerchantId.isLoading && !findCompanyByMerchantId.data && !findCompanyByMerchantId.error) {
             // No user found, let's create a company
             console.log("No company found");
-            
-            const companyParams = {
-                id: randomUUID(),
-                name: findLocations[0]?.name,
-                address: findLocations[0]?.address,
-                squareMerchantId: findLocations[0]?.companyId
+            if(findLocations[0] == null) { return }
+            if(findLocations.length > 0){
+                console.log("locations found, create company")
+                const companyParams = {
+                    id: uuidv4(),
+                    name: findLocations[0].name as string,
+                    address: findLocations[0].address as string,
+                    squareMerchantId: findLocations[0].companyId as string
+                }
+                createCompany.mutate(companyParams);
             }
-            createCompany.mutate({ merchantId });
         }
 
         if(findCompanyByMerchantId.data){
             // user exists
-            console.log(findCompanyByMerchantId.data, ", found company data");
-            setLoading(true);
-        }
-    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId]);
-
-    useEffect(() => {
-        if (createCompany.isSuccess) {
-            console.log("created new company")
-            // Company created, now fetch locations and create them
-            //fetchLocationsAndCreate();
-        }
-    }, [createCompany.isSuccess]); // Only rerun when createCompany call succeeds
-
-    useEffect(() => {
-        if (findCompanyByMerchantId.data && !createCompany.isPending) {
-            // User found, fetch locations and create them without creating company
-            fetchLocationsAndCreate();
-        }
-    }, [findCompanyByMerchantId.data, !createCompany.isPending]);
-
-    async function fetchLocationsAndCreate() {
-        try {
-            setLoading(true);
-            setError(null);
-            const locations = await fetchSquareLocationsApi(merchantId);
-            createLocations.mutate({ locations });
-        } catch (err) {
-            setError(err.message);
-        } finally {
+            console.log(findCompanyByMerchantId.data, ", <= found company data");
             setLoading(false);
         }
-    }
-
-    async function fetchSquareLocationsApi(merchantId) {
-        // Fetch locations from Square's API
-        // Simulating fetch with dummy data
-        return [{ id: 'location1', name: 'Primary Location' }];
-    }
+    }, [findCompanyByMerchantId.data, findCompanyByMerchantId.isLoading, findCompanyByMerchantId.error, merchantId, findLocations.data]);
 
     // Handle errors
     useEffect(() => {
