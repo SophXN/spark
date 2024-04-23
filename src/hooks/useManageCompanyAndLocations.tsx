@@ -17,10 +17,10 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string, opt
         console.log(data, "<= locations created")
         setLoading(false);
     },});
-    const findLocations = api.merchantLocations.getLocations.useQuery(accountId, {enabled: findCompanyByMerchantId.data === null}).data || [];
+    const findLocationsThroughSquare = api.merchantLocations.getLocations.useQuery(accountId, {enabled: findCompanyByMerchantId.data === null}).data || [];
     const createCompany = api.company.createCompany.useMutation({onSuccess(data, variables, context) {
         console.log(data, "<= company created")
-        const updatedLocations = findLocations.map(location => ({
+        const updatedLocations = findLocationsThroughSquare.map(location => ({
             id: location.id,
             companyId: data.id,
             city: location.city as string,
@@ -45,14 +45,14 @@ function useManageCompanyAndLocations(merchantId: string, accountId: string, opt
         if (!findCompanyByMerchantId.isLoading && !findCompanyByMerchantId.data && !findCompanyByMerchantId.error) {
             // No user found, let's create a company
             console.log("No company found");
-            if(findLocations[0] == null) { return }
-            if(findLocations.length > 0){
+            if(findLocationsThroughSquare[0] == null) { return }
+            if(findLocationsThroughSquare.length > 0){
                 console.log("locations found, create company")
                 const companyParams = {
                     id: uuidv4(),
-                    name: findLocations[0].name as string,
-                    address: findLocations[0].address as string,
-                    squareMerchantId: findLocations[0].companyId as string
+                    name: findLocationsThroughSquare[0].name as string,
+                    address: findLocationsThroughSquare[0].address as string,
+                    squareMerchantId: findLocationsThroughSquare[0].companyId as string
                 }
                 createCompany.mutate(companyParams);
             }

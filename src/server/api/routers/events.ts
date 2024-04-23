@@ -15,6 +15,14 @@ function generateUrl(baseUrl: string, params: Record<string, string | number>): 
   return url.toString();
 }
 
+function getRandomNumber(min: number, max: number): number {
+  // Create a random number between min (inclusive) and max (inclusive)
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const randomNumber = getRandomNumber(1, 10);
+console.log(randomNumber);
+
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
     .input(
@@ -30,29 +38,28 @@ export const eventsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-
       const baseUrl = 'https://api.unsplash.com/photos/';
       const queryParams = {
         page: 1,
-        query: input.description,
-        per_page: 1,
+        query: input.eventType,
+        per_page: 9,
         orientation: "landscape"
       }
+      
       const url = generateUrl(baseUrl, queryParams);
 
-      console.log(input, "<= query");
-      const accessKey = process.env.UNSPLASH_ACCESS_KEY;
       try {
         const response = await axios.get(url, {
           headers: {
-            'Authorization': `Client-ID ${accessKey}`,
+            'Authorization': `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
             'Content-Type': 'application/json',
             'Accept-Version': "v1"
           }
         });
 
-        const images = response.data[0].urls.regular;
-        console.log(images, ", <= images")
+        const randomNumber = getRandomNumber(0, 10)
+        const images = response.data[randomNumber].urls.regular;
+
         return await ctx.db.eventRequest.create({
           data: {
             eventId: input.eventId,
@@ -91,7 +98,7 @@ export const eventsRouter = createTRPCRouter({
       });
       return event;
     }),
-  getHomePageEvents: publicProcedure.query(async ({ ctx }) => {
+  getHomePageEvents: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const events = await ctx.db.eventRequest.findMany({
       include: {
         sponsors: true,
@@ -131,4 +138,27 @@ export const eventsRouter = createTRPCRouter({
       });
       return events;
     }),
+    getYourEvents: publicProcedure
+    .input(z.string())
+    .query(async ({ctx, input}) => {
+      return await ctx.db.eventRequest.findMany({
+        where: {
+          requesterId: input
+        },
+        include: {
+          sponsors: true,
+          collaborators: true,
+          requester: true,
+          _count: {
+            select: {
+              collaboratorsResponses: {
+                where: {
+                  status: CollaboratorResponseStatus.ACCEPTED,
+                },
+              },
+            },
+          },
+        },
+      })
+    })
 });
