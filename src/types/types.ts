@@ -123,9 +123,9 @@ export type CollaboratorResponseExtended = CollaboratorResponse & {
 };
 
 export enum BusinessType {
-  PHYSICAL = "Physical",
-  VIRTUAL = "Virtual",
-  MOBILE = "Mobile",
+  PHYSICAL = "PHYSICAL",
+  VIRTUAL = "VIRTUAL",
+  MOBILE = "MOBILE",
 };
 
 export interface filterObject {

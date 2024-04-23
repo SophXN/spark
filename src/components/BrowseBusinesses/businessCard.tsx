@@ -38,24 +38,22 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
                         />
                     </div>
                     <div className="min-w-0 flex flex-col gap-1">
-                        <a>
-                            <div>
-                                <p className="text-2xl font-bold text-gray-900">
-                                    {companyData.name}
-                                </p>
-                            </div>
-                            <div className="flex flex-row gap-1 mt-0.5">
-                                <a href="">
-                                    <Twitter size={"18"} className="text-slate-700"></Twitter>
-                                </a>
-                                <a href="">
-                                    <Instagram size={"18"} className="text-slate-700"></Instagram>
-                                </a>
-                                <a href="">
-                                    <Facebook size={"18"} className="text-slate-700"></Facebook>
-                                </a>
-                            </div>
-                        </a>
+                        <div>
+                            <p className="text-2xl font-bold text-gray-900">
+                                {companyData.name}
+                            </p>
+                        </div>
+                        <div className="flex flex-row gap-1 mt-0.5">
+                            <a href="">
+                                <Twitter size={"18"} className="text-slate-700"></Twitter>
+                            </a>
+                            <a href="">
+                                <Instagram size={"18"} className="text-slate-700"></Instagram>
+                            </a>
+                            <a href="">
+                                <Facebook size={"18"} className="text-slate-700"></Facebook>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div className="mt-2">
@@ -63,7 +61,6 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
                 </div>
                 <div className="mt-2 flex flex-row gap-1">
                     {companyData.locations.map((location) => {
-                        console.log(companyData.name, location);
                         return <Badge key={location.merchantCode}>{findMerchantByMcc(location.merchantCode)}</Badge>
                     })}
                 </div>
@@ -88,7 +85,7 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
                         <p className="text-sm font-bold">{companyData._count.collaboratorResponses}</p>
                     </div>
                 </div>
-                
+
             </div>
             <Button className="px-2 mt-2 sm:mt-0 w-full sm:w-auto"><SendIcon size={"17"} className="mr-1" /><span className="text-sm">Invite to Collab</span></Button>
         </div>

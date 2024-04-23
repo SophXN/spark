@@ -41,7 +41,7 @@ const BrowseMerchantsPage: React.FC = () => {
             (
               companyData?.map((company) => {
                 console.log(company)
-                return <BusinessCard companyData={company} ></BusinessCard>
+                return <BusinessCard key={company.squareMerchantId} companyData={company} ></BusinessCard>
             }))}
           </div>
         </div>

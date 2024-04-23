@@ -18,7 +18,6 @@ interface Props {
 
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
-  console.log("sessionData", sessionData);
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
   const { loading, error } = useManageCompanyAndLocations(
