@@ -60,7 +60,6 @@ enum EventCreationProgress {
 export default function Events() {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
-  console.log("sessionData", sessionData, status);
   const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
   const [eventCreationProgress, setEventCreationProgress] =
     React.useState<EventCreationProgress>(EventCreationProgress.IDLE);

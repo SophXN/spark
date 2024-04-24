@@ -18,29 +18,39 @@ interface Props {
 
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
+  console.log(sessionData);
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
+  const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
+  const [loadingYourEventData, setLoadingYourEventData] = useState(true);
   const { loading, error } = useManageCompanyAndLocations(
-    sessionData?.user.companyId,
+    sessionData?.user.companyId!,
     sessionData?.user.id!,
     { enabled: !!sessionData },
   );
 
-  const { data: eventData, isLoading } =
-    api.events.getHomePageEvents.useQuery();
-
-  console.log(eventData);
+  const [homePageEventData, yourEventsData] = api.useQueries((t) => [
+    t.events.getHomePageEvents("", { enabled: !!sessionData }),
+    t.events.getYourEvents(sessionData?.user.companyId!, {
+      enabled: !!sessionData,
+    }),
+  ]);
 
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
     }
 
-    if (!loading && !isLoading) {
+    if (!homePageEventData.isLoading && homePageEventData.data) {
       // stop page loading
-      setLoadingPage(false);
+      setLoadingFutureEventData(false);
     }
-  }, [sessionData, router, status, loading, isLoading]);
+
+    if (!yourEventsData.isLoading && yourEventsData.data) {
+      // stop page loading
+      setLoadingYourEventData(false);
+    }
+  }, [sessionData, router, status, homePageEventData, yourEventsData]);
 
   const handleEventClick = (eventId: string) => {
     console.log(eventId);
@@ -57,7 +67,7 @@ const HomePage: React.FC<Props> = () => {
       <main>
         <div className="mx-auto max-w-7xl px-3">
           <div className="my-2 flex flex-row justify-between">
-            <div className="text-2xl font-semibold">Events</div>
+            <div className="text-2xl font-semibold">Your Events</div>
             <Button
               onClick={() => handleCreateEventClick()}
               size="sm"
@@ -66,7 +76,34 @@ const HomePage: React.FC<Props> = () => {
               <StarFilledIcon className="mr-1"></StarFilledIcon>Create Event
             </Button>
           </div>
-          {loadingPage ? (
+          <div className="hide-scrollbar w-full max-w-7xl overflow-x-auto whitespace-nowrap">
+            {loadingYourEventData ? (
+              <div className="flex gap-2">
+                <Skeleton className="h-[400px] w-1/3 rounded-md" />
+                <Skeleton className="h-[400px] w-1/3 rounded-md" />
+                <Skeleton className="h-[400px] w-1/3 rounded-md" />
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                {yourEventsData.data?.map((event) => (
+                  <div
+                    key={event.eventId}
+                    onClick={() => handleEventClick(event.eventId)}
+                    className="inline-block w-1/3 min-w-[400px]"
+                  >
+                    <EventCard
+                      key={event.eventId}
+                      eventDetails={event as unknown as HomePageResponse}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="my-2 flex flex-row justify-between">
+            <div className="text-2xl font-semibold">Future Events</div>
+          </div>
+          {loadingFutureEventData ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               <Skeleton className="h-[400px] rounded-md" />
               <Skeleton className="h-[400px] rounded-md" />
@@ -80,7 +117,7 @@ const HomePage: React.FC<Props> = () => {
               role="list"
               className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             >
-              {eventData?.map((event) => (
+              {homePageEventData.data?.map((event) => (
                 <div
                   key={event.eventId}
                   onClick={() => handleEventClick(event.eventId)}
