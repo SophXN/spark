@@ -106,8 +106,6 @@ function useManageCompanyAndLocations(
     createCompany.isPending,
     createLocations.isPending,
   ]);
-
-  return { loading, error };
 }
 
 export default useManageCompanyAndLocations;

@@ -23,7 +23,7 @@ const HomePage: React.FC<Props> = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
   const [loadingYourEventData, setLoadingYourEventData] = useState(true);
-  const { loading, error } = useManageCompanyAndLocations(
+  useManageCompanyAndLocations(
     sessionData?.user.companyId!,
     sessionData?.user.id!,
     { enabled: !!sessionData },
@@ -35,6 +35,9 @@ const HomePage: React.FC<Props> = () => {
       enabled: !!sessionData,
     }),
   ]);
+
+  // const yourEventsData = { data: [] };
+  // const homePageEventData = { data: [] };
 
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
@@ -84,19 +87,28 @@ const HomePage: React.FC<Props> = () => {
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
               </div>
             ) : (
-              <div className="flex gap-2">
-                {yourEventsData.data?.map((event) => (
-                  <div
-                    key={event.eventId}
-                    onClick={() => handleEventClick(event.eventId)}
-                    className="inline-block w-1/3 min-w-[400px]"
-                  >
-                    <EventCard
-                      key={event.eventId}
-                      eventDetails={event as unknown as HomePageResponse}
-                    />
+              <div className="flex">
+                {yourEventsData.data.length > 0 ? (
+                  <div className="w-1/3">
+                    {yourEventsData.data.map((event) => (
+                      <div
+                        key={event.eventId}
+                        onClick={() => handleEventClick(event.eventId)}
+                        className="inline-block mr-3"
+                      >
+                        <EventCard
+                          key={event.eventId}
+                          eventDetails={event as unknown as HomePageResponse}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="bg-slate-50 w-full h-[400px]">
+                    <div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
