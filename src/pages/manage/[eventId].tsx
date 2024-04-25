@@ -9,10 +9,6 @@ const ManageEvent: React.FC = () => {
   const router = useRouter();
   const { eventId } = router.query;
 
-  const { data: eventData } = api.events.getEventCollaboratorResponses.useQuery(
-    eventId as string,
-  );
-
   const { data: event } = api.events.getEventPageDetails.useQuery(
     eventId as string,
   );
@@ -28,7 +24,7 @@ const ManageEvent: React.FC = () => {
           />
         </div>
         <div className="mt-2 text-3xl font-semibold">Manage Collaborators</div>
-        {eventData ? <Tabs eventData={eventData} /> : null}
+        <Tabs eventId={eventId as string} />
       </div>
     </div>
   );
