@@ -101,8 +101,14 @@ const HomePage: React.FC<Props> = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-slate-50 w-full h-[400px] rounded-lg">
-                    <div>
+                  <div className="bg-slate-100 w-full h-[400px] rounded-lg flex justify-center items-center">
+                    <div className="flex flex-col justify-items-center">
+                      <div className="text-xl font-semibold">
+                        You are not hosting any events.
+                      </div>
+                      <span className="font-medium text-slate-60 text-center pt-1">
+                        Try creating one above.
+                      </span>
                     </div>
                   </div>
                 )}
