@@ -36,9 +36,6 @@ const HomePage: React.FC<Props> = () => {
     }),
   ]);
 
-  // const yourEventsData = { data: [] };
-  // const homePageEventData = { data: [] };
-
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
@@ -68,7 +65,7 @@ const HomePage: React.FC<Props> = () => {
     <div>
       <Navbar />
       <main>
-        <div className="mx-auto max-w-7xl px-3">
+        <div className="mx-auto max-w-7xl px-3 pb-3">
           <div className="my-2 flex flex-row justify-between">
             <div className="text-2xl font-semibold">Your Events</div>
             <Button
@@ -104,7 +101,7 @@ const HomePage: React.FC<Props> = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-slate-50 w-full h-[400px]">
+                  <div className="bg-slate-50 w-full h-[400px] rounded-lg">
                     <div>
                     </div>
                   </div>
@@ -129,7 +126,7 @@ const HomePage: React.FC<Props> = () => {
               role="list"
               className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             >
-              {homePageEventData.data?.map((event) => (
+              {(homePageEventData.data ?? []).map((event) => (
                 <div
                   key={event.eventId}
                   onClick={() => handleEventClick(event.eventId)}

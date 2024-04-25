@@ -45,7 +45,7 @@ export function EventCard({ eventDetails }: EventCardProps) {
   }
 
   return (
-    <Card className="col-span-1 flex flex-col">
+    <Card className="cursor-pointer col-span-1 flex flex-col hover:drop-shadow-md transition duration-150 ease-out hover:ease-in">
       <CardContent className="px-3 py-3">
         <Image
           src={
