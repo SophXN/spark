@@ -8,6 +8,12 @@ import {
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
 import { type HomePageResponse } from "~/types/types";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip"
 
 interface PublicEventData {
   eventDetails: HomePageResponse;
@@ -24,8 +30,9 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   const totalSponsors = 0;
   const sponsorSpacesLeft = 0;
   let totalSponsorsRemaining = 0;
-  const countOfCollaboratorResponses =
-    eventDetails.collaboratorsResponses?.length ?? 0;
+
+  const countOfCollaboratorResponses = eventDetails.collaboratorsResponses?.length ?? 0;
+
   const acceptedCollaboratorResponsesCount =
     eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => {
       return collaborator.status === "ACCEPTED" ? acc + 1 : acc;
@@ -35,8 +42,8 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
     collaboratorsExist = true;
     totalCollaboratorsRequired = eventDetails.collaborators
       ? eventDetails.collaborators?.reduce((acc, collaborator) => {
-          return acc + collaborator.collaboratorsRequired;
-        }, 0)
+        return acc + collaborator.collaboratorsRequired;
+      }, 0)
       : 0;
     totalCollaboratorsRemaining =
       totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
@@ -48,8 +55,8 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
     sponsorsExists = true;
     totalSponsorsNeeded = eventDetails.sponsors
       ? eventDetails.sponsors?.reduce((acc, sponsor) => {
-          return acc + sponsor.sponsorsRequired;
-        }, 0)
+        return acc + sponsor.sponsorsRequired;
+      }, 0)
       : 0;
     totalSponsorsRemaining = totalSponsorsNeeded - 0;
   }
@@ -79,38 +86,68 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Become a sponsor</Button>
+          {totalSponsorsRemaining > 0 ? (
+            <Button className="w-full">Become a sponsor</Button>
+          ) : (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant={"outline"} className="w-full">Become a sponsor</Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Sponsors are now full for this event</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </CardFooter>
       </Card>
-      <Card className="mt-2">
-        <CardHeader>
-          <div className="flex flex-row justify-between space-y-0">
-            <CardTitle className="text-xl font-bold">Collaborators</CardTitle>
-            <CardTitle className="text-xl font-medium">
-              {totalCollaboratorsRemaining} spots left
-            </CardTitle>
-          </div>
-          <p className="text-sm">
-            Offer your services at this event. Get exposure to your brand for
-            free.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-sm">Total Collaborators</p>
-            <p className="text-sm font-bold">
-              {acceptedCollaboratorResponsesCount}
-            </p>
-          </div>
-          <div className="mt-2 flex flex-row items-center justify-between">
-            <p className="text-sm">Total Responses</p>
-            <p className="text-sm font-bold">{countOfCollaboratorResponses}</p>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <RequestCollaborationDialog eventDetails={eventDetails} />
-        </CardFooter>
-      </Card>
+      {
+        totalCollaboratorsRequired > 0 ? (
+          <Card className="mt-2">
+            <CardHeader>
+              <div className="flex flex-row justify-between space-y-0">
+                <CardTitle className="text-xl font-bold">Collaborators</CardTitle>
+                <CardTitle className="text-xl font-medium">
+                  {totalCollaboratorsRemaining} spots left
+                </CardTitle>
+              </div>
+              <p className="text-sm">
+                Offer your services at this event. Get exposure to your brand for
+                free.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-row items-center justify-between">
+                <p className="text-sm">Total Collaborators</p>
+                <p className="text-sm font-bold">
+                  {acceptedCollaboratorResponsesCount}
+                </p>
+              </div>
+              <div className="mt-2 flex flex-row items-center justify-between">
+                <p className="text-sm">Total Responses</p>
+                <p className="text-sm font-bold">{countOfCollaboratorResponses}</p>
+              </div>
+            </CardContent>
+            <CardFooter>
+              {totalCollaboratorsRemaining > 0 ? (
+                <RequestCollaborationDialog eventDetails={eventDetails} />
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant={"outline"} className="w-full">Become a collaborator</Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Collaborations are now full for this event</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </CardFooter>
+          </Card>
+        ) : (<div></div>)
+      }
     </div>
   );
 };

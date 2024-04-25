@@ -84,7 +84,7 @@ const EventDetails: React.FC = () => {
                 Support needed
               </h2>
               {
-                sessionData?.user.companyId === eventData.requester.squareMerchantId ? <SupportColumnHostView eventDetails={eventData as HomePageResponse} /> : <SupportColumnHostView eventDetails={eventData as HomePageResponse} />
+                sessionData?.user.companyId === eventData.requester.squareMerchantId ? <SupportColumnHostView eventDetails={eventData as HomePageResponse} /> : <SupportColumnPublicView eventDetails={eventData as HomePageResponse} />
               }
             </div>
           </div>
