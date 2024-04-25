@@ -6,8 +6,9 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import RequestCollaborationDialog from "~/components/EventDetail/RequestCollaborationDialog";
+import RequestCollaborationDialog from "./RequestCollaborationDialog";
 import { type HomePageResponse } from "~/types/types";
+import SponsorshipSelectionDialog from "./SponsorshipSelectionDialog";
 
 interface PublicEventData {
   eventDetails: HomePageResponse;
@@ -79,7 +80,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Become a sponsor</Button>
+          <SponsorshipSelectionDialog eventDetails={eventDetails} />
         </CardFooter>
       </Card>
       <Card className="mt-2">

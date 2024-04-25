@@ -18,19 +18,19 @@ export const companyRouter = createTRPCRouter({
         name: z.string(),
         address: z.string().optional(),
         squareMerchantId: z.string(),
-        businessDescription: z.string().optional(), 
+        businessDescription: z.string().optional(),
         facebookUrl: z.string().optional(),
         twitterUrl: z.string().optional(),
-        instagramUrl: z.string().optional()
+        instagramUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const company = await ctx.db.company.create({
         data: {
           name: input.name,
-          address: input.address as string,
+          address: input.address!,
           squareMerchantId: input.squareMerchantId,
-          businessDescription: input.businessDescription as string,
+          businessDescription: input.businessDescription!,
           facebookUrl: input.facebookUrl,
           twitterUrl: input.twitterUrl,
           instagramUrl: input.instagramUrl,
@@ -45,12 +45,13 @@ export const companyRouter = createTRPCRouter({
         type: z.string().optional(),
         merchantCode: z.string().optional(),
       }),
-    ).query(async ({ ctx, input }) => {
+    )
+    .query(async ({ ctx, input }) => {
       return await ctx.db.company.findMany({
         where: {
           locations: {
-            some: input
-          }
+            some: input,
+          },
         },
         include: {
           locations: true,
@@ -63,8 +64,8 @@ export const companyRouter = createTRPCRouter({
                   status: CollaboratorResponseStatus.ACCEPTED,
                 },
               },
-            }
-          }
+            },
+          },
         },
       });
     }),

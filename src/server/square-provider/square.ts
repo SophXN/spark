@@ -37,14 +37,14 @@ const SquareProvider = (
     authorization: {
       url: "https://connect.squareupsandbox.com/oauth2/authorize",
       params: {
-        scope: "MERCHANT_PROFILE_READ",
+        scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
       },
     },
   },
   token: {
     url: "https://connect.squareupsandbox.com/oauth2/token",
     params: {
-      scope: "MERCHANT_PROFILE_READ",
+      scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
     },
     async request(context) {
       try {
