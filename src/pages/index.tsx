@@ -88,9 +88,9 @@ const HomePage: React.FC<Props> = () => {
               </div>
             ) : (
               <div className="flex">
-                {yourEventsData.data.length > 0 ? (
+                {(yourEventsData.data ?? []).length > 0 ? (
                   <div className="w-1/3">
-                    {yourEventsData.data.map((event) => (
+                    {(yourEventsData.data ?? []).map((event) => (
                       <div
                         key={event.eventId}
                         onClick={() => handleEventClick(event.eventId)}
