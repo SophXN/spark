@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { ZodDate, z } from "zod";
 import {
   Popover,
   PopoverContent,
@@ -40,15 +40,15 @@ import Navbar from "~/components/Navbar";
 import { useSession } from "next-auth/react";
 
 const FormSchema = z.object({
-  eventId: z.string(),
-  requesterId: z.string(),
-  title: z.string(),
-  description: z.string(),
+  eventId: z.string({ required_error: "An event id is required." }).min(1),
+  requesterId: z.string({ required_error: "Requester id is required for event is be created.", }).min(1),
+  title: z.string({ required_error: "Title for your event is required." }).min(1),
+  description: z.string({ required_error: "Description is required." }).min(1),
   eventDate: z.date({
     required_error: "An event date is required.",
   }),
   eventType: z.nativeEnum(EventType),
-  eventLocation: z.string(),
+  eventLocation: z.string({ required_error: "Event location is required." }).min(1)
 });
 
 enum EventCreationProgress {
@@ -68,6 +68,7 @@ export default function Events() {
       setEventCreationProgress(EventCreationProgress.SUCCESS);
     },
   });
+
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuidv4(),
@@ -93,9 +94,14 @@ export default function Events() {
       eventType: data.eventType,
     };
     try {
+      await FormSchema.parse(params);
       setEventCreationProgress(EventCreationProgress.IN_PROGRESS);
       mutation.mutate(params);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Convert Zod errors to a more friendly format
+        setErrors(error.flatten().fieldErrors);
+      }
       console.error("Error submitting event form", error);
     }
   };
@@ -144,7 +150,6 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name="description"
@@ -163,6 +168,7 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
+                  
                   <div className="flex flex-row gap-2">
                     <div className="flex-1">
                       <FormField
@@ -211,6 +217,7 @@ export default function Events() {
                         )}
                       />
                     </div>
+                    
                     <div className="flex-1">
                       <FormField
                         control={form.control}
@@ -240,6 +247,7 @@ export default function Events() {
                       />
                     </div>
                   </div>
+                  
                   <FormField
                     control={form.control}
                     name="eventLocation"
@@ -258,6 +266,7 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
+                  
                   <EventSponsors
                     eventId={form.getValues("eventId")}
                     isReadyToSubmit={isReadyToSubmit}
