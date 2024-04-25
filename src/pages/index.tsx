@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 import { type HomePageResponse } from "~/types/types";
 import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
 import { Session } from "next-auth";
+import EmptyState from "~/components/EmptyState";
 import { Skeleton } from "~/components/ui/skeleton";
 
 interface Props {
@@ -23,7 +24,7 @@ const HomePage: React.FC<Props> = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
   const [loadingYourEventData, setLoadingYourEventData] = useState(true);
-  const { loading, error } = useManageCompanyAndLocations(
+  useManageCompanyAndLocations(
     sessionData?.user.companyId!,
     sessionData?.user.id!,
     { enabled: !!sessionData },
@@ -65,7 +66,7 @@ const HomePage: React.FC<Props> = () => {
     <div>
       <Navbar />
       <main>
-        <div className="mx-auto max-w-7xl px-3">
+        <div className="mx-auto max-w-7xl px-3 pb-3">
           <div className="my-2 flex flex-row justify-between">
             <div className="text-2xl font-semibold">Your Events</div>
             <Button
@@ -84,19 +85,27 @@ const HomePage: React.FC<Props> = () => {
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
               </div>
             ) : (
-              <div className="flex gap-2">
-                {yourEventsData.data?.map((event) => (
-                  <div
-                    key={event.eventId}
-                    onClick={() => handleEventClick(event.eventId)}
-                    className="inline-block w-1/3 min-w-[400px]"
-                  >
-                    <EventCard
-                      key={event.eventId}
-                      eventDetails={event as unknown as HomePageResponse}
-                    />
+              <div className="flex">
+                {(yourEventsData.data ?? []).length > 0 ? (
+                  <div className="w-1/3">
+                    {(yourEventsData.data ?? []).map((event) => (
+                      <div
+                        key={event.eventId}
+                        onClick={() => handleEventClick(event.eventId)}
+                        className="inline-block mr-3"
+                      >
+                        <EventCard
+                          key={event.eventId}
+                          eventDetails={event as unknown as HomePageResponse}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <EmptyState
+                    title="You are not hosting any events." 
+                    description="Try creating one above."/>
+                )}
               </div>
             )}
           </div>
@@ -117,7 +126,7 @@ const HomePage: React.FC<Props> = () => {
               role="list"
               className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             >
-              {homePageEventData.data?.map((event) => (
+              {(homePageEventData.data ?? []).map((event) => (
                 <div
                   key={event.eventId}
                   onClick={() => handleEventClick(event.eventId)}

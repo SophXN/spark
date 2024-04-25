@@ -27,7 +27,7 @@ function useManageCompanyAndLocations(
   console.log("is it enabled??", findCompanyByMerchantId.data);
   const findLocationsThroughSquare =
     api.merchantLocations.getLocations.useQuery(accountId, {
-      enabled: findCompanyByMerchantId.data !== null,
+      enabled: findCompanyByMerchantId.data === null,
     }).data ?? [];
   const createCompany = api.company.createCompany.useMutation({
     onSuccess(data, variables, context) {
@@ -80,6 +80,7 @@ function useManageCompanyAndLocations(
     findCompanyByMerchantId.isLoading,
     findCompanyByMerchantId.error,
     merchantId,
+    findLocationsThroughSquare
   ]);
 
   // Handle errors
@@ -106,8 +107,6 @@ function useManageCompanyAndLocations(
     createCompany.isPending,
     createLocations.isPending,
   ]);
-
-  return { loading, error };
 }
 
 export default useManageCompanyAndLocations;
