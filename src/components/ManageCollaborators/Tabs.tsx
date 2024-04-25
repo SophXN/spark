@@ -144,7 +144,7 @@ const Tabs: React.FC<TabsProps> = ({ eventId }) => {
                     )}
                   </div>
                 ) : (
-                  <EmptyState title="No requests have been made yet." description="Try to "></EmptyState>
+                  <EmptyState title="No requests have been made yet." description="Your event must be kinda lame 😬"></EmptyState>
                 )
               }
             </div>
