@@ -13,6 +13,7 @@ const Navbar: React.FC = () => {
   const handleBrowseMerchantsClick = () => {
     void router.push(`/browse-merchants`);
   };
+  
   return (
     <header className="w-full flex justify-center sticky top-0 z-10 overflow-visible border-b border-gray-200 bg-white">
       <div className="w-full px-3">

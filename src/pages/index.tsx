@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 import { type HomePageResponse } from "~/types/types";
 import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
 import { Session } from "next-auth";
+import EmptyState from "~/components/EmptyState";
 import { Skeleton } from "~/components/ui/skeleton";
 
 interface Props {
@@ -101,16 +102,9 @@ const HomePage: React.FC<Props> = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-slate-100 w-full h-[400px] rounded-lg flex justify-center items-center">
-                    <div className="flex flex-col justify-items-center">
-                      <div className="text-xl font-semibold">
-                        You are not hosting any events.
-                      </div>
-                      <span className="font-medium text-slate-60 text-center pt-1">
-                        Try creating one above.
-                      </span>
-                    </div>
-                  </div>
+                  <EmptyState
+                    title="You are not hosting any events." 
+                    description="Try creating one above."/>
                 )}
               </div>
             )}
