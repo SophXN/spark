@@ -9,7 +9,7 @@ import { SupportColumnPublicView } from "~/components/EventDetail/SupportColumnP
 import { SupportColumnHostView } from "~/components/EventDetail/SupportColumnHostView";
 import { api } from "~/utils/api";
 import { format } from "date-fns";
-import { HomePageResponse } from "~/types/types";
+import { type HomePageResponse } from "~/types/types";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "~/components/ui/skeleton";
 
@@ -39,18 +39,21 @@ const EventDetails: React.FC = () => {
       // stop page loading
       setLoadingPage(false);
     }
-
   }, [sessionData, router, status, isLoading]);
 
-  if (!eventData) { return }
+  if (!eventData) {
+    return;
+  }
 
-  const formattedDate = eventData ? format(eventData?.eventDate, "MMMM do, yyyy") : "no date found";
+  const formattedDate = eventData
+    ? format(eventData?.eventDate, "MMMM do, yyyy")
+    : "no date found";
 
   return (
     <div>
       <Navbar />
       <div className="px-3 py-3">
-        <div className="flex justify-center w-full">
+        <div className="flex w-full justify-center">
           <Image
             src={eventData.image}
             alt="Event"
@@ -83,9 +86,16 @@ const EventDetails: React.FC = () => {
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>
-              {
-                sessionData?.user.companyId === eventData.requester.squareMerchantId ? <SupportColumnHostView eventDetails={eventData as HomePageResponse} /> : <SupportColumnHostView eventDetails={eventData as HomePageResponse} />
-              }
+              {sessionData?.user.companyId ===
+              eventData.requester.squareMerchantId ? (
+                <SupportColumnHostView
+                  eventDetails={eventData as HomePageResponse}
+                />
+              ) : (
+                <SupportColumnPublicView
+                  eventDetails={eventData as HomePageResponse}
+                />
+              )}
             </div>
           </div>
         </div>
