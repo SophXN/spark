@@ -78,29 +78,39 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           {formattedDate}
         </CardDescription>
         <CardDescription>{eventDetails.eventLocation}</CardDescription>
-        { yourEvent ? (
+        {yourEvent ? (
           <div></div>
         ) : (
-          <div className="relative flex items-center space-x-1 pt-2">
-          <div className="flex-shrink-0">
-            <Image
-              className="h-5 w-5 object-cover rounded-full"
-              src={eventDetails.requester.profilePicture as string}
-              alt="Business Logo"
-              width="100"
-              height="100"
-              layout="fixed"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <a href="#" className="focus:outline-none">
-              <span className="absolute inset-0" aria-hidden="true" />
+          <div className="relative flex flex-row items-center gap-1 pt-2">
+            <div>
+              {eventDetails.requester.profilePicture ? (
+                <div>
+                  <Image
+                    className="h-5 w-5 object-cover rounded-full"
+                    src={eventDetails.requester.profilePicture as string}
+                    alt="Business Logo"
+                    width="100"
+                    height="100"
+                    layout="fixed"
+                  />
+                </div>
+              ) : (
+                <div className="w-5 h-5">
+                  <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
+                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </span>
+                </div>
+
+              )}
+            </div>
+            <div className="flex-1">
               <p className="text-sm font-medium text-gray-900">
                 {eventDetails.requester.name}
               </p>
-            </a>
+            </div>
           </div>
-        </div>
         )}
 
       </CardContent>
