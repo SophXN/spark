@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { api } from "~/utils/api";
 import { z } from "zod";
-import { MerchantLocation } from "@prisma/client";
+import { Company, MerchantLocation } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
+import { HomePageMerchantDetails } from "~/types/types";
 
 type FetchOptions = {
   enabled: boolean;
@@ -15,9 +16,11 @@ function useManageCompanyAndLocations(
 ) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [company, setCompany] = useState<HomePageMerchantDetails>();
   const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId, {
     enabled: options.enabled,
   });
+  
   const createLocations = api.merchantLocations.addLocations.useMutation({
     onSuccess(data) {
       console.log(data, "<= locations created");
@@ -25,13 +28,16 @@ function useManageCompanyAndLocations(
     },
   });
   console.log("is it enabled??", findCompanyByMerchantId.data);
+  
   const findLocationsThroughSquare =
     api.merchantLocations.getLocations.useQuery(accountId, {
       enabled: findCompanyByMerchantId.data === null,
     }).data ?? [];
-  const createCompany = api.company.createCompany.useMutation({
+  
+    const createCompany = api.company.createCompany.useMutation({
     onSuccess(data, variables, context) {
       console.log(data, "<= company created");
+      setCompany(data as HomePageMerchantDetails);
       const updatedLocations = findLocationsThroughSquare.map((location) => ({
         id: location.id,
         companyId: data.id,
@@ -42,6 +48,7 @@ function useManageCompanyAndLocations(
       createLocations.mutate(updatedLocations);
     },
   });
+  
   useEffect(() => {
     if (!options.enabled) {
       console.log("not calling, no session data");
@@ -49,8 +56,8 @@ function useManageCompanyAndLocations(
     }
 
     if (findCompanyByMerchantId.data) {
+      setCompany(findCompanyByMerchantId.data);
       console.log("company found, no further action");
-      setLoading(false);
       return;
     }
 
@@ -107,6 +114,8 @@ function useManageCompanyAndLocations(
     createCompany.isPending,
     createLocations.isPending,
   ]);
+
+  return { company }
 }
 
 export default useManageCompanyAndLocations;

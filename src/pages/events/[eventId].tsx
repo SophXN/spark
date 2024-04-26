@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import Navbar from "~/components/Navbar";
+import Navbar from "~/components/Home/Navbar";
 import React from "react";
 import { useState } from "react";
 import EventLocationAndDate from "~/components/EventDetail/WhenAndWhere";

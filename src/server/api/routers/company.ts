@@ -10,6 +10,19 @@ export const companyRouter = createTRPCRouter({
         where: {
           squareMerchantId: input,
         },
+        include: {
+          _count: {
+            select: {
+              eventRequests: true,
+              sponsorships: true,
+              collaboratorResponses: {
+                where: {
+                  status: CollaboratorResponseStatus.ACCEPTED,
+                },
+              },
+            },
+          },
+        },
       });
     }),
   createCompany: publicProcedure
@@ -22,6 +35,7 @@ export const companyRouter = createTRPCRouter({
         facebookUrl: z.string().optional(),
         twitterUrl: z.string().optional(),
         instagramUrl: z.string().optional(),
+        profilePicture: z.string().optional()
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -34,6 +48,7 @@ export const companyRouter = createTRPCRouter({
           facebookUrl: input.facebookUrl,
           twitterUrl: input.twitterUrl,
           instagramUrl: input.instagramUrl,
+          profilePicture: input.profilePicture
         },
       });
       return company;

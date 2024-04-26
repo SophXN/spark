@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useState, useEffect } from "react";
-import Navbar from "~/components/Navbar";
+import Navbar from "~/components/Home/Navbar";
 import Filters from "~/components/BrowseBusinesses/filters";
 import { filterObject, BusinessType, BrowseMerchantsQuery } from "~/types/types";
 import { mcc } from "~/utils/mcc";

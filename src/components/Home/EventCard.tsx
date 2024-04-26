@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import Image from "next/image";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 import { format } from "date-fns";
 import { type HomePageResponse } from "~/types/types";
 

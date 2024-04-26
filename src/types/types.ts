@@ -148,3 +148,27 @@ export interface BrowseMerchantsQuery {
   type?: string,
   merchantCode?: string,
 }
+
+export enum CurrentStep {
+  createAccount = "Create account",
+  addProfilePicture = "Add profile picture",
+  createFirstEvent = "Create your first event",
+  collaborateOnEvent = "Collaborate on an event",
+  sponsorAnEvent = "Sponsor a local event"
+}
+
+export type OnBoardingStepData = {
+  index: number;
+  currentStep: CurrentStep;
+  completeStatus: boolean;
+  link?: string;
+  onClick?: () => void;
+}
+
+export interface HomePageMerchantDetails extends Company {
+  _count: {
+    eventRequests: number;
+    sponsorships: number;
+    collaboratorResponses: number;
+  }
+}

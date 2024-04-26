@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { EventType } from "@prisma/client";
-import Navbar from "~/components/Navbar";
+import Navbar from "~/components/Home/Navbar";
 import { useSession } from "next-auth/react";
 
 const FormSchema = z.object({

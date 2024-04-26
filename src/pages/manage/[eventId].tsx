@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Navbar from "~/components/Navbar";
+import Navbar from "~/components/Home/Navbar";
 import { BreadcrumbManageCollaborators } from "~/components/ManageCollaborators/BreadcrumbManageCollaborators";
 import Tabs from "~/components/ManageCollaborators/Tabs";
 import { api } from "~/utils/api";

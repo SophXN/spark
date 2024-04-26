@@ -75,4 +75,14 @@ export const collaboratorResponseRouter = createTRPCRouter({
       });
       return newEvent;
     }),
+    getMerchantsTotalCollaborations: publicProcedure
+    .input(z.string())
+    .query( async ({ctx, input}) => {
+      return await ctx.db.collaboratorResponse.count({
+        where: {
+          responderId: input,
+          status: "ACCEPTED"
+        }
+      })
+    })
 });

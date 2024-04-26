@@ -1,7 +1,27 @@
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
-
+import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "~/lib/utils"
+
+const progressIndicatorVariants = cva("h-full w-full flex-1 bg-primary transition-all",
+  {
+    variants: {
+      variant: {
+        default: "h-full w-full flex-1 bg-primary transition-all",
+        onboarding: "h-full w-full flex-1 bg-[#00d06f] transition-all"
+      }
+    },
+    defaultVariants: {
+      variant: "default"
+    },
+  })
+
+
+export interface ProgressProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  VariantProps<typeof progressIndicatorVariants> {
+  asChild?: boolean
+}
 
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
