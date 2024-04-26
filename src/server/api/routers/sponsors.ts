@@ -65,7 +65,7 @@ export const sponsorsRouter = createTRPCRouter({
       });
 
       const accessToken = user?.access_token;
-      console.log(user, "<= found user in SPONSORS router");
+      console.log(accessToken, "<= found accessToken in SPONSORS router");
       const sponsor = await ctx.db.sponsor.findUnique({
         where: {
           id: input.sponsorId,
@@ -78,24 +78,26 @@ export const sponsorsRouter = createTRPCRouter({
         "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          params: {
-            checkout_options: {},
+        const response = await axios.post(
+          url,
+          {
             idempotency_key: uuidv4(),
             quick_pay: {
-              name: "TEST PAYMENT ",
+              name: "another PAYMENT ",
               price_money: {
-                amount: sponsor.amountPerSponsor,
+                amount: 2000,
                 currency: "USD",
               },
               location_id: "LNGBSQJ62R28Y",
             },
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
         const data = response.data;
         console.log(data, "<= data from Square API");
