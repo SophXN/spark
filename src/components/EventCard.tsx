@@ -12,9 +12,10 @@ import { type HomePageResponse } from "~/types/types";
 
 interface EventCardProps {
   eventDetails: HomePageResponse;
+  yourEvent?: boolean
 }
 
-export function EventCard({ eventDetails }: EventCardProps) {
+export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
   const formattedDate = format(eventDetails?.eventDate, "MMMM do, yyyy");
   let collaboratorsExist = false;
   let sponsorsExists = false;
@@ -77,7 +78,10 @@ export function EventCard({ eventDetails }: EventCardProps) {
           {formattedDate}
         </CardDescription>
         <CardDescription>{eventDetails.eventLocation}</CardDescription>
-        <div className="relative flex items-center space-x-1 pt-2">
+        { yourEvent ? (
+          <div></div>
+        ) : (
+          <div className="relative flex items-center space-x-1 pt-2">
           <div className="flex-shrink-0">
             <Image
               className="h-5 w-5 rounded-full"
@@ -96,6 +100,8 @@ export function EventCard({ eventDetails }: EventCardProps) {
             </a>
           </div>
         </div>
+        )}
+
       </CardContent>
     </Card>
   );

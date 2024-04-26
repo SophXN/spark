@@ -98,10 +98,6 @@ export default function Events() {
       setEventCreationProgress(EventCreationProgress.IN_PROGRESS);
       mutation.mutate(params);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        // Convert Zod errors to a more friendly format
-        setErrors(error.flatten().fieldErrors);
-      }
       console.error("Error submitting event form", error);
     }
   };

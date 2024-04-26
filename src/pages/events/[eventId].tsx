@@ -86,7 +86,7 @@ const EventDetails: React.FC = () => {
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>
-              {sessionData?.user.companyId !==
+              {sessionData?.user.companyId ===
               eventData.requester.squareMerchantId ? (
                 <SupportColumnHostView
                   eventDetails={eventData as HomePageResponse}

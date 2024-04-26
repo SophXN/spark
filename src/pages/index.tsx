@@ -77,26 +77,26 @@ const HomePage: React.FC<Props> = () => {
               <StarFilledIcon className="mr-1"></StarFilledIcon>Create Event
             </Button>
           </div>
-          <div className="hide-scrollbar w-full max-w-7xl overflow-x-auto whitespace-nowrap">
-            {loadingYourEventData ? (
-              <div className="flex gap-2">
+          {loadingYourEventData ? (
+              <div className="flex w-full gap-2">
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
               </div>
             ) : (
-              <div className="flex">
+              <div className="flex hide-scrollbar w-full max-w-7xl overflow-x-auto whitespace-nowrap">
                 {(yourEventsData.data ?? []).length > 0 ? (
-                  <div className="w-1/3">
+                  <div>
                     {(yourEventsData.data ?? []).map((event) => (
                       <div
                         key={event.eventId}
                         onClick={() => handleEventClick(event.eventId)}
-                        className="inline-block mr-3"
+                        className="inline-block mr-3 w-[400px]"
                       >
                         <EventCard
                           key={event.eventId}
                           eventDetails={event as unknown as HomePageResponse}
+                          yourEvent={true}
                         />
                       </div>
                     ))}
@@ -108,7 +108,6 @@ const HomePage: React.FC<Props> = () => {
                 )}
               </div>
             )}
-          </div>
           <div className="my-2 flex flex-row justify-between">
             <div className="text-2xl font-semibold">Future Events</div>
           </div>
