@@ -71,7 +71,7 @@ export const EventSponsors = ({
 
       <div className="flex flex-col space-y-2 rounded-lg border border-gray-300 p-3">
         {hasSponsors ? (
-          sponsors.map((sponsor) => {
+          sponsors.map((sponsor, index) => {
             return (
               <EventSponsorRow
                 id={sponsor.id}
@@ -79,6 +79,7 @@ export const EventSponsors = ({
                 sponsor={sponsor}
                 removeSponsor={removeSponsor}
                 updateSponsor={updateSponsor}
+                index={index + 1}
               />
             );
           })
