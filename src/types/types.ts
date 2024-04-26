@@ -162,7 +162,7 @@ export type OnBoardingStepData = {
   currentStep: CurrentStep;
   completeStatus: boolean;
   link?: string;
-  onClick?: () => void;
+  onClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface HomePageMerchantDetails extends Company {
