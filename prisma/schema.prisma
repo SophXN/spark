@@ -133,6 +133,7 @@ model MerchantLocation {
     city         String
     type         String
     merchantCode String
+    locationId   String?
 }
 
 model EventRequest {

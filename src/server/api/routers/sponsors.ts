@@ -54,7 +54,7 @@ export const sponsorsRouter = createTRPCRouter({
         userId: z.string(),
         companyId: z.string(),
         sponsorId: z.string(),
-        locationId: z.string(),
+        requesterMerchantId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -65,65 +65,56 @@ export const sponsorsRouter = createTRPCRouter({
       });
 
       const accessToken = user?.access_token;
-      console.log(accessToken, "<= found accessToken in SPONSORS router");
       const sponsor = await ctx.db.sponsor.findUnique({
         where: {
           id: input.sponsorId,
         },
       });
-      if (!sponsor) {
-        throw new Error("Sponsor not found");
+
+      const location = await ctx.db.merchantLocation.findFirst({
+        where: {
+          companyId: input.requesterMerchantId,
+        },
+      });
+
+      if (!sponsor || !location) {
+        throw new Error("Sponsor or location not found");
       }
       const url =
         "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
-        const response = await axios.post(
-          url,
-          {
-            idempotency_key: uuidv4(),
-            quick_pay: {
-              name: "another PAYMENT ",
-              price_money: {
-                amount: 2000,
-                currency: "USD",
-              },
-              location_id: "LNGBSQJ62R28Y",
+        const params = {
+          idempotency_key: uuidv4(),
+          quick_pay: {
+            name: sponsor.tier,
+            price_money: {
+              amount: sponsor.amountPerSponsor,
+              currency: "USD",
             },
+            location_id: location.id,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
+        };
+        const response = await axios.post(url, params, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
           },
-        );
+        });
 
+        if (response.status !== 200) {
+          console.log("response", response);
+          console.log("failed params?", params);
+          throw new Error("Failed to create payment link");
+        }
         const data = response.data;
-        console.log(data, "<= data from Square API");
-        // Handle the response data as needed
+        return data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Error response:", error.response);
+          console.error("Axios error response:", error.response);
         } else {
           console.error("Unexpected error:", error);
         }
-        console.log(error, "<= ANOTHER error from Square API");
       }
-
-      await ctx.db.sponsor.update({
-        where: {
-          id: input.sponsorId,
-        },
-        data: {
-          responders: {
-            connect: {
-              id: input.companyId,
-            },
-          },
-        },
-      });
-
-      return sponsor;
     }),
 });

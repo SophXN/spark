@@ -13,6 +13,7 @@ import { type HomePageResponse } from "~/types/types";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
+import router from "next/router";
 
 interface PublicEventData {
   eventDetails: HomePageResponse;
@@ -22,19 +23,31 @@ export default function SponsorshipSelectionDialog({
   eventDetails,
 }: PublicEventData) {
   const [open, setOpen] = useState(false);
-  const [selectedSponsorId, setSelectedSponsorId] = useState("");
+  const [selectedSponsorId, setSelectedSponsorId] = useState(null);
   const { data: sessionData } = useSession();
   const companyId = sessionData?.user.companyId ?? "";
   const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
-
+  console.log("eventDetails", eventDetails);
   const testPaymentHandler = () => {
+    if (
+      !selectedSponsorId ||
+      !sessionData?.user.id ||
+      !eventDetails.requester.squareMerchantId
+    )
+      return;
     sponsorMutation.mutate({
-      userId: sessionData?.user.id ?? "",
+      userId: sessionData?.user.id,
       companyId: companyId,
       sponsorId: selectedSponsorId,
-      locationId: "clvd5j4ah0004x7no8w7lfdkm",
+      requesterMerchantId: eventDetails.requester.id,
     });
   };
+
+  if (sponsorMutation.isSuccess && sponsorMutation.data) {
+    console.log("SPONSOR DATA", sponsorMutation.data);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // void router.push(sponsorMutation.data.payment_link.url as string);
+  }
 
   const getTierTitle = (tier: string) => {
     switch (tier) {
@@ -91,21 +104,6 @@ export default function SponsorshipSelectionDialog({
             disabled={selectedSponsorId === null}
           >
             Go to payment
-          </Button>
-          <Button
-            onClick={() =>
-              console.log(
-                "CHECK OBJECT",
-                "companyId:",
-                companyId,
-                "sponsorId:",
-                selectedSponsorId,
-                "userId:",
-                sessionData?.user.id,
-              )
-            }
-          >
-            CHECK OBJECT
           </Button>
         </DialogFooter>
       </DialogContent>

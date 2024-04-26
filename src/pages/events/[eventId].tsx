@@ -28,8 +28,6 @@ const EventDetails: React.FC = () => {
     enabled: !!eventId,
   });
 
-  console.log(eventData);
-
   React.useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
