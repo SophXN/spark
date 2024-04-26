@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { v4 as uuidv4 } from "uuid";
 
-const supabase = createClient(process.env.SUPABASE_S3_BUCKET_URL as string, process.env.SUPABASE_API_KEY as string)
+const supabase = createClient(process.env.SUPABASE_URL as string, process.env.SUPABASE_API_KEY as string)
 
 export const imageHandlerRouter = createTRPCRouter({
   updateBusinessProfileImage: protectedProcedure
@@ -14,7 +14,7 @@ export const imageHandlerRouter = createTRPCRouter({
   .mutation(async ({ ctx, input }) => {
     const filePath = "/" + uuidv4()
     console.log(filePath)
-    
+
     const { error: uploadError, data } = await supabase.storage.from(input.bucket).upload(filePath, input.file);
     if (uploadError) {
         throw uploadError;
