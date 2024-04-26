@@ -84,11 +84,12 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           <div className="relative flex items-center space-x-1 pt-2">
           <div className="flex-shrink-0">
             <Image
-              className="h-5 w-5 rounded-full"
-              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              className="h-5 w-5 object-cover rounded-full"
+              src={eventDetails.requester.profilePicture as string}
               alt="Business Logo"
               width="100"
               height="100"
+              layout="fixed"
             />
           </div>
           <div className="min-w-0 flex-1">

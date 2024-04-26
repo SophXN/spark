@@ -18,7 +18,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["images.unsplash.com", "another-domain.com"],
+    domains: ["images.unsplash.com", "another-domain.com","yirkvtjbghpozzzsbloy.supabase.co"],
   },
 };
 

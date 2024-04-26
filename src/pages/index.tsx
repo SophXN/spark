@@ -20,7 +20,7 @@ interface Props {
 
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
-  console.log(sessionData);
+  
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
   const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
@@ -77,7 +77,7 @@ const HomePage: React.FC<Props> = () => {
   React.useEffect(() => {
     if (company != null) {
       // updating setup checklist
-
+      console.log(company, "<= company")
       if (company.profilePicture) {
         // profile picture exists
         updateOnboardingSteps(CurrentStep.addProfilePicture);

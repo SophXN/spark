@@ -56,7 +56,7 @@ function useManageCompanyAndLocations(
     }
 
     if (findCompanyByMerchantId.data) {
-      setCompany(findCompanyByMerchantId.data);
+      setCompany(findCompanyByMerchantId.data as HomePageMerchantDetails);
       console.log("company found, no further action");
       return;
     }
