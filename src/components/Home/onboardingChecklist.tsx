@@ -26,7 +26,7 @@ const OnboardingStatus: React.FC<OnboardingStatusProps> = ({ data }: OnboardingS
         <div className="w-full rounded-lg border px-2 py-2 flex flex-col gap-2">
             <div className="flex flex-row justify-between">
                 <div className="text-lg font-semibold">Get set-up checklist</div>
-                <div className="txt-lg font-semibold">{percentageChecklistComplete.toString() + "%"}</div>
+                <div className="text-lg font-semibold">{percentageChecklistComplete.toString() + "%"}</div>
             </div>
             <div>
                 <Progress
