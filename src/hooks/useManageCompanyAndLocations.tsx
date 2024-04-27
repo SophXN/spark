@@ -12,8 +12,8 @@ function useManageCompanyAndLocations(
   accountId: string,
   options: FetchOptions,
 ) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<string>("");
   const [company, setCompany] = useState<HomePageMerchantDetails>();
   const findCompanyByMerchantId = api.company.getCompany.useQuery(merchantId, {
     enabled: options.enabled,
@@ -33,7 +33,7 @@ function useManageCompanyAndLocations(
     }).data ?? [];
 
   const createCompany = api.company.createCompany.useMutation({
-    onSuccess(data, variables, context) {
+    onSuccess(data) {
       // console.log(data, "<= company created");
       const defaultData = {
         _count: {
@@ -89,6 +89,7 @@ function useManageCompanyAndLocations(
         createCompany.mutate(companyParams);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     findCompanyByMerchantId.data,
     findCompanyByMerchantId.isLoading,

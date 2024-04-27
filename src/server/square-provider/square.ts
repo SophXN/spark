@@ -6,6 +6,7 @@
 import { type OAuthConfig } from "next-auth/providers/oauth";
 import { Client, Environment, Merchant } from "square";
 import { type TokenSetParameters } from "openid-client";
+import { Profile } from "next-auth";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OAuthProviderOptions = Pick<OAuthConfig<any>, "clientId" | "clientSecret">;
@@ -86,11 +87,10 @@ const SquareProvider = (
     },
   },
   userinfo: {
-    async request(context) {
+    async request(context): Promise<Profile> {
       try {
         // refresh_token, expires_at can be used for refreshing access_token without manual sign in
-        const { access_token, providerAccountId, refresh_token, expires_at } =
-          context.tokens;
+        const { access_token, providerAccountId } = context.tokens;
 
         // create Api client
         // must create new client with accessToken
@@ -103,10 +103,11 @@ const SquareProvider = (
         );
 
         // match request() signature
-        return result.merchant as any;
+        return result.merchant as Profile;
       } catch (error) {
         console.log(error);
       }
+      return {} as Profile;
     },
   },
   ...options,
