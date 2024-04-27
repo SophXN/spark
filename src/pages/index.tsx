@@ -12,7 +12,7 @@ import useManageCompanyAndLocations from "~/hooks/useManageCompanyAndLocations";
 import EmptyState from "~/components/EmptyState";
 import { Skeleton } from "~/components/ui/skeleton";
 import OnboardingStatus from "~/components/Home/onboardingChecklist";
-import { OnBoardingStepData, CurrentStep } from "~/types/types";
+import { type OnBoardingStepData, CurrentStep } from "~/types/types";
 
 interface Props {
   logo: string;
@@ -28,11 +28,28 @@ const HomePage: React.FC<Props> = () => {
   const [loadingOnboardingStatus, setLoadingOnboardingStatus] = useState(true);
   const [onBoardingSteps, setOnboardingSteps] = useState<OnBoardingStepData[]>([
     { index: 1, currentStep: CurrentStep.createAccount, completeStatus: true },
-    { index: 2, currentStep: CurrentStep.addProfilePicture, completeStatus: false },
-    { index: 3, currentStep: CurrentStep.createFirstEvent, completeStatus: false, link: "/create-event" },
-    { index: 4, currentStep: CurrentStep.collaborateOnEvent, completeStatus: false },
-    { index: 5, currentStep: CurrentStep.sponsorAnEvent, completeStatus: false }
-  ])
+    {
+      index: 2,
+      currentStep: CurrentStep.addProfilePicture,
+      completeStatus: false,
+    },
+    {
+      index: 3,
+      currentStep: CurrentStep.createFirstEvent,
+      completeStatus: false,
+      link: "/create-event",
+    },
+    {
+      index: 4,
+      currentStep: CurrentStep.collaborateOnEvent,
+      completeStatus: false,
+    },
+    {
+      index: 5,
+      currentStep: CurrentStep.sponsorAnEvent,
+      completeStatus: false,
+    },
+  ]);
 
   // checks if merchant exists in db or not 1st
   // if merchant exists then just return the merchant
@@ -40,8 +57,8 @@ const HomePage: React.FC<Props> = () => {
   // then add the merchant + locations to Spark db
 
   const { company } = useManageCompanyAndLocations(
-    sessionData?.user.companyId!,
-    sessionData?.user.id!,
+    sessionData?.user.companyId ?? "",
+    sessionData?.user.id ?? "",
     { enabled: !!sessionData },
   );
 
@@ -52,7 +69,7 @@ const HomePage: React.FC<Props> = () => {
 
   const [homePageEventData, yourEventsData] = api.useQueries((t) => [
     t.events.getHomePageEvents("", { enabled: !!company }),
-    t.events.getYourEvents(company?.squareMerchantId!, {
+    t.events.getYourEvents(company?.squareMerchantId ?? "", {
       enabled: !!company,
     }),
   ]);
@@ -71,15 +88,24 @@ const HomePage: React.FC<Props> = () => {
       // stop page loading
       setLoadingYourEventData(false);
     }
-
-  }, [sessionData, router, status, homePageEventData, yourEventsData, loadingOnboardingStatus]);
+  }, [
+    sessionData,
+    router,
+    status,
+    homePageEventData,
+    yourEventsData,
+    loadingOnboardingStatus,
+  ]);
 
   React.useEffect(() => {
     if (company != null) {
       // updating setup checklist
-      console.log(company, "<= company")
+      // console.log(company, "<= company")
 
-      updateOnboardingSteps(CurrentStep.addProfilePicture, company.squareMerchantId);
+      updateOnboardingSteps(
+        CurrentStep.addProfilePicture,
+        company.squareMerchantId,
+      );
 
       if (company.profilePicture) {
         // profile picture exists
@@ -101,34 +127,36 @@ const HomePage: React.FC<Props> = () => {
         updateOnboardingSteps(CurrentStep.sponsorAnEvent);
       }
     }
-  }, [company])
+  }, [company]);
 
-  const updateOnboardingSteps = (currentStep: CurrentStep, companyId?: string) => {
+  const updateOnboardingSteps = (
+    currentStep: CurrentStep,
+    companyId?: string,
+  ) => {
     // set step to complete on front end
     if (companyId != null) {
       // add company id meta data to setup checklist
-      setOnboardingSteps(steps => {
+      setOnboardingSteps((steps) => {
         return steps.map((step) => {
           if (step.currentStep === currentStep) {
-            return { ...step, companyId: companyId };  // Update the completeStatus or any other property
+            return { ...step, companyId: companyId }; // Update the completeStatus or any other property
           }
-          return step;  // Return all other items unchanged
+          return step; // Return all other items unchanged
         });
       });
     } else {
-      setOnboardingSteps(steps => {
+      setOnboardingSteps((steps) => {
         return steps.map((step) => {
           if (step.currentStep === currentStep) {
-            return { ...step, completeStatus: true };  // Update the completeStatus or any other property
+            return { ...step, completeStatus: true }; // Update the completeStatus or any other property
           }
-          return step;  // Return all other items unchanged
+          return step; // Return all other items unchanged
         });
       });
     }
-  }
+  };
 
   const handleEventClick = (eventId: string) => {
-    console.log(eventId);
     void router.push(`/events/${eventId}`);
   };
 
@@ -162,14 +190,14 @@ const HomePage: React.FC<Props> = () => {
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
               </div>
             ) : (
-              <div className="flex hide-scrollbar w-full max-w-7xl overflow-x-auto whitespace-nowrap">
+              <div className="hide-scrollbar flex w-full max-w-7xl overflow-x-auto whitespace-nowrap">
                 {(yourEventsData.data ?? []).length > 0 ? (
                   <div>
                     {(yourEventsData.data ?? []).map((event) => (
                       <div
                         key={event.eventId}
                         onClick={() => handleEventClick(event.eventId)}
-                        className="inline-block mr-3 w-[400px]"
+                        className="mr-3 inline-block w-[400px]"
                       >
                         <EventCard
                           key={event.eventId}
@@ -182,7 +210,8 @@ const HomePage: React.FC<Props> = () => {
                 ) : (
                   <EmptyState
                     title="You are not hosting any events."
-                    description="Try creating one above." />
+                    description="Try creating one above."
+                  />
                 )}
               </div>
             )}
