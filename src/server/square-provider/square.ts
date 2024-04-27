@@ -31,7 +31,7 @@ const SquareProvider = (
       return {
         id: profile.id, // id will be overwritten
         companyId: profile.id,
-        email: `${profile.businessName.replace(/\s+/g, "-").toLowerCase()}@square.com`, // dummy email
+        email: `${(profile.businessName ?? "").replace(/\s+/g, "-").toLowerCase()}@square.com`, // dummy email
       };
     },
     callbackUrl,
@@ -57,10 +57,9 @@ const SquareProvider = (
         "PAYMENTS_WRITE",
       ],
     },
-    async request(context) {
+    async request(context): Promise<TokenSetParameters> {
       try {
         const { code } = context.params;
-
         const squareClient = new Client(squareClientConfig);
         const oauthInstance = squareClient.oAuthApi;
         const { result } = await oauthInstance.obtainToken({
@@ -80,9 +79,10 @@ const SquareProvider = (
           token_type: result.tokenType,
         };
 
-        return { tokens };
+        return { tokens }; //  {tokens} previously
       } catch (error) {
         console.log(error);
+        throw error; // or return a valid TokenSetParameters object
       }
     },
   },
