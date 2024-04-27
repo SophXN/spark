@@ -18,7 +18,7 @@ const OnboardingStatus: React.FC<OnboardingStatusProps> = ({
     (numberOfCompletedItems / totalSteps) * 100;
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border px-2 py-2 mt-4">
+    <div className="flex w-full flex-col gap-2 rounded-lg border px-2 py-2">
       <div className="flex flex-row justify-between">
         <div className="text-lg font-semibold">Get set-up checklist</div>
         <div className="text-lg font-semibold">
