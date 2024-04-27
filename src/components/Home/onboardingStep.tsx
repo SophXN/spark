@@ -32,7 +32,7 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({
       return;
     }
     // Trigger the file input when the div is clicked
-    fileInputRef.current.click();
+    (fileInputRef.current as HTMLInputElement).click();
   };
 
   const handleFileChange = async (
