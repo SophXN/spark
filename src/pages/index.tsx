@@ -13,6 +13,7 @@ import EmptyState from "~/components/EmptyState";
 import { Skeleton } from "~/components/ui/skeleton";
 import OnboardingStatus from "~/components/Home/onboardingChecklist";
 import { type OnBoardingStepData, CurrentStep } from "~/types/types";
+import { useRef } from "react";
 
 interface Props {
   logo: string;
@@ -21,8 +22,11 @@ interface Props {
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
 
+  const renderCompanyCount = useRef(0);
+  const renderYourEventsCount = useRef(0);
+  const renderHomePageEventsCount = useRef(0);
+
   const router = useRouter();
-  const [loadingPage, setLoadingPage] = useState(true);
   const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
   const [loadingYourEventData, setLoadingYourEventData] = useState(true);
   const [loadingOnboardingStatus, setLoadingOnboardingStatus] = useState(true);
@@ -59,7 +63,7 @@ const HomePage: React.FC<Props> = () => {
   const { company } = useManageCompanyAndLocations(
     sessionData?.user.companyId ?? "",
     sessionData?.user.id ?? "",
-    { enabled: !!sessionData },
+    { enabled: !!sessionData && renderCompanyCount.current == 0 },
   );
 
   // fetches 3 things on the condition that a company exists:
@@ -68,24 +72,27 @@ const HomePage: React.FC<Props> = () => {
   // 3. Onboarding status' on incomplete actions
 
   const [homePageEventData, yourEventsData] = api.useQueries((t) => [
-    t.events.getHomePageEvents("", { enabled: !!company }),
+    t.events.getHomePageEvents("", { enabled: !!company && renderHomePageEventsCount.current == 0 }),
     t.events.getYourEvents(company?.squareMerchantId ?? "", {
-      enabled: !!company,
+      enabled: !!company && renderYourEventsCount.current == 0,
     }),
   ]);
 
   React.useEffect(() => {
+
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
     }
 
     if (!homePageEventData.isLoading && homePageEventData.data) {
       // stop page loading
+      renderCompanyCount.current += 1
       setLoadingFutureEventData(false);
     }
 
     if (!yourEventsData.isLoading && yourEventsData.data) {
       // stop page loading
+      renderYourEventsCount.current += 1
       setLoadingYourEventData(false);
     }
   }, [
@@ -94,14 +101,13 @@ const HomePage: React.FC<Props> = () => {
     status,
     homePageEventData,
     yourEventsData,
-    loadingOnboardingStatus,
   ]);
 
   React.useEffect(() => {
     if (company != null) {
       // updating setup checklist
       // console.log(company, "<= company")
-
+      renderCompanyCount.current += 1;
       updateOnboardingSteps(
         CurrentStep.addProfilePicture,
         company.squareMerchantId,
@@ -126,8 +132,10 @@ const HomePage: React.FC<Props> = () => {
         // has sponsored an event
         updateOnboardingSteps(CurrentStep.sponsorAnEvent);
       }
+
+      setLoadingOnboardingStatus(false);
     }
-  }, [company]);
+  }, [company, loadingOnboardingStatus]);
 
   const updateOnboardingSteps = (
     currentStep: CurrentStep,
@@ -139,7 +147,7 @@ const HomePage: React.FC<Props> = () => {
       setOnboardingSteps((steps) => {
         return steps.map((step) => {
           if (step.currentStep === currentStep) {
-            return { ...step, companyId: companyId }; // Update the completeStatus or any other property
+            return { ...step, companyId: companyId }; // Update the companyId
           }
           return step; // Return all other items unchanged
         });
@@ -148,7 +156,7 @@ const HomePage: React.FC<Props> = () => {
       setOnboardingSteps((steps) => {
         return steps.map((step) => {
           if (step.currentStep === currentStep) {
-            return { ...step, completeStatus: true }; // Update the completeStatus or any other property
+            return { ...step, completeStatus: true }; // Update the completeStatus
           }
           return step; // Return all other items unchanged
         });
