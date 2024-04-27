@@ -16,6 +16,8 @@ const OnboardingStatus: React.FC<OnboardingStatusProps> = ({ data }: OnboardingS
     }, 0) ?? 0;
     const percentageChecklistComplete = (numberOfCompletedItems / totalSteps) * 100;
 
+    console.log(data);
+
     return (
         <div className="w-full rounded-lg border px-2 py-2 flex flex-col gap-2">
             <div className="flex flex-row justify-between">

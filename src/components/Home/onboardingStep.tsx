@@ -2,8 +2,11 @@ import { CurrentStep } from "~/types/types"
 import { FaCircleCheck } from "react-icons/fa6";
 import { ArrowRight } from "lucide-react";
 import { OnBoardingStepData } from "~/types/types";
-import { useRef, useState} from "react";
-import useImageUploader from "~/hooks/useImageUploader";
+import { useEffect, useRef, useState} from "react";
+import useImageUploader, { FileObj } from "~/hooks/useImageUploader";
+import { UploadStates } from "~/hooks/useImageUploader";
+import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 interface OnboardingStepProps {
     step: OnBoardingStepData
@@ -11,8 +14,13 @@ interface OnboardingStepProps {
 
 const OnboardingStep: React.FC<OnboardingStepProps> = ({ step }: OnboardingStepProps) => {
     const fileInputRef = useRef(null);
-    const [files, setFiles] = useState<File>();
-    const { status, storageUrl } = useImageUploader("profile-pictures", files)
+    const [file, setFile] = useState<FileObj>({
+        bucket: "profile-pictures",
+    });
+    const { status, storageUrl } = useImageUploader(file);
+    const updateProfileImageMutation = api.company.updateCompanyProfilePicture.useMutation({onSuccess(data) {
+        console.log(data, " <= finished updated company with new icon")
+    },});
 
     const handleDivClick = () => {
         // Trigger the file input when the div is clicked
@@ -26,8 +34,21 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({ step }: OnboardingStepP
         if (!file) {
             return;
         }
-        setFiles(file)
+        const contentType = file.type;
+        const fileData = {
+            file: file,
+            contentType: contentType
+        }
+
+        setFile(prevState => ({...prevState, ...fileData}))
     }
+
+    useEffect(() => {
+        if(status == UploadStates.uploadedToBucket && storageUrl != null) {
+            // update company with new image
+            // updateProfileImageMutation.mutate({squareMerchantId: step.companyId ?? "", profilePicture: storageUrl})
+        }
+    }, [status, storageUrl])
 
     return (
         <div>

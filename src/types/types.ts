@@ -163,6 +163,7 @@ export type OnBoardingStepData = {
   completeStatus: boolean;
   link?: string;
   onClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  companyId?: string;
 }
 
 export interface HomePageMerchantDetails extends Company {

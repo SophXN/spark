@@ -84,4 +84,19 @@ export const companyRouter = createTRPCRouter({
         },
       });
     }),
+    updateCompanyProfilePicture: publicProcedure
+    .input(z.object({
+      squareMerchantId: z.string(),
+      profilePicture: z.string()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.company.update({
+        where: {
+          squareMerchantId: input.squareMerchantId
+        },
+        data: {
+          profilePicture: input.profilePicture
+        },
+      });
+    })
 });

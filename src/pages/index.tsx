@@ -20,7 +20,7 @@ interface Props {
 
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
-  
+
   const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(true);
   const [loadingFutureEventData, setLoadingFutureEventData] = useState(true);
@@ -78,6 +78,9 @@ const HomePage: React.FC<Props> = () => {
     if (company != null) {
       // updating setup checklist
       console.log(company, "<= company")
+
+      updateOnboardingSteps(CurrentStep.addProfilePicture, company.squareMerchantId);
+
       if (company.profilePicture) {
         // profile picture exists
         updateOnboardingSteps(CurrentStep.addProfilePicture);
@@ -100,16 +103,28 @@ const HomePage: React.FC<Props> = () => {
     }
   }, [company])
 
-  const updateOnboardingSteps = (currentStep: CurrentStep) => {
+  const updateOnboardingSteps = (currentStep: CurrentStep, companyId?: string) => {
     // set step to complete on front end
-    setOnboardingSteps(steps => {
-      return steps.map((step) => {
-        if (step.currentStep === currentStep) {
-          return { ...step, completeStatus: true };  // Update the completeStatus or any other property
-        }
-        return step;  // Return all other items unchanged
+    if (companyId != null) {
+      // add company id meta data to setup checklist
+      setOnboardingSteps(steps => {
+        return steps.map((step) => {
+          if (step.currentStep === currentStep) {
+            return { ...step, companyId: companyId };  // Update the completeStatus or any other property
+          }
+          return step;  // Return all other items unchanged
+        });
       });
-    });
+    } else {
+      setOnboardingSteps(steps => {
+        return steps.map((step) => {
+          if (step.currentStep === currentStep) {
+            return { ...step, completeStatus: true };  // Update the completeStatus or any other property
+          }
+          return step;  // Return all other items unchanged
+        });
+      });
+    }
   }
 
   const handleEventClick = (eventId: string) => {

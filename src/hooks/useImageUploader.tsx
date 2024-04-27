@@ -5,43 +5,43 @@ import { api } from "~/utils/api";
 
 // Create a single supabase client for interacting with your database
 
-enum uploadStates {
+export enum UploadStates {
     pending,
     uploadingToBucket,
-    uploadedToBucket,
-    updatingMerchantWithUrl,
-    finishedUpdatingUser
+    uploadedToBucket
 }
 
-function useImageUploader(bucket: string, file?: File) {
-    const [status, setStatus] = useState(uploadStates.pending);
+export interface FileObj {
+    bucket: string,
+    file?: File,
+    contentType?: string
+}
+
+function useImageUploader(fileObj: FileObj) {
+    const [status, setStatus] = useState(UploadStates.pending);
     const [storageUrl, setStorageUrl] = useState<string>();
-    const imageMutation = api.imageHandler.updateBusinessProfileImage.useMutation({onSuccess: (data) => {
-        // console.log(data.profilePicture, " <= image uploaded to bucket")
-        // setStatus(uploadStates.uploadedToBucket);
-        // setStorageUrl(data.profilePicture as string)
+    const imageMutation = api.imageHandler.uploadImageToStorage.useMutation({onSuccess: (data) => {
+        console.log(data, " <= image uploaded to bucket")
+        setStatus(UploadStates.uploadedToBucket);
+        setStorageUrl(data as string)
     }})
 
     useEffect(() => {
-
-        if (file != null) {
-
+        if (fileObj.file != null) {
+            console.log(fileObj, " <= image handler")
             const uploadImage = async () => {
-                setStatus(uploadStates.uploadingToBucket);
-                // const formData = new FormData();
-                // formData.append('file', file);
-                // console.log(formData, " <= formData");
+                setStatus(UploadStates.uploadingToBucket);
                 const params = {
-                    bucket: bucket,
-                    file: file
+                    bucket: fileObj.bucket,
+                    file: fileObj.file,
+                    contentType: fileObj.contentType
                 }
+                console.log(params, "<= before upload")
                 imageMutation.mutate(params)
-                //setStatus(uploadStates.uploadedToBucket);
             }
-
             uploadImage()
         }
-    }, [file])
+    }, [fileObj])
 
     return { status, storageUrl }
 }
