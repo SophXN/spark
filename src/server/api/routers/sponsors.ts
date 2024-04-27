@@ -122,6 +122,7 @@ export const sponsorsRouter = createTRPCRouter({
 
           throw new Error("Failed to create payment link");
         }
+        console.log("MAYBE ERRORS: ", response.data.errors);
 
         const data = response.data;
         const squarePayment = await ctx.db.sponsorPayments.create({
