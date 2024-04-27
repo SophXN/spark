@@ -106,7 +106,7 @@ export const sponsorsRouter = createTRPCRouter({
                 currency: "USD",
               },
               // TODO: Change this to the actual location ID
-              location_id: location.locationId,
+              location_id: `${location.locationId}`,
             },
           },
           {
