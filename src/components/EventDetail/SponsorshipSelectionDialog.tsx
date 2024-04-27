@@ -45,7 +45,8 @@ export default function SponsorshipSelectionDialog({
 
   React.useEffect(() => {
     if (sponsorMutation.isSuccess && sponsorMutation.data) {
-      void router.push(sponsorMutation.data);
+      console.log(sponsorMutation.data);
+      // void router.push(sponsorMutation.data);
     }
   }, [sponsorMutation.isSuccess, sponsorMutation.data]);
 

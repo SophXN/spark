@@ -89,12 +89,6 @@ export const sponsorsRouter = createTRPCRouter({
           : "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
-        console.log(
-          "amount",
-          sponsor.amountPerSponsor,
-          "\nlocation",
-          location.locationId,
-        );
         const response = await axios.post(
           url,
           {
@@ -105,8 +99,7 @@ export const sponsorsRouter = createTRPCRouter({
                 amount: sponsor.amountPerSponsor,
                 currency: "USD",
               },
-              // TODO: Change this to the actual location ID
-              location_id: `${location.locationId}`,
+              location_id: location.locationId,
             },
           },
           {
@@ -118,11 +111,8 @@ export const sponsorsRouter = createTRPCRouter({
         );
 
         if (response.status !== 200 || !response.data.payment_link) {
-          console.log("response", response);
-
           throw new Error("Failed to create payment link");
         }
-        console.log("MAYBE ERRORS: ", response.data.errors);
 
         const data = response.data;
         const squarePayment = await ctx.db.sponsorPayments.create({
@@ -137,7 +127,8 @@ export const sponsorsRouter = createTRPCRouter({
         });
 
         console.log("squarePayment", squarePayment);
-        return data.payment_link.url as string;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Axios error response:", error.response);

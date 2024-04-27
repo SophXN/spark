@@ -7,7 +7,10 @@ import { type Profile } from "next-auth";
 type OAuthProviderOptions = Pick<OAuthConfig<any>, "clientId" | "clientSecret">;
 
 const env = process.env.NODE_ENV;
-const callbackUrl = `${process.env.NEXTAUTH_URL}`;
+const callbackUrl =
+  env === "production"
+    ? `${process.env.NEXTAUTH_URL}`
+    : `${process.env.NEXTAUTH_URL}/api/auth/callback/square`;
 
 const squareClientConfig = {
   environment:
@@ -68,7 +71,7 @@ const SquareProvider = (
           providerAccountId: result.merchantId,
           access_token: result.accessToken,
           refresh_token: result.refreshToken,
-          expires_at: new Date().getTime() / 10000, // ms to sec to fit INT
+          expires_at: new Date().getTime() / 1000, // ms to sec to fit INT
           token_type: result.tokenType,
         };
 
