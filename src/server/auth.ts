@@ -4,7 +4,6 @@ import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
-  type User,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 
@@ -36,12 +35,9 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, user }) {
-      // const { session, token } = context;
-
       if (session && user) {
-        session.user = user; 
+        session.user = user;
       }
-      console.log("HI SESSION", session);
       return session;
     },
   },
@@ -50,11 +46,11 @@ export const authOptions: NextAuthOptions = {
     SquareProvider({
       clientId:
         process.env.NODE_ENV === "production"
-          ? process.env.SQUARE_PROD_CLIENT_ID
+          ? process.env.SQR_PROD_APPLICATION_ID
           : process.env.SQR_SANDBOX_APPLICATION_ID,
       clientSecret:
         process.env.NODE_ENV === "production"
-          ? process.env.SQUARE_PROD_APP_SECRET
+          ? process.env.SQR_PROD_APPLICATION_SECRET
           : process.env.SQR_SANDBOX_APPLICATION_SECRET,
     }),
 
