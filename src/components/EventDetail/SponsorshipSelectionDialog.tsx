@@ -27,7 +27,7 @@ export default function SponsorshipSelectionDialog({
   const { data: sessionData } = useSession();
   const companyId = sessionData?.user.companyId ?? "";
   const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
-  console.log("eventDetails", eventDetails);
+
   const testPaymentHandler = () => {
     if (
       !selectedSponsorId ||
@@ -43,11 +43,11 @@ export default function SponsorshipSelectionDialog({
     });
   };
 
-  if (sponsorMutation.isSuccess && sponsorMutation.data) {
-    console.log("SPONSOR DATA", sponsorMutation.data);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    void router.push(sponsorMutation.data);
-  }
+  React.useEffect(() => {
+    if (sponsorMutation.isSuccess && sponsorMutation.data) {
+      void router.push(sponsorMutation.data);
+    }
+  }, [sponsorMutation.isSuccess, sponsorMutation.data]);
 
   const getTierTitle = (tier: string) => {
     switch (tier) {
