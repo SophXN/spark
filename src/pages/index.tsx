@@ -176,11 +176,9 @@ const HomePage: React.FC<Props> = () => {
     <div>
       <Navbar />
       <main>
-        <div className="mx-auto flex w-full items-start gap-1 px-4 sm:px-6 lg:px-8">
-          <aside className="sticky top-24 hidden w-80 shrink-0 lg:block">
-            <OnboardingStatus data={onBoardingSteps} />
-          </aside>
-          <div className="flex-1 px-3">
+        <div className="flex w-full items-start sm:justify-center gap-1 px-4">
+          <div className="w-full sm:w-[1000px]">
+          <OnboardingStatus data={onBoardingSteps} />
             <div className="my-3 flex flex-row justify-between">
               <div className="text-2xl font-semibold">Your Events</div>
               <Button
@@ -198,7 +196,7 @@ const HomePage: React.FC<Props> = () => {
                 <Skeleton className="h-[400px] w-1/3 rounded-md" />
               </div>
             ) : (
-              <div className="hide-scrollbar flex w-full max-w-7xl overflow-x-auto whitespace-nowrap">
+              <div className="hide-scrollbar flex w-full max-w-[1000px] overflow-x-auto whitespace-nowrap">
                 {(yourEventsData.data ?? []).length > 0 ? (
                   <div>
                     {(yourEventsData.data ?? []).map((event) => (
@@ -238,7 +236,7 @@ const HomePage: React.FC<Props> = () => {
             ) : (
               <ul
                 role="list"
-                className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2"
               >
                 {(homePageEventData.data ?? []).map((event) => (
                   <div
@@ -254,7 +252,6 @@ const HomePage: React.FC<Props> = () => {
               </ul>
             )}
           </div>
-          <aside className="sticky top-8 hidden w-80 shrink-0 xl:block"></aside>
         </div>
       </main>
     </div>

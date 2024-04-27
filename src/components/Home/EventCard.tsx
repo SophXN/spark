@@ -83,7 +83,7 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
               {eventDetails.requester.profilePicture ? (
                 <div>
                   <Image
-                    className="h-5 w-5 rounded-full object-cover"
+                    className="h-5 w-5 object-cover rounded-full"
                     src={eventDetails.requester.profilePicture}
                     alt="Business Logo"
                     width="100"
