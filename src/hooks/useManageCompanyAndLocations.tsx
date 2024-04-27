@@ -21,7 +21,7 @@ function useManageCompanyAndLocations(
 
   const createLocations = api.merchantLocations.addLocations.useMutation({
     onSuccess(data) {
-      console.log(data, "<= locations created");
+      // console.log(data, "<= locations created");
       setLoading(false);
     },
   });
@@ -42,7 +42,6 @@ function useManageCompanyAndLocations(
           collaboratorResponses: 0,
         },
       };
-      // setCompany(data as HomePageMerchantDetails);
       setCompany({ ...defaultData, ...data } as HomePageMerchantDetails);
       const updatedLocations = findLocationsThroughSquare.map((location) => ({
         id: uuidv4(),
@@ -74,7 +73,7 @@ function useManageCompanyAndLocations(
       !findCompanyByMerchantId.error
     ) {
       // No user found, let's create a company
-      console.log("No company found");
+      // console.log("No company found");
       if (findLocationsThroughSquare[0] == null) {
         return;
       }
