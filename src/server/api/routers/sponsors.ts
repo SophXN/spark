@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Tier } from "@prisma/client";
 import axios from "axios";
 import { z } from "zod";
@@ -77,38 +79,62 @@ export const sponsorsRouter = createTRPCRouter({
         },
       });
 
-      if (!sponsor || !location) {
+      if (!sponsor || !location?.locationId) {
         throw new Error("Sponsor or location not found");
       }
+      // TODO: Change this to the production URL
       const url =
         "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
-        const params = {
-          idempotency_key: uuidv4(),
-          quick_pay: {
-            name: sponsor.tier,
-            price_money: {
-              amount: sponsor.amountPerSponsor,
-              currency: "USD",
+        console.log(
+          "amount",
+          sponsor.amountPerSponsor,
+          "\nlocation",
+          location.locationId,
+        );
+        const response = await axios.post(
+          url,
+          {
+            idempotency_key: uuidv4(),
+            quick_pay: {
+              name: `Spark Sponsorship | Tier ${sponsor.tier}`,
+              price_money: {
+                amount: sponsor.amountPerSponsor,
+                currency: "USD",
+              },
+              // TODO: Change this to the actual location ID
+              location_id: "LNGBSQJ62R28Y",
             },
-            location_id: location.id,
           },
-        };
-        const response = await axios.post(url, params, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        if (response.status !== 200 || !response.data.payment_link) {
+          console.log("response", response);
+
+          throw new Error("Failed to create payment link");
+        }
+
+        const data = response.data;
+        const squarePayment = await ctx.db.sponsorPayments.create({
+          data: {
+            id: uuidv4(),
+            sponsorId: input.sponsorId,
+            companyId: input.companyId,
+            squareOrderId: data.related_resources.orders[0].id,
+            createdAt: new Date(),
+            paymentStatus: data.related_resources.orders[0].state,
           },
         });
 
-        if (response.status !== 200) {
-          console.log("response", response);
-          console.log("failed params?", params);
-          throw new Error("Failed to create payment link");
-        }
-        const data = response.data;
-        return data;
+        console.log("squarePayment", squarePayment);
+        return data.payment_link.url as string;
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Axios error response:", error.response);

@@ -46,7 +46,7 @@ export default function SponsorshipSelectionDialog({
   if (sponsorMutation.isSuccess && sponsorMutation.data) {
     console.log("SPONSOR DATA", sponsorMutation.data);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    // void router.push(sponsorMutation.data.payment_link.url as string);
+    void router.push(sponsorMutation.data);
   }
 
   const getTierTitle = (tier: string) => {

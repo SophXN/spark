@@ -119,7 +119,7 @@ model Company {
     profilePicture        String?
     squareMerchantId      String                 @unique
     eventRequests         EventRequest[]
-    sponsorships          Sponsor[]
+    sponsorships          SponsorPayments[]
     businessDescription   String?
     facebookUrl           String?
     twitterUrl            String?
@@ -156,14 +156,14 @@ model EventRequest {
 }
 
 model Sponsor {
-    id               String       @id @default(cuid())
-    eventRequest     EventRequest @relation(fields: [eventRequestId], references: [eventId])
+    id               String            @id @default(cuid())
+    eventRequest     EventRequest      @relation(fields: [eventRequestId], references: [eventId])
     eventRequestId   String
     tier             Tier
     description      String
     sponsorsRequired Int
     amountPerSponsor Float
-    responders       Company[]
+    payments         SponsorPayments[]
 }
 
 model Collaborator {
@@ -188,4 +188,15 @@ model CollaboratorResponse {
     responseMessage String?
     respondedOn     DateTime
     serviceType     ServiceType                @default(FOOD)
+}
+
+model SponsorPayments {
+    id            String   @id @default(cuid())
+    sponsor       Sponsor  @relation(fields: [sponsorId], references: [id])
+    sponsorId     String
+    company       Company  @relation(fields: [companyId], references: [squareMerchantId])
+    companyId     String
+    squareOrderId String
+    paymentStatus String
+    createdAt     DateTime
 }
