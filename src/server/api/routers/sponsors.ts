@@ -82,9 +82,11 @@ export const sponsorsRouter = createTRPCRouter({
       if (!sponsor || !location?.locationId) {
         throw new Error("Sponsor or location not found");
       }
-      // TODO: Change this to the production URL
+
       const url =
-        "https://connect.squareup.com/v2/online-checkout/payment-links";
+        process.env.NODE_ENV === "production"
+          ? "https://connect.squareup.com/v2/online-checkout/payment-links"
+          : "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
         console.log(
