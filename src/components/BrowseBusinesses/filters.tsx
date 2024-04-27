@@ -51,15 +51,6 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     console.log("updated");
     console.log(filterObject, "<= before query");
 
-    if (
-      filterObject.city === "" &&
-      filterObject.merchantCode === "" &&
-      filterObject.type === ""
-    ) {
-      onChange(filterObject);
-      return;
-    }
-
     if (filterObject.city === "") {
       delete filterObject.city;
     }
@@ -69,6 +60,7 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
     if (filterObject.type === "") {
       delete filterObject.type;
     }
+    
     onChange(filterObject);
   }, [filterObject, onChange]);
 
@@ -182,16 +174,13 @@ const Filters: React.FC<filterProps> = ({ onChange }) => {
             <SelectContent>
               <SelectGroup>
                 <SelectItem value={BusinessType.MOBILE}>
-                  {BusinessType.MOBILE.toUpperCase() +
-                    BusinessType.MOBILE.slice(1).toLowerCase()}
+                  Mobile
                 </SelectItem>
                 <SelectItem value={BusinessType.PHYSICAL}>
-                  {BusinessType.PHYSICAL.toUpperCase() +
-                    BusinessType.PHYSICAL.slice(1).toLowerCase()}
+                  Physical
                 </SelectItem>
                 <SelectItem value={BusinessType.VIRTUAL}>
-                  {BusinessType.VIRTUAL.toUpperCase() +
-                    BusinessType.VIRTUAL.slice(1).toLowerCase()}
+                  Virtual
                 </SelectItem>
               </SelectGroup>
             </SelectContent>

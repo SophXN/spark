@@ -11,8 +11,9 @@ import {
   Twitter,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { type BrowseCompanies } from "~/types/types";
+import { type BrowseCompanies, BusinessType } from "~/types/types";
 import { mcc } from "~/utils/mcc";
+import Image from "next/image";
 
 interface BusinessCardProps {
   companyData: BrowseCompanies; // Using the extended type here
@@ -32,7 +33,11 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
 
   const concatenatedTypes = companyData.locations.reduce(
     (accumulator, currentValue) => {
-      return accumulator + (accumulator ? ", " : "") + currentValue.type;
+      let newValue = "";
+      if(currentValue.type == BusinessType.PHYSICAL as string) newValue = "Physical"
+      if(currentValue.type == BusinessType.VIRTUAL as string) newValue = "Virtual"
+      if(currentValue.type == BusinessType.MOBILE as string) newValue = "Mobile"
+      return accumulator + (accumulator ? ", " : "") + newValue;
     },
     "",
   );
@@ -42,11 +47,30 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
       <div className="flex flex-grow flex-col">
         <div className="flex flex-row items-center gap-2">
           <div className="flex-shrink-0">
-            <img
-              className="h-[70px] w-[70px] rounded-full"
-              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt=""
-            />
+            {companyData.profilePicture ? (
+              <div>
+                <Image
+                  className="h-12 w-12 object-cover rounded-full"
+                  src={companyData.profilePicture}
+                  alt="Business Logo"
+                  width="100"
+                  height="100"
+                  layout="fixed"
+                />
+              </div>
+            ) : (
+              <div className="h-12 w-12">
+                <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                  <svg
+                    className="h-full w-full text-gray-300"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex min-w-0 flex-col gap-1">
             <div>
@@ -111,7 +135,7 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
           </div>
         </div>
       </div>
-      <Button className="mt-2 w-full px-2 sm:mt-0 sm:w-auto">
+      <Button size={"sm"} className="mt-2 w-full px-1 sm:mt-0 sm:w-auto">
         <SendIcon size={"17"} className="mr-1" />
         <span className="text-sm">Invite to Collab</span>
       </Button>
