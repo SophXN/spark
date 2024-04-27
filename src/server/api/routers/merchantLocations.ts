@@ -84,7 +84,7 @@ export const merchantLocationRouter = createTRPCRouter({
       const accessToken = user?.access_token;
 
       console.log(user, ", <= user");
-      const url = "https://connect.squareupsandbox.com/v2/locations";
+      const url = "https://connect.squareup.com/v2/locations";
 
       try {
         const response = await axios.get(url, {

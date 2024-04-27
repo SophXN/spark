@@ -12,10 +12,12 @@ import { Profile } from "next-auth";
 type OAuthProviderOptions = Pick<OAuthConfig<any>, "clientId" | "clientSecret">;
 
 const callbackUrl = `${process.env.NEXTAUTH_URL}/api/auth/callback/square`;
+const env = process.env.NODE_ENV;
 
 const squareClientConfig = {
-  environment: Environment.Sandbox,
-  userAgentDetail: "first-app",
+  environment:
+    env === "production" ? Environment.Production : Environment.Sandbox,
+  userAgentDetail: "square-spark",
 };
 
 const SquareProvider = (
@@ -36,28 +38,23 @@ const SquareProvider = (
     },
     callbackUrl,
     authorization: {
-      url: "https://connect.squareupsandbox.com/oauth2/authorize",
+      url:
+        env === "production"
+          ? `${process.env.SQUARE_AUTH_PROD_URL}/authorize`
+          : `${process.env.SQUARE_AUTH_SANDBOX_URL}/authorize`,
       params: {
         scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
       },
-      // [
-      //   "MERCHANT_PROFILE_READ",
-      //   "ORDERS_READ",
-      //   "ORDERS_WRITE",
-      //   "PAYMENTS_WRITE",
-      // ],
     },
   },
   token: {
-    // url: "https://connect.squareupsandbox.com/oauth2/token",
-    // params: {
-    //   scope: [
-    //     "MERCHANT_PROFILE_READ",
-    //     "ORDERS_READ",
-    //     "ORDERS_WRITE",
-    //     "PAYMENTS_WRITE",
-    //   ],
-    // },
+    url:
+      env === "production"
+        ? `${process.env.SQUARE_AUTH_PROD_URL}/token`
+        : `${process.env.SQUARE_AUTH_SANDBOX_URL}/token`,
+    params: {
+      scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
+    },
     async request(context) {
       try {
         const { code } = context.params;
