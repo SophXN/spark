@@ -23,7 +23,7 @@ export default function SponsorshipSelectionDialog({
   eventDetails,
 }: PublicEventData) {
   const [open, setOpen] = useState(false);
-  const [selectedSponsorId, setSelectedSponsorId] = useState(null);
+  const [selectedSponsorId, setSelectedSponsorId] = useState("");
   const { data: sessionData } = useSession();
   const companyId = sessionData?.user.companyId ?? "";
   const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
@@ -101,7 +101,7 @@ export default function SponsorshipSelectionDialog({
         <DialogFooter className="mt-2">
           <Button
             onClick={testPaymentHandler}
-            disabled={selectedSponsorId === null}
+            disabled={selectedSponsorId === ""}
           >
             Go to payment
           </Button>
