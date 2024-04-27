@@ -43,7 +43,8 @@ const SquareProvider = (
           ? `${process.env.SQUARE_AUTH_PROD_URL}/authorize`
           : `${process.env.SQUARE_AUTH_SANDBOX_URL}/authorize`,
       params: {
-        scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
+        scope: "MERCHANT_PROFILE_READ",
+        // scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
       },
     },
   },
@@ -53,7 +54,8 @@ const SquareProvider = (
         ? `${process.env.SQUARE_AUTH_PROD_URL}/token`
         : `${process.env.SQUARE_AUTH_SANDBOX_URL}/token`,
     params: {
-      scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
+      scope: "MERCHANT_PROFILE_READ",
+      // scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
     },
     async request(context) {
       try {
