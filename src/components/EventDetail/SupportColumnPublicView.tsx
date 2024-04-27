@@ -23,13 +23,12 @@ interface PublicEventData {
 export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   eventDetails,
 }) => {
-  let collaboratorsExist = false;
-  let sponsorsExists = false;
+  // let collaboratorsExist = false;
+  // let sponsorsExists = false;
   let totalCollaboratorsRequired = 0;
   let totalCollaboratorsRemaining = 0;
   let totalSponsorsNeeded = 0;
   const totalSponsors = 0;
-  const sponsorSpacesLeft = 0;
   let totalSponsorsRemaining = 0;
 
   const countOfCollaboratorResponses =
@@ -41,7 +40,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
     }, 0) ?? 0;
 
   if (eventDetails.collaborators.length > 0) {
-    collaboratorsExist = true;
+    // collaboratorsExist = true;
     totalCollaboratorsRequired = eventDetails.collaborators
       ? eventDetails.collaborators?.reduce((acc, collaborator) => {
           return acc + collaborator.collaboratorsRequired;
@@ -54,7 +53,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
 
   if (eventDetails.sponsors.length > 0) {
-    sponsorsExists = true;
+    // sponsorsExists = true;
     totalSponsorsNeeded = eventDetails.sponsors
       ? eventDetails.sponsors?.reduce((acc, sponsor) => {
           return acc + sponsor.sponsorsRequired;

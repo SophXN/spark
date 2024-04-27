@@ -12,7 +12,7 @@ import { type HomePageResponse } from "~/types/types";
 
 interface EventCardProps {
   eventDetails: HomePageResponse;
-  yourEvent?: boolean
+  yourEvent?: boolean;
 }
 
 export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
@@ -21,7 +21,6 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
   let sponsorsExists = false;
   let totalCollaboratorsNeeded = 0;
   let collaboratorSpacesLeft = 0;
-  const totalSponsorsNeeded = 0;
   const sponsorSpacesLeft = 0;
   const acceptedCollaboratorResponsesCount =
     eventDetails._count.collaboratorsResponses ?? 0;
@@ -46,12 +45,10 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
   }
 
   return (
-    <Card className="cursor-pointer col-span-1 flex flex-col hover:drop-shadow-md transition duration-150 ease-out hover:ease-in">
+    <Card className="col-span-1 flex cursor-pointer flex-col transition duration-150 ease-out hover:drop-shadow-md hover:ease-in">
       <CardContent className="px-3 py-3">
         <Image
-          src={
-            eventDetails.image
-          }
+          src={eventDetails.image}
           alt="Event"
           className="h-[200px] w-full rounded object-cover"
           width={500}
@@ -86,8 +83,8 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
               {eventDetails.requester.profilePicture ? (
                 <div>
                   <Image
-                    className="h-5 w-5 object-cover rounded-full"
-                    src={eventDetails.requester.profilePicture as string}
+                    className="h-5 w-5 rounded-full object-cover"
+                    src={eventDetails.requester.profilePicture}
                     alt="Business Logo"
                     width="100"
                     height="100"
@@ -95,14 +92,17 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
                   />
                 </div>
               ) : (
-                <div className="w-5 h-5">
+                <div className="h-5 w-5">
                   <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
-                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="h-full w-full text-gray-300"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   </span>
                 </div>
-
               )}
             </div>
             <div className="flex-1">
@@ -112,7 +112,6 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
             </div>
           </div>
         )}
-
       </CardContent>
     </Card>
   );

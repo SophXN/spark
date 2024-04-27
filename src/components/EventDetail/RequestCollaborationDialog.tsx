@@ -32,6 +32,8 @@ import { api } from "~/utils/api";
 import { type HomePageResponse, RequestStatus } from "~/types/types";
 import { ServiceType } from "@prisma/client";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { v4 as uuidv4 } from "uuid";
 
 const collaboratorResponseSchema = z.object({
   collaboratorId: z.string().min(1, "Collaborator ID is required"),
@@ -51,14 +53,13 @@ export default function RequestCollaborationDialog({
   eventDetails,
 }: PublicEventData) {
   const [open, setOpen] = useState(false);
-
-  //TODO: Updated the responderID with the id of the user who is logged in
+  const { data: sessionData } = useSession();
 
   const form = useForm<z.infer<typeof collaboratorResponseSchema>>({
     defaultValues: {
-      collaboratorId: "",
+      collaboratorId: uuidv4(),
       eventRequestId: eventDetails.eventId,
-      responderId: "235khf8745",
+      responderId: sessionData?.user.companyId ?? "",
       status: RequestStatus.pending,
       responseMessage: "",
       respondedOn: new Date(),
@@ -80,8 +81,7 @@ export default function RequestCollaborationDialog({
       const validatedInput = collaboratorResponseSchema.parse(data);
       // If validation is successful, proceed to mutate
       mutation.mutate(validatedInput, {
-        onSuccess: (results) => {
-          console.log(results, "<-- submission");
+        onSuccess: () => {
           setOpen(false);
         },
       });

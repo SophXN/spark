@@ -182,7 +182,7 @@ model CollaboratorResponse {
     collaboratorId  String
     eventRequest    EventRequest               @relation(fields: [eventRequestId], references: [eventId])
     eventRequestId  String
-    responder       Company                    @relation(fields: [responderId], references: [id])
+    responder       Company                    @relation(fields: [responderId], references: [squareMerchantId])
     responderId     String
     status          CollaboratorResponseStatus @default(PENDING)
     responseMessage String?

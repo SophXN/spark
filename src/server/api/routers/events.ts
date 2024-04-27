@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { EventType, CollaboratorResponseStatus } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import axios from "axios";
 
-function generateUrl(baseUrl: string, params: Record<string, string | number>): string {
+function generateUrl(
+  baseUrl: string,
+  params: Record<string, string | number>,
+): string {
   const url = new URL(baseUrl);
   const searchParams = new URLSearchParams();
 
@@ -38,26 +42,27 @@ export const eventsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const baseUrl = 'https://api.unsplash.com/photos/';
+      const baseUrl = "https://api.unsplash.com/photos/";
       const queryParams = {
         page: 1,
         query: input.eventType,
         per_page: 9,
-        orientation: "landscape"
-      }
-      
+        orientation: "landscape",
+      };
+
       const url = generateUrl(baseUrl, queryParams);
 
       try {
         const response = await axios.get(url, {
           headers: {
-            'Authorization': `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
-            'Content-Type': 'application/json',
-            'Accept-Version': "v1"
-          }
+            Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
+            "Content-Type": "application/json",
+            "Accept-Version": "v1",
+          },
         });
 
-        const randomNumber = getRandomNumber(0, 10)
+        const randomNumber = getRandomNumber(0, 10);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const images = response.data[randomNumber].urls.regular;
 
         return await ctx.db.eventRequest.create({
@@ -72,11 +77,10 @@ export const eventsRouter = createTRPCRouter({
             createdOn: input.createdOn,
             eventType: EventType[input.eventType as keyof typeof EventType],
           },
-        })
-      }
-      catch (err) {
+        });
+      } catch (err) {
         console.log(err);
-      };
+      }
     }),
   getEvent: publicProcedure.query(async ({ ctx, input: eventId }) => {
     const event = await ctx.db.eventRequest.findUnique({
@@ -98,25 +102,27 @@ export const eventsRouter = createTRPCRouter({
       });
       return event;
     }),
-  getHomePageEvents: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    const events = await ctx.db.eventRequest.findMany({
-      include: {
-        sponsors: true,
-        collaborators: true,
-        requester: true,
-        _count: {
-          select: {
-            collaboratorsResponses: {
-              where: {
-                status: CollaboratorResponseStatus.ACCEPTED,
+  getHomePageEvents: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx }) => {
+      const events = await ctx.db.eventRequest.findMany({
+        include: {
+          sponsors: true,
+          collaborators: true,
+          requester: true,
+          _count: {
+            select: {
+              collaboratorsResponses: {
+                where: {
+                  status: CollaboratorResponseStatus.ACCEPTED,
+                },
               },
             },
           },
         },
-      },
-    });
-    return events;
-  }),
+      });
+      return events;
+    }),
   getEventCollaboratorResponses: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: eventId }) => {
@@ -138,12 +144,12 @@ export const eventsRouter = createTRPCRouter({
       });
       return events;
     }),
-    getYourEvents: publicProcedure
+  getYourEvents: publicProcedure
     .input(z.string())
-    .query(async ({ctx, input}) => {
+    .query(async ({ ctx, input }) => {
       return await ctx.db.eventRequest.findMany({
         where: {
-          requesterId: input
+          requesterId: input,
         },
         include: {
           sponsors: true,
@@ -159,6 +165,6 @@ export const eventsRouter = createTRPCRouter({
             },
           },
         },
-      })
-    })
+      });
+    }),
 });

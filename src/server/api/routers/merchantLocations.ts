@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { MerchantLocation } from "@prisma/client";
@@ -28,14 +29,19 @@ const locationSchema = z.object({
   mcc: z.string(),
 });
 
-const locationDisplaySchema = locationSchema.transform(location => ({
+const locationDisplaySchema = locationSchema.transform((location) => ({
   id: location.id,
   name: location.name,
-  address: location.address.address_line_1 + ", " + location.address.postal_code + ", " + location.address.country,
+  address:
+    location.address.address_line_1 +
+    ", " +
+    location.address.postal_code +
+    ", " +
+    location.address.country,
   companyId: location.merchant_id,
   city: location.address.locality,
   type: location.type,
-  merchantCode: location.mcc
+  merchantCode: location.mcc,
 }));
 
 const locationsArraySchema = z.array(locationDisplaySchema);
@@ -50,7 +56,7 @@ export const merchantLocationRouter = createTRPCRouter({
           city: z.string(),
           type: z.string(),
           merchantCode: z.string(),
-          locationId: z.string()
+          locationId: z.string(),
         }),
       ),
     )
@@ -62,44 +68,46 @@ export const merchantLocationRouter = createTRPCRouter({
           city: location.city,
           type: location.type,
           merchantCode: location.merchantCode,
-          locationId: location.locationId
+          locationId: location.locationId,
         })),
       });
     }),
   getLocations: publicProcedure
-    .input(z.string())  
-    .query(async ({ctx, input}) => {
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
       const user = await ctx.db.account.findFirst({
         where: {
-          userId: input
-        }
-      })
+          userId: input,
+        },
+      });
 
       const accessToken = user?.access_token;
 
-      console.log(user, ", <= user")
-      const url = 'https://connect.squareupsandbox.com/v2/locations';
+      console.log(user, ", <= user");
+      const url = "https://connect.squareupsandbox.com/v2/locations";
 
       try {
         const response = await axios.get(url, {
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         });
-        
-        const displayLocations = locationsArraySchema.parse(response.data.locations);
-        
-        console.log(displayLocations, ", <= location square data")
+
+        const displayLocations = locationsArraySchema.parse(
+          response.data.locations,
+        );
+
+        console.log(displayLocations, ", <= location square data");
 
         return displayLocations; // Returning just the locations part
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error('Error response:', error.response);
+          console.error("Error response:", error.response);
         } else {
-          console.error('Unexpected error:', error);
+          console.error("Unexpected error:", error);
         }
-        throw new Error('Failed to fetch locations from Square API');
+        throw new Error("Failed to fetch locations from Square API");
       }
-    })
+    }),
 });
