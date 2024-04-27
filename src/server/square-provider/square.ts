@@ -26,11 +26,11 @@ const SquareProvider = (
     name: "Square",
     type: "oauth",
     version: "2.0",
-    profile: (profile) => {
+    profile: async (profile) => {
       // must match Prisma User model
       return {
-        id: profile.id, // id will be overwritten
-        companyId: profile.id,
+        id: profile.id ?? "", // ensure 'id' is always of type 'string'
+        companyId: profile.id ?? "",
         email: `${(profile.businessName ?? "").replace(/\s+/g, "-").toLowerCase()}@square.com`, // dummy email
       };
     },
@@ -38,26 +38,27 @@ const SquareProvider = (
     authorization: {
       url: "https://connect.squareupsandbox.com/oauth2/authorize",
       params: {
-        scope: [
-          "MERCHANT_PROFILE_READ",
-          "ORDERS_READ",
-          "ORDERS_WRITE",
-          "PAYMENTS_WRITE",
-        ],
+        scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
       },
+      // [
+      //   "MERCHANT_PROFILE_READ",
+      //   "ORDERS_READ",
+      //   "ORDERS_WRITE",
+      //   "PAYMENTS_WRITE",
+      // ],
     },
   },
   token: {
-    url: "https://connect.squareupsandbox.com/oauth2/token",
-    params: {
-      scope: [
-        "MERCHANT_PROFILE_READ",
-        "ORDERS_READ",
-        "ORDERS_WRITE",
-        "PAYMENTS_WRITE",
-      ],
-    },
-    async request(context): Promise<TokenSetParameters> {
+    // url: "https://connect.squareupsandbox.com/oauth2/token",
+    // params: {
+    //   scope: [
+    //     "MERCHANT_PROFILE_READ",
+    //     "ORDERS_READ",
+    //     "ORDERS_WRITE",
+    //     "PAYMENTS_WRITE",
+    //   ],
+    // },
+    async request(context) {
       try {
         const { code } = context.params;
         const squareClient = new Client(squareClientConfig);
@@ -79,7 +80,7 @@ const SquareProvider = (
           token_type: result.tokenType,
         };
 
-        return { tokens }; //  {tokens} previously
+        return { tokens };
       } catch (error) {
         console.log(error);
         throw error; // or return a valid TokenSetParameters object
@@ -91,7 +92,7 @@ const SquareProvider = (
       try {
         // refresh_token, expires_at can be used for refreshing access_token without manual sign in
         const { access_token, providerAccountId } = context.tokens;
-
+        console.log("USER INFO ACCESS TOKEN", access_token);
         // create Api client
         // must create new client with accessToken
         const squareClient = new Client({

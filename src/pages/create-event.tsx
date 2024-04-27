@@ -41,14 +41,22 @@ import { useSession } from "next-auth/react";
 
 const FormSchema = z.object({
   eventId: z.string({ required_error: "An event id is required." }).min(1),
-  requesterId: z.string({ required_error: "Requester id is required for event is be created.", }).min(1),
-  title: z.string({ required_error: "Title for your event is required." }).min(1),
+  requesterId: z
+    .string({
+      required_error: "Requester id is required for event is be created.",
+    })
+    .min(1),
+  title: z
+    .string({ required_error: "Title for your event is required." })
+    .min(1),
   description: z.string({ required_error: "Description is required." }).min(1),
   eventDate: z.date({
     required_error: "An event date is required.",
   }),
   eventType: z.nativeEnum(EventType),
-  eventLocation: z.string({ required_error: "Event location is required." }).min(1)
+  eventLocation: z
+    .string({ required_error: "Event location is required." })
+    .min(1),
 });
 
 enum EventCreationProgress {
@@ -59,7 +67,7 @@ enum EventCreationProgress {
 
 export default function Events() {
   const router = useRouter();
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData } = useSession();
   const [isReadyToSubmit, setIsReadyToSubmit] = React.useState(false);
   const [eventCreationProgress, setEventCreationProgress] =
     React.useState<EventCreationProgress>(EventCreationProgress.IDLE);
@@ -94,7 +102,7 @@ export default function Events() {
       eventType: data.eventType,
     };
     try {
-      await FormSchema.parse(params);
+      FormSchema.parse(params);
       setEventCreationProgress(EventCreationProgress.IN_PROGRESS);
       mutation.mutate(params);
     } catch (error) {
@@ -107,7 +115,7 @@ export default function Events() {
       setIsReadyToSubmit(true);
       setTimeout(() => {
         void router.push(`/events/${form.getValues("eventId")}`);
-      }, 3000);
+      }, 5000);
     }
   }, [eventCreationProgress, form, router]);
 
@@ -164,7 +172,7 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="flex flex-row gap-2">
                     <div className="flex-1">
                       <FormField
@@ -213,7 +221,7 @@ export default function Events() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="flex-1">
                       <FormField
                         control={form.control}
@@ -243,7 +251,7 @@ export default function Events() {
                       />
                     </div>
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name="eventLocation"
@@ -262,7 +270,7 @@ export default function Events() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <EventSponsors
                     eventId={form.getValues("eventId")}
                     isReadyToSubmit={isReadyToSubmit}
