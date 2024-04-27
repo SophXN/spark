@@ -10,9 +10,12 @@ import { Profile } from "next-auth";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OAuthProviderOptions = Pick<OAuthConfig<any>, "clientId" | "clientSecret">;
-
-const callbackUrl = `${process.env.NEXTAUTH_URL}/api/auth/callback/square`;
 const env = process.env.NODE_ENV;
+// https://spark-square.vercel.app/api/auth/callback/square
+// https://spark-square.vercel.app/api/auth/callback/square
+// https://spark-square.vercel.app/api/auth/callback/square
+// https://spark-square.vercel.app/api/auth/callback/square/api/auth/callback/square
+const callbackUrl = `${process.env.NEXTAUTH_URL}`;
 
 const squareClientConfig = {
   environment:
@@ -69,16 +72,17 @@ const SquareProvider = (
           clientSecret: options.clientSecret,
           grantType: "authorization_code",
         });
-
+        console.log("TOKEN RESULT", result);
         // match interface for Account Prisma model
         const tokens: TokenSetParameters = {
           providerAccountId: result.merchantId,
           access_token: result.accessToken,
           refresh_token: result.refreshToken,
-          expires_at: new Date().getTime() / 1000, // ms to sec to fit INT
+          expires_at: new Date().getTime() / 10000, // ms to sec to fit INT
           token_type: result.tokenType,
         };
 
+        console.log("ACTUAL TOKEN??", tokens);
         return { tokens };
       } catch (error) {
         console.log(error);
