@@ -34,28 +34,34 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({
     (fileInputRef.current as HTMLInputElement).click();
   };
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        // upload profile picture if you don't have one set
-        console.log(event.target.files, "<= image captured")
-        const file = event.target.files ? event.target.files[0] : null;
-        if (!file) {
-            return;
-        }
-        const contentType = file.type;
-        const fileData = {
-            bucket: "profile-pictures",
-            file: file,
-            contentType: contentType
-        }
-
-        setFile(fileData);
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    // upload profile picture if you don't have one set
+    console.log(event.target.files, "<= image captured");
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) {
+      return;
     }
+    const contentType = file.type;
+    const fileData = {
+      bucket: "profile-pictures",
+      file: file,
+      contentType: contentType,
+    };
+
+    setFile(fileData);
+  };
 
   useEffect(() => {
     if (status == UploadStates.uploadedToBucket && storageUrl != null) {
       // update company with new image
-      updateProfileImageMutation.mutate({squareMerchantId: step.companyId ?? "", profilePicture: storageUrl})
+      updateProfileImageMutation.mutate({
+        squareMerchantId: step.companyId ?? "",
+        profilePicture: storageUrl,
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, storageUrl]);
 
   return (

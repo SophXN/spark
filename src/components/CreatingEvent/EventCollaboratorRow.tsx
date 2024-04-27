@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import { ServiceType, type Collaborator } from "@prisma/client";
 
 interface EventCollaboratorRowProps {

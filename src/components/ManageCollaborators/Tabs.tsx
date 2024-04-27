@@ -5,10 +5,7 @@ import {
   type CollaboratorResponseExtended,
   type EventRequestExtended,
 } from "~/types/types";
-import {
-  type CollaboratorResponse,
-  CollaboratorResponseStatus,
-} from "@prisma/client";
+import { CollaboratorResponseStatus } from "@prisma/client";
 import { AcceptedCollaborators } from "./AcceptedCollaborators";
 import { DeniedCollaborators } from "./DeniedCollaborators";
 import { api } from "~/utils/api";
@@ -41,11 +38,12 @@ const Tabs: React.FC<TabsProps> = ({ eventId }) => {
 
   const collaboratorResponses: CollaboratorResponseExtended[] = [];
 
-  let eventResponse = api.events.getEventCollaboratorResponses.useQuery(
-    eventId as string, {enabled : !!eventId}
-  )
+  const eventResponse = api.events.getEventCollaboratorResponses.useQuery(
+    eventId,
+    { enabled: !!eventId },
+  );
 
-  const eventData = eventResponse.data as EventRequestExtended[] ?? [];
+  const eventData = (eventResponse.data as EventRequestExtended[]) ?? [];
 
   eventData.forEach((event) => {
     event.collaboratorsResponses.forEach((response) => {
@@ -108,49 +106,49 @@ const Tabs: React.FC<TabsProps> = ({ eventId }) => {
         </div>
       </div>
       <div className="mt-2">
-        {
-          eventResponse.isLoading ? (
-            <div>
-              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
-              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
-              <Skeleton className="mt-4 w-full h-[300px] rounded-md" />
-            </div>
-          ) : (
-
-            <div>
-              {
-                collaboratorResponses.length > 0 ? (
-                  <div>
-                    {activeTab === "Requests" && (
-                      <Requests
-                        collaboratorResponses={collaboratorResponses.filter(
-                          (item) => item.status === CollaboratorResponseStatus.PENDING,
-                        )}
-                      />
+        {eventResponse.isLoading ? (
+          <div>
+            <Skeleton className="mt-4 h-[300px] w-full rounded-md" />
+            <Skeleton className="mt-4 h-[300px] w-full rounded-md" />
+            <Skeleton className="mt-4 h-[300px] w-full rounded-md" />
+          </div>
+        ) : (
+          <div>
+            {collaboratorResponses.length > 0 ? (
+              <div>
+                {activeTab === "Requests" && (
+                  <Requests
+                    collaboratorResponses={collaboratorResponses.filter(
+                      (item) =>
+                        item.status === CollaboratorResponseStatus.PENDING,
                     )}
-                    {activeTab === "Accepted" && (
-                      <AcceptedCollaborators
-                        acceptedCollaborators={collaboratorResponses.filter(
-                          (item) => item.status === CollaboratorResponseStatus.ACCEPTED,
-                        )}
-                      />
+                  />
+                )}
+                {activeTab === "Accepted" && (
+                  <AcceptedCollaborators
+                    acceptedCollaborators={collaboratorResponses.filter(
+                      (item) =>
+                        item.status === CollaboratorResponseStatus.ACCEPTED,
                     )}
-                    {activeTab === "Denied" && (
-                      <DeniedCollaborators
-                        deniedCollaborators={collaboratorResponses.filter(
-                          (item) => item.status === CollaboratorResponseStatus.DENIED,
-                        )}
-                      />
+                  />
+                )}
+                {activeTab === "Denied" && (
+                  <DeniedCollaborators
+                    deniedCollaborators={collaboratorResponses.filter(
+                      (item) =>
+                        item.status === CollaboratorResponseStatus.DENIED,
                     )}
-                  </div>
-                ) : (
-                  <EmptyState title="No requests have been made yet." description="Your event must be kinda lame 😬"></EmptyState>
-                )
-              }
-            </div>
-          )
-        }
-
+                  />
+                )}
+              </div>
+            ) : (
+              <EmptyState
+                title="No requests have been made yet."
+                description="Your event must be kinda lame 😬"
+              ></EmptyState>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
