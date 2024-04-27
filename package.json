@@ -39,6 +39,7 @@
     "@types/micro-cors": "^0.1.5",
     "@types/next-auth": "^3.15.0",
     "@uppy/core": "^3.10.1",
+    "base64-arraybuffer": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",

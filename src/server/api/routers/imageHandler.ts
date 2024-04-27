@@ -1,30 +1,35 @@
-import { any, z } from "zod";
+import { z } from "zod";
 import { createClient } from '@supabase/supabase-js'
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { v4 as uuidv4 } from "uuid";
-import { FileObj } from "~/hooks/useImageUploader";
+import { decode } from 'base64-arraybuffer'
 
-const supabase = createClient(process.env.SUPABASE_URL as string, process.env.SUPABASE_API_KEY as string)
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_API_KEY!)
 
 export const imageHandlerRouter = createTRPCRouter({
   uploadImageToStorage: protectedProcedure
-  .input(z.custom<FileObj>())
+  .input(z.object({
+    bucket: z.string(),
+    file: z.string(),
+    contentType: z.string().optional()
+  }))
   .mutation(async ({ ctx, input }) => {
     const filePath = uuidv4()
     console.log(input)
-    if(input.file == null){
-      throw "No file found";
-    }
+
+    const base64 = input.file.split('base64,')[1]
+
     const { error: uploadError, data } = await supabase.storage
       .from(input.bucket)
-      .upload(filePath, input.file, {contentType: input.contentType});
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+      .upload(filePath, decode(base64!), {contentType: input.contentType});
     if (uploadError) {
         throw uploadError;
     }
-    console.log(data, " <= finished uploading")
-    const imageFullUrl = process.env.SUPABASE_URL + "/storage/v1/object/public/" + data.fullPath;
+    const imageFullUrl = process.env.SUPABASE_URL + "/storage/v1/object/public/" + input.bucket + "/" + data.path;
 
+    console.log(imageFullUrl);
     return imageFullUrl;
-  }),
 
+  }),
 });
