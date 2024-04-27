@@ -78,7 +78,7 @@ function useManageCompanyAndLocations(
         return;
       }
       if (findLocationsThroughSquare.length > 0) {
-        console.log("locations found, create company");
+        // console.log("locations found, create company");
         const companyParams = {
           id: uuidv4(),
           name: findLocationsThroughSquare[0].name,

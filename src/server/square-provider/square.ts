@@ -1,20 +1,12 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type OAuthConfig } from "next-auth/providers/oauth";
-import { Client, Environment, Merchant } from "square";
+import { Client, Environment, type Merchant } from "square";
 import { type TokenSetParameters } from "openid-client";
-import { Profile } from "next-auth";
+import { type Profile } from "next-auth";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OAuthProviderOptions = Pick<OAuthConfig<any>, "clientId" | "clientSecret">;
+
 const env = process.env.NODE_ENV;
-// https://spark-square.vercel.app/api/auth/callback/square
-// https://spark-square.vercel.app/api/auth/callback/square
-// https://spark-square.vercel.app/api/auth/callback/square
-// https://spark-square.vercel.app/api/auth/callback/square/api/auth/callback/square
 const callbackUrl = `${process.env.NEXTAUTH_URL}`;
 
 const squareClientConfig = {
@@ -46,8 +38,7 @@ const SquareProvider = (
           ? `${process.env.SQUARE_AUTH_PROD_URL}/authorize`
           : `${process.env.SQUARE_AUTH_SANDBOX_URL}/authorize`,
       params: {
-        scope: "MERCHANT_PROFILE_READ",
-        // scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
+        scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
       },
     },
   },
@@ -57,8 +48,7 @@ const SquareProvider = (
         ? `${process.env.SQUARE_AUTH_PROD_URL}/token`
         : `${process.env.SQUARE_AUTH_SANDBOX_URL}/token`,
     params: {
-      scope: "MERCHANT_PROFILE_READ",
-      // scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
+      scope: "MERCHANT_PROFILE_READ ORDERS_READ ORDERS_WRITE PAYMENTS_WRITE",
     },
     async request(context) {
       try {
