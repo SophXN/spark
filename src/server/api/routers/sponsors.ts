@@ -84,7 +84,7 @@ export const sponsorsRouter = createTRPCRouter({
       }
       // TODO: Change this to the production URL
       const url =
-        "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
+        "https://connect.squareup.com/v2/online-checkout/payment-links";
 
       try {
         console.log(
