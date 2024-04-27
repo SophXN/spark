@@ -12,7 +12,7 @@ export const imageHandlerRouter = createTRPCRouter({
     file: z.custom<File>()
   }),)
   .mutation(async ({ ctx, input }) => {
-    const filePath = "/" + uuidv4()
+    const filePath = uuidv4()
     console.log(filePath)
 
     const { error: uploadError, data } = await supabase.storage.from(input.bucket).upload(filePath, input.file);

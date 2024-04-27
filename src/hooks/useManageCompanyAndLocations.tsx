@@ -3,7 +3,7 @@ import { api } from "~/utils/api";
 import { z } from "zod";
 import { Company, MerchantLocation } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
-import { HomePageMerchantDetails } from "~/types/types";
+import { HomePageEventDetails, HomePageMerchantDetails } from "~/types/types";
 
 type FetchOptions = {
   enabled: boolean;
@@ -37,13 +37,22 @@ function useManageCompanyAndLocations(
     const createCompany = api.company.createCompany.useMutation({
     onSuccess(data, variables, context) {
       console.log(data, "<= company created");
-      setCompany(data as HomePageMerchantDetails);
+      const defaultData = {
+        _count: {
+          eventRequests: 0,
+          sponsorships: 0,
+          collaboratorResponses: 0
+        }
+      }
+      // setCompany(data as HomePageMerchantDetails);
+      setCompany({...defaultData, ...data} as HomePageMerchantDetails)
       const updatedLocations = findLocationsThroughSquare.map((location) => ({
-        id: location.id,
+        id: uuidv4(),
         companyId: data.id,
         city: location.city!,
         type: location.type,
         merchantCode: location.merchantCode,
+        locationId: location.id
       }));
       createLocations.mutate(updatedLocations);
     },

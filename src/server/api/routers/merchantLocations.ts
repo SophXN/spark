@@ -25,11 +25,11 @@ const locationSchema = z.object({
   business_name: z.string(),
   type: z.string(), // Assuming these types, adjust as necessary
   business_hours: z.record(z.string()), // Simple representation, use a more specific schema if needed
-  mcc: z.string()
+  mcc: z.string(),
 });
 
 const locationDisplaySchema = locationSchema.transform(location => ({
-  id: randomUUID(),
+  id: location.id,
   name: location.name,
   address: location.address.address_line_1 + ", " + location.address.postal_code + ", " + location.address.country,
   companyId: location.merchant_id,
@@ -50,6 +50,7 @@ export const merchantLocationRouter = createTRPCRouter({
           city: z.string(),
           type: z.string(),
           merchantCode: z.string(),
+          locationId: z.string()
         }),
       ),
     )
@@ -61,6 +62,7 @@ export const merchantLocationRouter = createTRPCRouter({
           city: location.city,
           type: location.type,
           merchantCode: location.merchantCode,
+          locationId: location.locationId
         })),
       });
     }),
