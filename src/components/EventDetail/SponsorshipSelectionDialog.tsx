@@ -26,34 +26,33 @@ export default function SponsorshipSelectionDialog({
   const [selectedSponsorId, setSelectedSponsorId] = useState("");
   const { data: sessionData } = useSession();
   const companyId = sessionData?.user.companyId ?? "";
-  // const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
+  const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
+
+  const paymentLinkInfo = api.sponsors.getSponsor
+    .useQuery(selectedSponsorId)
+    .data?.paymentLinks.filter((ea) => ea.paymentStatus === "PENDING")[0];
+  const paymentLink = paymentLinkInfo?.paymentLink;
+  const paymentLinkOrderId = paymentLinkInfo?.squareOrderId;
 
   const testPaymentHandler = () => {
     if (
       !selectedSponsorId ||
       !sessionData?.user.id ||
-      !eventDetails.requester.squareMerchantId
+      !eventDetails.requester.squareMerchantId ||
+      !paymentLink ||
+      !paymentLinkOrderId
     ) {
       return;
     }
 
-    // sponsorMutation.mutate({
-    //   userId: sessionData?.user.id,
-    //   companyId: companyId,
-    //   sponsorId: selectedSponsorId,
-    // });
-    // void router.push(paymentLink);
+    sponsorMutation.mutate({
+      userId: sessionData?.user.id,
+      companyId: companyId,
+      sponsorId: selectedSponsorId,
+      paymentLinkOrderId: paymentLinkOrderId,
+    });
+    void router.push(paymentLink);
   };
-
-  const sponsor = api.sponsors.getSponsor.useQuery(selectedSponsorId);
-  // const paymentLink = sponsor.data?.paymentLink;
-
-  // React.useEffect(() => {
-  //   console.log(sponsorMutation.data);
-  //   if (sponsorMutation.isSuccess && sponsorMutation.data) {
-  //     // void router.push(sponsorMutation.data);
-  //   }
-  // }, [sponsorMutation.isSuccess, sponsorMutation.data]);
 
   const getTierTitle = (tier: string) => {
     switch (tier) {

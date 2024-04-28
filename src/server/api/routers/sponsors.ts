@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type PaymentLink } from "@prisma/client";
+import { type Tier, type PaymentLink } from "@prisma/client";
 import axios from "axios";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -13,6 +13,13 @@ export const sponsorsRouter = createTRPCRouter({
       return await ctx.db.sponsor.findFirst({
         where: {
           id: input,
+        },
+        include: {
+          paymentLinks: {
+            where: {
+              paymentStatus: "PENDING",
+            },
+          },
         },
       });
     }),
@@ -85,62 +92,87 @@ export const sponsorsRouter = createTRPCRouter({
           : "https://connect.squareupsandbox.com/v2/online-checkout/payment-links";
 
       try {
-        return squarePaymentApiUrl;
-        // await Promise.all(
-        //   input.sponsors.map(async (sponsor) => {
-        //     const sponsorsRequiredLinks = Array.from(
-        //       { length: sponsor.sponsorsRequired },
-        //       (_, i) => i,
-        //     );
-        //     await Promise.all(
-        //       sponsorsRequiredLinks.map(async () => {
-        //         const response = await axios.post(
-        //           squarePaymentApiUrl,
-        //           {
-        //             idempotency_key: uuidv4(),
-        //             quick_pay: {
-        //               name: `Spark Sponsorship | Tier ${sponsor.tier}`,
-        //               price_money: {
-        //                 amount: sponsor.amountPerSponsor * 100,
-        //                 currency: "USD",
-        //               },
-        //               location_id: location.locationId,
-        //             },
-        //             checkout_options: {
-        //               redirect_url:
-        //                 process.env.NODE_ENV === "production"
-        //                   ? `https://spark-square.vercel.app/events/${sponsor.eventRequestId}`
-        //                   : `http://localhost:3000/events/${sponsor.eventRequestId}`,
-        //             },
-        //           },
-        //           {
-        //             headers: {
-        //               Authorization: `Bearer ${accessToken}`,
-        //               "Content-Type": "application/json",
-        //             },
-        //           },
-        //         );
+        await Promise.all(
+          input.sponsors.map(async (sponsor) => {
+            await ctx.db.sponsor.create({
+              data: {
+                id: sponsor.id,
+                eventRequestId: sponsor.eventRequestId,
+                tier: sponsor.tier as Tier,
+                description: sponsor.description,
+                sponsorsRequired: sponsor.sponsorsRequired,
+                amountPerSponsor: sponsor.amountPerSponsor,
+              },
+            });
+            const sponsorsRequiredLinks = Array.from(
+              { length: sponsor.sponsorsRequired },
+              (_, i) => i,
+            );
+            await Promise.all(
+              sponsorsRequiredLinks.map(async () => {
+                const response = await axios.post(
+                  squarePaymentApiUrl,
+                  {
+                    idempotency_key: uuidv4(),
+                    quick_pay: {
+                      name: `Spark Sponsorship | Tier ${sponsor.tier}`,
+                      price_money: {
+                        amount: sponsor.amountPerSponsor * 100,
+                        currency: "USD",
+                      },
+                      location_id: location.locationId,
+                    },
+                    checkout_options: {
+                      redirect_url:
+                        process.env.NODE_ENV === "production"
+                          ? `https://spark-square.vercel.app/events/${sponsor.eventRequestId}`
+                          : `http://localhost:3000/events/${sponsor.eventRequestId}`,
+                    },
+                  },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "Content-Type": "application/json",
+                    },
+                  },
+                );
 
-        //         if (response.status !== 200 || !response.data.payment_link) {
-        //           throw new Error(
-        //             `Failed to create payment link for Sponsor Tier ${sponsor.tier} - ${sponsor.description}`,
-        //           );
-        //         }
+                if (response.status !== 200 || !response.data.payment_link) {
+                  throw new Error(
+                    `Failed to create payment link for Sponsor Tier ${sponsor.tier} - ${sponsor.description}`,
+                  );
+                }
+                if (!response.data.payment_link.url) {
+                  throw new Error(
+                    `Payment link URL not found for Sponsor Tier ${sponsor.tier} - ${sponsor.description}`,
+                  );
+                }
 
-        //         console.log("PAYMENT LINK RESPONSE", response.data);
-        //         return await ctx.db.paymentLink.create({
-        //           data: {
-        //             id: uuidv4(),
-        //             sponsorId: sponsor.id,
-        //             paymentLink: response.data.payment_link.url,
-        //             paymentStatus: "PENDING",
-        //             squareOrderId: response.data.payment_link.order_id,
-        //             createdAt: new Date(),
-        //           },
-        //         })
-        //       }
-        //     );
-        //   }
+                try {
+                  await ctx.db.paymentLink.create({
+                    data: {
+                      id: uuidv4(),
+                      sponsorId: sponsor.id,
+                      paymentLink: response.data.payment_link.url,
+                      paymentStatus: "PENDING",
+                      squareOrderId: response.data.payment_link.order_id,
+                      createdAt: new Date(),
+                    },
+                  });
+                } catch (error) {
+                  console.error("Error creating payment link", error);
+                }
+
+                const paymentLinks = await ctx.db.paymentLink.findMany({
+                  where: {
+                    sponsorId: sponsor.id,
+                  },
+                });
+                return paymentLinks;
+              }),
+            );
+          }),
+        );
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Axios error response:", error.response);
@@ -164,6 +196,7 @@ export const sponsorsRouter = createTRPCRouter({
         userId: z.string(),
         companyId: z.string(),
         sponsorId: z.string(),
+        paymentLinkOrderId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -173,11 +206,9 @@ export const sponsorsRouter = createTRPCRouter({
         },
       });
 
-      // if (!sponsor?.orderId) {
-      //   throw new Error(
-      //     "Sponsor not found when adding company through payment flow",
-      //   );
-      // }
+      if (!sponsor) {
+        throw new Error("Sponsor not found");
+      }
 
       try {
         const squarePayment = await ctx.db.sponsorPayments.create({
@@ -185,8 +216,7 @@ export const sponsorsRouter = createTRPCRouter({
             id: uuidv4(),
             sponsorId: input.sponsorId,
             companyId: input.companyId,
-            squareOrderId: "",
-            // TODO FIX squareOrderId: sponsor.orderId,
+            squareOrderId: input.paymentLinkOrderId,
             createdAt: new Date(),
             paymentStatus: "PENDING",
           },
