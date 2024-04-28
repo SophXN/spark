@@ -205,6 +205,23 @@ export const sponsorsRouter = createTRPCRouter({
           id: input.sponsorId,
         },
       });
+      const paymentLink = await ctx.db.paymentLink.findFirst({
+        where: {
+          squareOrderId: input.paymentLinkOrderId,
+        },
+      });
+      if (!paymentLink) {
+        throw new Error("Payment link not found, cannot update status");
+      }
+
+      await ctx.db.paymentLink.update({
+        where: {
+          id: paymentLink.id, // Update the property name from 'sponsorId' to 'id'
+        },
+        data: {
+          paymentStatus: "ATTEMPTED",
+        },
+      });
 
       if (!sponsor) {
         throw new Error("Sponsor not found");
