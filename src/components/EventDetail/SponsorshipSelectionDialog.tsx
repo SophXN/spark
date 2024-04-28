@@ -26,28 +26,27 @@ export default function SponsorshipSelectionDialog({
   const [selectedSponsorId, setSelectedSponsorId] = useState("");
   const { data: sessionData } = useSession();
   const companyId = sessionData?.user.companyId ?? "";
-  const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
+  // const sponsorMutation = api.sponsors.addCompanyAsSponsor.useMutation();
 
   const testPaymentHandler = () => {
     if (
       !selectedSponsorId ||
       !sessionData?.user.id ||
-      !eventDetails.requester.squareMerchantId ||
-      !paymentLink
+      !eventDetails.requester.squareMerchantId
     ) {
       return;
     }
 
-    sponsorMutation.mutate({
-      userId: sessionData?.user.id,
-      companyId: companyId,
-      sponsorId: selectedSponsorId,
-    });
-    void router.push(paymentLink);
+    // sponsorMutation.mutate({
+    //   userId: sessionData?.user.id,
+    //   companyId: companyId,
+    //   sponsorId: selectedSponsorId,
+    // });
+    // void router.push(paymentLink);
   };
 
   const sponsor = api.sponsors.getSponsor.useQuery(selectedSponsorId);
-  const paymentLink = sponsor.data?.paymentLink;
+  // const paymentLink = sponsor.data?.paymentLink;
 
   // React.useEffect(() => {
   //   console.log(sponsorMutation.data);

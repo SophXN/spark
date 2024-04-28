@@ -67,8 +67,6 @@ export const EventSponsors = ({
       description: "",
       sponsorsRequired: 1,
       amountPerSponsor: 0.0,
-      paymentLink: "",
-      orderId: "",
     };
     setSponsors([...sponsors, newSponsor]);
   };

@@ -118,10 +118,19 @@ model Sponsor {
   description      String
   sponsorsRequired Int
   amountPerSponsor Float
-  paymentLink      String
-  orderId          String?
+  paymentLinks     PaymentLink[]
   eventRequest     EventRequest      @relation(fields: [eventRequestId], references: [eventId])
   payments         SponsorPayments[]
+}
+
+model PaymentLink {
+  id            String   @id @default(cuid())
+  sponsorId     String
+  paymentLink   String
+  paymentStatus String
+  squareOrderId String
+  createdAt     DateTime
+  sponsor       Sponsor  @relation(fields: [sponsorId], references: [id])
 }
 
 model Collaborator {
