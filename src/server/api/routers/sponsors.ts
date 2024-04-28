@@ -99,7 +99,7 @@ export const sponsorsRouter = createTRPCRouter({
                 amount: sponsor.amountPerSponsor,
                 currency: "USD",
               },
-              location_id: "LMHJQE8CJ6SHG",
+              location_id: location.locationId,
             },
           },
           {
