@@ -19,9 +19,7 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({
     bucket: "profile-pictures",
   });
   const { status, storageUrl } = useImageUploader(file);
-  const updateProfileImageMutation =
-    api.company.updateCompanyProfilePicture.useMutation({
-      onSuccess(data) {
+  const updateProfileImageMutation = api.company.updateCompanyProfilePicture.useMutation({ onSuccess(data) {
         console.log(data, " <= finished updated company with new icon");
       },
     });

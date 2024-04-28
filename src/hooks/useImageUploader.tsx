@@ -18,8 +18,10 @@ export interface FileObj {
 }
 
 function useImageUploader(fileObj: FileObj) {
-    const [status, setStatus] = useState(UploadStates.pending);
+    
+    const [status, setStatus] = useState<UploadStates>();
     const [storageUrl, setStorageUrl] = useState<string>();
+
     const imageMutation = api.imageHandler.uploadImageToStorage.useMutation({
         onSuccess: (data) => {
             console.log(data, " <= image uploaded to bucket")
@@ -35,7 +37,6 @@ function useImageUploader(fileObj: FileObj) {
 
             convertFileToBase64(fileObj.file, (base64EncodedFile) => {
                 if (base64EncodedFile) {
-                    console.log('Base64 Encoded File:', base64EncodedFile);
                     // Now send `base64EncodedFile` to your API
                     const params = {
                         bucket: fileObj.bucket,

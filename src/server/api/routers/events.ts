@@ -61,7 +61,7 @@ export const eventsRouter = createTRPCRouter({
           },
         });
 
-        const randomNumber = getRandomNumber(0, 10);
+        const randomNumber = getRandomNumber(0, 9);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const images = response.data[randomNumber].urls.regular;
 
