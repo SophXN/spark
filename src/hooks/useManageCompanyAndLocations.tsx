@@ -21,11 +21,10 @@ function useManageCompanyAndLocations(
 
   const createLocations = api.merchantLocations.addLocations.useMutation({
     onSuccess(data) {
-      // console.log(data, "<= locations created");
+      console.log(data, "<= locations created");
       setLoading(false);
     },
   });
-  // console.log("is it enabled??", findCompanyByMerchantId.data);
 
   const findLocationsThroughSquare =
     api.merchantLocations.getLocations.useQuery(accountId, {
@@ -34,7 +33,7 @@ function useManageCompanyAndLocations(
 
   const createCompany = api.company.createCompany.useMutation({
     onSuccess(data) {
-      // console.log(data, "<= company created");
+      console.log(data, "<= company created");
       const defaultData = {
         _count: {
           eventRequests: 0,
@@ -57,13 +56,13 @@ function useManageCompanyAndLocations(
 
   useEffect(() => {
     if (!options.enabled) {
-      // console.log("not calling, no session data");
+      console.log("not calling, no session data");
       return;
     }
 
     if (findCompanyByMerchantId.data) {
       setCompany(findCompanyByMerchantId.data as HomePageMerchantDetails);
-      // console.log("company found, no further action");
+      console.log("company found, no further action");
       return;
     }
 
@@ -73,12 +72,12 @@ function useManageCompanyAndLocations(
       !findCompanyByMerchantId.error
     ) {
       // No user found, let's create a company
-      // console.log("No company found");
+      console.log("No company found");
       if (findLocationsThroughSquare[0] == null) {
         return;
       }
       if (findLocationsThroughSquare.length > 0) {
-        // console.log("locations found, create company");
+        console.log("locations found, create company");
         const companyParams = {
           id: uuidv4(),
           name: findLocationsThroughSquare[0].name,

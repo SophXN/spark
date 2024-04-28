@@ -66,42 +66,39 @@ const HomePage: React.FC<Props> = () => {
     { enabled: !!sessionData && renderCompanyCount.current == 0 },
   );
 
+  console.log("home page - company", company);
+
   // fetches 3 things on the condition that a company exists:
   // 1. all future events from other merchants
   // 2. Events you are throwing
   // 3. Onboarding status' on incomplete actions
 
   const [homePageEventData, yourEventsData] = api.useQueries((t) => [
-    t.events.getHomePageEvents("", { enabled: !!company && renderHomePageEventsCount.current == 0 }),
+    t.events.getHomePageEvents("", {
+      enabled: !!company && renderHomePageEventsCount.current == 0,
+    }),
     t.events.getYourEvents(company?.squareMerchantId ?? "", {
       enabled: !!company && renderYourEventsCount.current == 0,
     }),
   ]);
 
   React.useEffect(() => {
-
     if (status !== "authenticated" && status !== "loading") {
       void router.push("/login");
     }
 
     if (!homePageEventData.isLoading && homePageEventData.data) {
       // stop page loading
-      renderCompanyCount.current += 1
+      renderCompanyCount.current += 1;
       setLoadingFutureEventData(false);
     }
 
     if (!yourEventsData.isLoading && yourEventsData.data) {
       // stop page loading
-      renderYourEventsCount.current += 1
+      renderYourEventsCount.current += 1;
       setLoadingYourEventData(false);
     }
-  }, [
-    sessionData,
-    router,
-    status,
-    homePageEventData,
-    yourEventsData,
-  ]);
+  }, [sessionData, router, status, homePageEventData, yourEventsData]);
 
   React.useEffect(() => {
     if (company != null) {
@@ -176,9 +173,9 @@ const HomePage: React.FC<Props> = () => {
     <div>
       <Navbar />
       <main>
-        <div className="flex w-full items-start sm:justify-center gap-1 px-4 my-4">
+        <div className="my-4 flex w-full items-start gap-1 px-4 sm:justify-center">
           <div className="w-full sm:w-[1000px]">
-          <OnboardingStatus data={onBoardingSteps} />
+            <OnboardingStatus data={onBoardingSteps} />
             <div className="my-3 flex flex-row justify-between">
               <div className="text-2xl font-semibold">Your Events</div>
               <Button
