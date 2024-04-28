@@ -32,23 +32,29 @@ export default function SponsorshipSelectionDialog({
     if (
       !selectedSponsorId ||
       !sessionData?.user.id ||
-      !eventDetails.requester.squareMerchantId
-    )
+      !eventDetails.requester.squareMerchantId ||
+      !paymentLink
+    ) {
       return;
+    }
+
     sponsorMutation.mutate({
       userId: sessionData?.user.id,
       companyId: companyId,
       sponsorId: selectedSponsorId,
-      requesterMerchantId: eventDetails.requester.id,
     });
+    void router.push(paymentLink);
   };
 
-  React.useEffect(() => {
-    console.log(sponsorMutation.data);
-    if (sponsorMutation.isSuccess && sponsorMutation.data) {
-      // void router.push(sponsorMutation.data);
-    }
-  }, [sponsorMutation.isSuccess, sponsorMutation.data]);
+  const sponsor = api.sponsors.getSponsor.useQuery(selectedSponsorId);
+  const paymentLink = sponsor.data?.paymentLink;
+
+  // React.useEffect(() => {
+  //   console.log(sponsorMutation.data);
+  //   if (sponsorMutation.isSuccess && sponsorMutation.data) {
+  //     // void router.push(sponsorMutation.data);
+  //   }
+  // }, [sponsorMutation.isSuccess, sponsorMutation.data]);
 
   const getTierTitle = (tier: string) => {
     switch (tier) {

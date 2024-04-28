@@ -7,6 +7,7 @@ import { Tier, type Sponsor } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { api } from "~/utils/api";
 import { type EventSponsorsAndCollaboratorProps } from "~/types/types";
+import { useSession } from "next-auth/react";
 
 export const EventSponsors = ({
   eventId,
@@ -16,22 +17,40 @@ export const EventSponsors = ({
   const hasSponsors = sponsors.length !== 0;
   const mutation = api.sponsors.addSponsors.useMutation();
   const hasSubmitted = React.useRef(false);
+  const { data: sessionData } = useSession();
 
   React.useEffect(() => {
-    if (isReadyToSubmit && !hasSubmitted.current && hasSponsors) {
+    if (
+      isReadyToSubmit &&
+      !hasSubmitted.current &&
+      hasSponsors &&
+      sessionData?.user.id &&
+      sessionData?.user.companyId
+    ) {
       const sponsorsToSubmit = sponsors.filter(
         (sponsor) =>
           sponsor.amountPerSponsor !== 0 &&
           sponsor.description.trim().length > 0,
       );
       try {
-        mutation.mutate(sponsorsToSubmit);
+        mutation.mutate({
+          userId: sessionData?.user.id,
+          merchantId: sessionData?.user.companyId,
+          sponsors: sponsorsToSubmit,
+        });
         hasSubmitted.current = true;
       } catch (error) {
         console.error("Error creating new sponsors", error);
       }
     }
-  }, [hasSponsors, isReadyToSubmit, mutation, sponsors]);
+  }, [
+    hasSponsors,
+    isReadyToSubmit,
+    mutation,
+    sessionData?.user.companyId,
+    sessionData?.user.id,
+    sponsors,
+  ]);
 
   const removeSponsor = (sponsorId: string) => {
     const newSponsors = sponsors.filter((s: Sponsor) => s.id !== sponsorId);
@@ -48,6 +67,8 @@ export const EventSponsors = ({
       description: "",
       sponsorsRequired: 1,
       amountPerSponsor: 0.0,
+      paymentLink: "",
+      orderId: "",
     };
     setSponsors([...sponsors, newSponsor]);
   };

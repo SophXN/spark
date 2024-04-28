@@ -1,202 +1,195 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["relationJoins"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
-    provider  = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url       = env("DATABASE_URL")
-    directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    firstName String?
-    lastName  String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String
+  firstName   String?
+  lastName    String?
+  createdBy   User     @relation(fields: [createdById], references: [id])
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([firstName])
+  @@index([firstName])
 }
 
-// Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    firstName     String?
-    lastName      String?
-    email         String?   @unique
-    emailVerified DateTime?
-    companyId     String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  emailVerified DateTime?
+  companyId     String?
+  firstName     String?
+  lastName      String?
+  accounts      Account[]
+  posts         Post[]
+  sessions      Session[]
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
-}
-
-enum ServiceType {
-    FOOD
-    MUSIC
-    ART
-    DESIGN
-    SPACE
-    OTHER
-}
-
-enum EventType {
-    POPUP
-    CONFERENCE
-    CONCERT
-    DINNER
-    GALA
-    FAIR
-    COMPETITION
-    CHARITY
-    NETWORKING
-    CELEBRATION
-    OTHER
-}
-
-enum Tier {
-    ONE
-    TWO
-    THREE
-}
-
-enum CollaboratorResponseStatus {
-    ACCEPTED
-    PENDING
-    DENIED
+  @@unique([identifier, token])
 }
 
 model Company {
-    id                    String                 @id @default(cuid())
-    name                  String
-    address               String
-    email                 String?
-    profilePicture        String?
-    squareMerchantId      String                 @unique
-    eventRequests         EventRequest[]
-    sponsorships          SponsorPayments[]
-    businessDescription   String?
-    facebookUrl           String?
-    twitterUrl            String?
-    instagramUrl          String?
-    collaboratorResponses CollaboratorResponse[]
-    locations             MerchantLocation[]
+  id                    String                 @id @default(cuid())
+  name                  String
+  businessDescription   String?
+  facebookUrl           String?
+  instagramUrl          String?
+  squareMerchantId      String                 @unique
+  twitterUrl            String?
+  address               String
+  email                 String?
+  profilePicture        String?
+  collaboratorResponses CollaboratorResponse[]
+  eventRequests         EventRequest[]
+  locations             MerchantLocation[]
+  sponsorships          SponsorPayments[]
 }
 
 model MerchantLocation {
-    id           String  @id @default(cuid())
-    company      Company @relation(fields: [companyId], references: [id])
-    companyId    String
-    city         String
-    type         String
-    merchantCode String
-    locationId   String?
+  id           String  @id @default(cuid())
+  companyId    String
+  city         String
+  type         String
+  merchantCode String
+  locationId   String?
+  company      Company @relation(fields: [companyId], references: [id])
 }
 
 model EventRequest {
-    id                     String                 @id @default(cuid())
-    eventId                String                 @unique
-    requester              Company                @relation(fields: [requesterId], references: [squareMerchantId])
-    requesterId            String
-    title                  String
-    description            String
-    eventDate              DateTime
-    eventLocation          String
-    createdOn              DateTime
-    image                  String                 @default("https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-    eventType              EventType
-    sponsors               Sponsor[]
-    collaborators          Collaborator[]
-    collaboratorsResponses CollaboratorResponse[]
+  id                     String                 @id @default(cuid())
+  eventId                String                 @unique
+  requesterId            String
+  title                  String
+  description            String
+  eventDate              DateTime
+  eventLocation          String
+  createdOn              DateTime
+  eventType              EventType
+  image                  String                 @default("https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+  collaborators          Collaborator[]
+  collaboratorsResponses CollaboratorResponse[]
+  requester              Company                @relation(fields: [requesterId], references: [squareMerchantId])
+  sponsors               Sponsor[]
 }
 
 model Sponsor {
-    id               String            @id @default(cuid())
-    eventRequest     EventRequest      @relation(fields: [eventRequestId], references: [eventId])
-    eventRequestId   String
-    tier             Tier
-    description      String
-    sponsorsRequired Int
-    amountPerSponsor Float
-    payments         SponsorPayments[]
+  id               String            @id @default(cuid())
+  eventRequestId   String
+  tier             Tier
+  description      String
+  sponsorsRequired Int
+  amountPerSponsor Float
+  paymentLink      String
+  orderId          String?
+  eventRequest     EventRequest      @relation(fields: [eventRequestId], references: [eventId])
+  payments         SponsorPayments[]
 }
 
 model Collaborator {
-    id                    String                 @id @default(cuid())
-    eventRequest          EventRequest           @relation(fields: [eventRequestId], references: [eventId])
-    eventRequestId        String
-    serviceType           ServiceType
-    description           String
-    collaboratorsRequired Int
-    responses             CollaboratorResponse[]
+  id                    String                 @id @default(cuid())
+  eventRequestId        String
+  serviceType           ServiceType
+  description           String
+  collaboratorsRequired Int
+  eventRequest          EventRequest           @relation(fields: [eventRequestId], references: [eventId])
+  responses             CollaboratorResponse[]
 }
 
 model CollaboratorResponse {
-    id              String                     @id @default(cuid())
-    collaborator    Collaborator               @relation(fields: [collaboratorId], references: [id])
-    collaboratorId  String
-    eventRequest    EventRequest               @relation(fields: [eventRequestId], references: [eventId])
-    eventRequestId  String
-    responder       Company                    @relation(fields: [responderId], references: [squareMerchantId])
-    responderId     String
-    status          CollaboratorResponseStatus @default(PENDING)
-    responseMessage String?
-    respondedOn     DateTime
-    serviceType     ServiceType                @default(FOOD)
+  id              String                     @id @default(cuid())
+  collaboratorId  String
+  responderId     String
+  responseMessage String?
+  respondedOn     DateTime
+  eventRequestId  String
+  status          CollaboratorResponseStatus @default(PENDING)
+  serviceType     ServiceType                @default(FOOD)
+  collaborator    Collaborator               @relation(fields: [collaboratorId], references: [id])
+  eventRequest    EventRequest               @relation(fields: [eventRequestId], references: [eventId])
+  responder       Company                    @relation(fields: [responderId], references: [squareMerchantId])
 }
 
 model SponsorPayments {
-    id            String   @id @default(cuid())
-    sponsor       Sponsor  @relation(fields: [sponsorId], references: [id])
-    sponsorId     String
-    company       Company  @relation(fields: [companyId], references: [squareMerchantId])
-    companyId     String
-    squareOrderId String
-    paymentStatus String
-    createdAt     DateTime
+  id            String   @id @default(cuid())
+  sponsorId     String
+  companyId     String
+  squareOrderId String
+  paymentStatus String
+  createdAt     DateTime
+  company       Company  @relation(fields: [companyId], references: [squareMerchantId])
+  sponsor       Sponsor  @relation(fields: [sponsorId], references: [id])
+}
+
+enum ServiceType {
+  FOOD
+  MUSIC
+  ART
+  DESIGN
+  SPACE
+  OTHER
+}
+
+enum EventType {
+  POPUP
+  CONFERENCE
+  CONCERT
+  DINNER
+  GALA
+  FAIR
+  COMPETITION
+  CHARITY
+  NETWORKING
+  CELEBRATION
+  OTHER
+}
+
+enum Tier {
+  ONE
+  TWO
+  THREE
+}
+
+enum CollaboratorResponseStatus {
+  ACCEPTED
+  PENDING
+  DENIED
 }
