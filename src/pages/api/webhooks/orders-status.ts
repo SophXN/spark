@@ -38,7 +38,7 @@ const cors = Cors({
 
 // The URL where event notifications are sent.
 const NOTIFICATION_URL =
-  "https://spark-square.vercel.app/api/webhooks/order-status";
+  "https://spark-square.vercel.app/api/webhooks/orders-status";
 
 // The signature key defined for the subscription.
 const SIGNATURE_KEY = process.env.WEBHOOK_SIGNATURE_KEY;
