@@ -94,7 +94,7 @@ export const sponsorsRouter = createTRPCRouter({
                 quick_pay: {
                   name: `Spark Sponsorship | Tier ${sponsor.tier}`,
                   price_money: {
-                    amount: sponsor.amountPerSponsor,
+                    amount: sponsor.amountPerSponsor * 100,
                     currency: "USD",
                   },
                   location_id: location.locationId,
@@ -102,7 +102,7 @@ export const sponsorsRouter = createTRPCRouter({
                 checkout_options: {
                   redirect_url:
                     process.env.NODE_ENV === "production"
-                      ? `https://spark-square.vercel.app/${sponsor.eventRequestId}`
+                      ? `https://spark-square.vercel.app/events/${sponsor.eventRequestId}`
                       : `http://localhost:3000/events/${sponsor.eventRequestId}`,
                 },
               },

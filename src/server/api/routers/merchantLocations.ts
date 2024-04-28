@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { MerchantLocation } from "@prisma/client";
 import axios from "axios";
-import { randomUUID } from "crypto";
 
 const locationSchema = z.object({
   id: z.string(),
