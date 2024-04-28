@@ -175,7 +175,8 @@ const HomePage: React.FC<Props> = () => {
       <main>
         <div className="my-4 flex w-full items-start gap-1 px-4 sm:justify-center">
           <div className="w-full sm:w-[1000px]">
-            <OnboardingStatus data={onBoardingSteps} />
+            { sessionData ? (<OnboardingStatus data={onBoardingSteps} />) : (<div></div>) }
+            
             <div className="my-3 flex flex-row justify-between">
               <div className="text-2xl font-semibold">Your Events</div>
               <Button

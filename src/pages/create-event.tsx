@@ -3,8 +3,6 @@ import { EventCollaborators } from "~/components/CreatingEvent/EventCollaborator
 import { EventSponsors } from "~/components/CreatingEvent/EventSponsors";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { UploadIcon } from "@radix-ui/react-icons";
 import { Calendar } from "~/components/ui/calendar";
 import { api } from "~/utils/api";
 import { v4 as uuidv4 } from "uuid";
@@ -21,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { ZodDate, z } from "zod";
+import { z } from "zod";
 import {
   Popover,
   PopoverContent,
@@ -77,6 +75,11 @@ export default function Events() {
     },
   });
 
+  // convert file to base64
+  // upload to storage
+  // then add url to params
+  // then upload event with image url
+
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuidv4(),
@@ -101,8 +104,10 @@ export default function Events() {
       createdOn: new Date(),
       eventType: data.eventType,
     };
+    console.log(params);
     try {
       FormSchema.parse(params);
+      console.log(params);
       setEventCreationProgress(EventCreationProgress.IN_PROGRESS);
       mutation.mutate(params);
     } catch (error) {
@@ -113,6 +118,7 @@ export default function Events() {
   React.useEffect(() => {
     if (eventCreationProgress === EventCreationProgress.SUCCESS) {
       setIsReadyToSubmit(true);
+      // why don't you put this router in the sponsors page
       setTimeout(() => {
         void router.push(`/events/${form.getValues("eventId")}`);
       }, 5000);

@@ -20,8 +20,8 @@ function useManageCompanyAndLocations(
   });
 
   const createLocations = api.merchantLocations.addLocations.useMutation({
-    onSuccess(data) {
-      console.log(data, "<= locations created");
+    onSuccess() {
+      // console.log(data, "<= locations created");
       setLoading(false);
     },
   });
