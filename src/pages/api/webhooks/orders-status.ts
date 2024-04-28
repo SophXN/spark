@@ -4,38 +4,6 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { WebhooksHelper } from "square";
 
-const cors = Cors({
-  allowMethods: ["POST", "HEAD"],
-});
-
-// export async function POST(req: Request) {
-//   try {
-//     const body = await req.text();
-
-//     const signature = headers().get("x-square-signature");
-//     console.log("Signature", signature);
-//     console.log("Body", body);
-//     // return 200 status code
-//     return NextResponse.json(
-//       {
-//         message: "success",
-//         ok: true,
-//       },
-//       { status: 200 },
-//     );
-//     // return NextResponse.next();
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json(
-//       {
-//         message: "something went wrong",
-//         ok: false,
-//       },
-//       { status: 500 },
-//     );
-//   }
-// }
-
 // The URL where event notifications are sent.
 const NOTIFICATION_URL =
   "https://spark-square.vercel.app/api/webhooks/orders-status";
