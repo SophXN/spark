@@ -36,9 +36,12 @@ export default async function handler(
       res
         .status(200)
         .json({ message: `hihihi ${req.body.data.object.payment.status}` });
+      console.info("Request body: " + body);
+
       const orderId = req.body.data.id as string;
-      const paymentOrderId = req.body.data.object.payment.order_id as string;
-      const paymentStatus = req.body.data.object.payment.status as string;
+      const paymentOrderId = req.body.data.data.object.payment
+        .order_id as string;
+      const paymentStatus = req.body.data.data.object.payment.status as string;
       const context = await createTRPCContext({
         req,
         res,
@@ -61,7 +64,6 @@ export default async function handler(
         default:
           break;
       }
-      console.info("Request body: " + body);
     } else {
       // Signature is invalid. Return 403 Forbidden.
       res.status(403).end();
