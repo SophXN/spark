@@ -34,15 +34,15 @@ export default async function handler(
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
       res.status(200).end();
-      if (req.body.data.type === "order_fulfillment_updated") {
-        const orderId = req.body.data.id as string;
-        mutation.mutate({ orderId });
-      }
       console.info("Request body: " + body);
     } else {
       // Signature is invalid. Return 403 Forbidden.
       res.status(403).end();
     }
+    // if (req.body.data.type === "order_fulfillment_updated") {
+    //   const orderId = req.body.data.id as string;
+    //   mutation.mutate({ orderId });
+    // }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
