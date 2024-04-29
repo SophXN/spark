@@ -75,11 +75,6 @@ export default function Events() {
     },
   });
 
-  // convert file to base64
-  // upload to storage
-  // then add url to params
-  // then upload event with image url
-
   const form = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
       eventId: uuidv4(),
