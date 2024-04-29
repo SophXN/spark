@@ -84,7 +84,8 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
                 Amount raised · ${totalAmountRaised}
               </Badge>
               <Badge variant="secondary">
-                Sponsors needed · {totalSponsorSpotsLeft} more
+                {totalSponsorSpotsLeft > 0 && (`Sponsors needed · ${totalSponsorSpotsLeft} more`)}
+                {totalSponsorSpotsLeft == 0 && ("Sponsors filled")}
               </Badge>
             </div>
           ) : (
@@ -93,6 +94,8 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           {collaboratorsExist ? (
             <Badge variant="secondary">
               Collabs needed · {collaboratorSpacesLeft} more
+              {collaboratorSpacesLeft > 0 && (`Collabs needed · ${collaboratorSpacesLeft} more`)}
+              {collaboratorSpacesLeft == 0 && ("Collabs filled")}
             </Badge>
           ) : (
             <div />
