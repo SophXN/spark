@@ -31,9 +31,14 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   let totalSponsorsNeeded = 0;
   let totalPaymentsCompleted = 0;
   let totalSponsorsLeft = 0;
+  
   const collabResponses = eventDetails.collaboratorsResponses ?? []
   const collabs = eventDetails.collaborators ?? []
   const sponsors = eventDetails.sponsors ?? []
+
+  let totalAmountLeftToRaise = 0;
+  let totalAmountRaised = 0;
+  let totalSponsorAmountNeeded = 0;
 
   if (!collabResponses || !collabs || !sponsors) return;
 
@@ -47,7 +52,6 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
 
   // payment link count where status is PENDING
 
-
   if (collabs.length > 0) {
     totalCollaboratorsRequired = collabs
       ? collabs.reduce((acc, collaborator) => {
@@ -60,10 +64,10 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
 
   // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
 
-  if (eventDetails.sponsors.length > 0) {
+  if (sponsors.length > 0) {
 
-    totalSponsorsNeeded = eventDetails.sponsors
-      ? eventDetails.sponsors?.reduce((acc, sponsor) => {
+    totalSponsorsNeeded = sponsors
+      ? sponsors.reduce((acc, sponsor) => {
         return acc + sponsor.sponsorsRequired;
       }, 0)
       : 0;
@@ -74,6 +78,18 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
     }, 0);
     
     totalPaymentsCompleted = totalSponsorsNeeded - totalSponsorsLeft;
+        
+    totalSponsorAmountNeeded = sponsors.reduce((accumulator, sponsor) => {
+      const product = sponsor.sponsorsRequired * sponsor.amountPerSponsor;
+      return accumulator + product;
+    }, 0);
+
+    totalAmountLeftToRaise = sponsors.reduce((accumulator, sponsor) => {
+      const product = sponsor.amountPerSponsor * sponsor.paymentLinks.length
+      return accumulator + product;
+    }, 0)
+
+    totalAmountRaised = totalSponsorAmountNeeded - totalAmountLeftToRaise;
 
   }
 
@@ -99,6 +115,10 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total sponsors</p>
             <p className="text-sm font-bold">{totalPaymentsCompleted ?? 0}</p>
+          </div>
+          <div className="flex flex-row items-center justify-between mt-2">
+            <p className="text-sm">Total amount raised</p>
+            <p className="text-sm font-bold">${totalAmountRaised ?? 0}</p>
           </div>
         </CardContent>
         <CardFooter>

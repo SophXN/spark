@@ -68,10 +68,9 @@ const HomePage: React.FC<Props> = () => {
 
   console.log("home page - company", company);
 
-  // fetches 3 things on the condition that a company exists:
+  // fetches  things on the condition that a company exists:
   // 1. all future events from other merchants
   // 2. Events you are throwing
-  // 3. Onboarding status' on incomplete actions
 
   const [homePageEventData, yourEventsData] = api.useQueries((t) => [
     t.events.getHomePageEvents("", {
@@ -125,7 +124,7 @@ const HomePage: React.FC<Props> = () => {
         updateOnboardingSteps(CurrentStep.createFirstEvent);
       }
 
-      if (company._count.sponsorships > 0) {
+      if (company._count.payees > 0) {
         // has sponsored an event
         updateOnboardingSteps(CurrentStep.sponsorAnEvent);
       }

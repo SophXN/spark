@@ -82,6 +82,7 @@ model Company {
   eventRequests         EventRequest[]
   locations             MerchantLocation[]
   sponsorships          SponsorPayments[]
+  payees                PaymentLink[]
 }
 
 model MerchantLocation {
@@ -113,7 +114,7 @@ model EventRequest {
 
 model Sponsor {
   id               String            @id @default(cuid())
-  eventRequestId   String
+  eventRequestId   String             
   tier             Tier
   description      String
   sponsorsRequired Int
@@ -125,12 +126,14 @@ model Sponsor {
 
 model PaymentLink {
   id            String   @id @default(cuid())
-  sponsorId     String
+  sponsorId     String   
   paymentLink   String
   paymentStatus String
   squareOrderId String
   createdAt     DateTime
   sponsor       Sponsor  @relation(fields: [sponsorId], references: [id])
+  payee         Company?  @relation(fields: [payeeMerchantId], references: [squareMerchantId])
+  payeeMerchantId String?
 }
 
 model Collaborator {
