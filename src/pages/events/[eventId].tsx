@@ -11,14 +11,12 @@ import { api } from "~/utils/api";
 import { format } from "date-fns";
 import { type HomePageResponse } from "~/types/types";
 import { useSession } from "next-auth/react";
-import { Skeleton } from "~/components/ui/skeleton";
 
 const EventDetails: React.FC = () => {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
   const { eventId } = router.query; // Access the dynamic segment
   const [pageLoading, setLoadingPage] = useState(true);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [id, setId] = useState(eventId);
   const [eventData, setEventData] = useState<HomePageResponse>();
 
@@ -27,7 +25,6 @@ const EventDetails: React.FC = () => {
   const {
     data: responseData,
     isLoading,
-    error,
   } = api.events.getEventPageDetails.useQuery(eventId as string, {
     enabled: !!eventId && (eventData == null),
   });
@@ -70,7 +67,7 @@ const EventDetails: React.FC = () => {
           <div className="mx-auto flex w-full max-w-7xl flex-wrap items-start gap-x-3">
             <main className="bg-black-200 flex-grow">
               <h1 className="text-4xl font-extrabold">{eventData.title}</h1>
-              <p className="pt-1 text-sm text-muted-foreground">
+              <p className="pt-1 text-sm text-muted-foreground md:max-w-lg">
                 {eventData.description}
               </p>
               <h2 className="mt-2 scroll-m-20 text-xl font-bold tracking-tight">
@@ -85,7 +82,7 @@ const EventDetails: React.FC = () => {
               </h2>
               <OrganizerCard eventDetails={eventData} />
             </main>
-            <div className="sticky mt-2 w-full xl:mt-0 xl:block xl:w-96">
+            <div className="sticky mt-2 w-full lg:mt-0 lg:block lg:w-96">
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>
