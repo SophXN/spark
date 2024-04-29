@@ -97,7 +97,7 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
             <div />
           )}
         </div>
-        <CardTitle className="mt-2">{eventDetails.title}</CardTitle>
+        <CardTitle className="mt-1 leading-relaxed overflow-hidden whitespace-nowrap overflow-ellipsis">{eventDetails.title}</CardTitle>
         <CardDescription className="py-1 text-orange-400">
           {formattedDate}
         </CardDescription>

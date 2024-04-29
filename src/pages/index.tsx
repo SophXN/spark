@@ -187,7 +187,7 @@ const HomePage: React.FC<Props> = () => {
               </Button>
             </div>
             {loadingYourEventData ? (
-              <div className="flex w-full gap-2">
+              <div className="flex w-full gap-2 mb-2">
                 <Skeleton className="h-[400px] w-1/2 rounded-md" />
                 <Skeleton className="h-[400px] w-1/2 rounded-md" />
               </div>
@@ -221,7 +221,7 @@ const HomePage: React.FC<Props> = () => {
               <div className="text-2xl font-semibold">Future Events</div>
             </div>
             {loadingFutureEventData ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2">
+              <div className="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2">
                 <Skeleton className="h-[400px] rounded-md" />
                 <Skeleton className="h-[400px] rounded-md" />
                 <Skeleton className="h-[400px] rounded-md" />
