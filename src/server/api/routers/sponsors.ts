@@ -106,6 +106,10 @@ export const sponsorsRouter = createTRPCRouter({
         throw new Error("Payment link not found, cannot update status");
       }
 
+      if (paymentsDataResponse.data?.status !== "COMPLETED") {
+        throw new Error("Payment not completed");
+      }
+
       await ctx.db.paymentLink.update({
         where: {
           id: paymentLink.id,
