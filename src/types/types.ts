@@ -6,6 +6,7 @@ import {
   type Company,
   type CollaboratorResponse,
   type MerchantLocation,
+  type PaymentLink,
 } from "@prisma/client";
 
 export interface EventSponsorsAndCollaboratorProps {
@@ -107,8 +108,12 @@ export type HomePageResponse = EventRequest & {
   };
   collaborators: Collaborator[];
   collaboratorsResponses: CollaboratorResponse[];
-  sponsors: Sponsor[];
+  sponsors: SponsorsExtended[];
   requester: Company;
+};
+
+export interface SponsorsExtended extends Sponsor {
+  paymentLinks: PaymentLink[];
 };
 
 export type EventRequestExtended = EventRequest & {

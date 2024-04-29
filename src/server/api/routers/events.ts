@@ -46,7 +46,7 @@ export const eventsRouter = createTRPCRouter({
       const queryParams = {
         page: 1,
         query: input.eventType,
-        per_page: 9,
+        per_page: 20,
         orientation: "landscape",
       };
 
@@ -61,7 +61,7 @@ export const eventsRouter = createTRPCRouter({
           },
         });
 
-        const randomNumber = getRandomNumber(0, 9);
+        const randomNumber = getRandomNumber(0, 20);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const images = response.data[randomNumber].urls.regular;
 
@@ -94,7 +94,15 @@ export const eventsRouter = createTRPCRouter({
       const event = await ctx.db.eventRequest.findUnique({
         where: { eventId: eventId },
         include: {
-          sponsors: true,
+          sponsors: {
+            include: {
+              paymentLinks: {
+                where: {
+                  paymentStatus: "PENDING",
+                },
+              }
+            }
+          },
           collaborators: true,
           requester: true,
           collaboratorsResponses: true,

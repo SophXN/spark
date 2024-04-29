@@ -7,7 +7,7 @@ import {
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import RequestCollaborationDialog from "./RequestCollaborationDialog";
-import { type HomePageResponse } from "~/types/types";
+import { type HomePageResponse, type SponsorsExtended } from "~/types/types";
 import {
   TooltipProvider,
   Tooltip,
@@ -15,6 +15,7 @@ import {
   TooltipContent,
 } from "../ui/tooltip";
 import SponsorshipSelectionDialog from "./SponsorshipSelectionDialog";
+import { PaymentLink } from "@prisma/client";
 
 interface PublicEventData {
   eventDetails: HomePageResponse;
@@ -28,23 +29,30 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   let totalCollaboratorsRequired = 0;
   let totalCollaboratorsRemaining = 0;
   let totalSponsorsNeeded = 0;
-  const totalSponsors = 0;
-  let totalSponsorsRemaining = 0;
+  let totalPaymentsCompleted = 0;
+  let totalSponsorsLeft = 0;
+  const collabResponses = eventDetails.collaboratorsResponses ?? []
+  const collabs = eventDetails.collaborators ?? []
+  const sponsors = eventDetails.sponsors ?? []
+
+  if (!collabResponses || !collabs || !sponsors) return;
 
   const countOfCollaboratorResponses =
-    eventDetails.collaboratorsResponses?.length ?? 0;
+    collabResponses.length ?? 0;
 
   const acceptedCollaboratorResponsesCount =
-    eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => {
+    collabResponses.reduce((acc, collaborator) => {
       return collaborator.status === "ACCEPTED" ? acc + 1 : acc;
     }, 0) ?? 0;
 
-  if (eventDetails.collaborators.length > 0) {
-    // collaboratorsExist = true;
-    totalCollaboratorsRequired = eventDetails.collaborators
-      ? eventDetails.collaborators?.reduce((acc, collaborator) => {
-          return acc + collaborator.collaboratorsRequired;
-        }, 0)
+  // payment link count where status is PENDING
+
+
+  if (collabs.length > 0) {
+    totalCollaboratorsRequired = collabs
+      ? collabs.reduce((acc, collaborator) => {
+        return acc + collaborator.collaboratorsRequired;
+      }, 0)
       : 0;
     totalCollaboratorsRemaining =
       totalCollaboratorsRequired - acceptedCollaboratorResponsesCount;
@@ -53,13 +61,20 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
   // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
 
   if (eventDetails.sponsors.length > 0) {
-    // sponsorsExists = true;
+
     totalSponsorsNeeded = eventDetails.sponsors
       ? eventDetails.sponsors?.reduce((acc, sponsor) => {
-          return acc + sponsor.sponsorsRequired;
-        }, 0)
+        return acc + sponsor.sponsorsRequired;
+      }, 0)
       : 0;
-    totalSponsorsRemaining = totalSponsorsNeeded - 0;
+
+    totalSponsorsLeft = sponsors.reduce((acc, sponsor) => {
+      // add up all the sponsors left where payment link paid status is pending
+      return acc + sponsor.paymentLinks.length
+    }, 0);
+    
+    totalPaymentsCompleted = totalSponsorsNeeded - totalSponsorsLeft;
+
   }
 
   return (
@@ -69,8 +84,8 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           <div className="flex flex-row justify-between space-y-0">
             <CardTitle className="text-xl font-bold">Sponsors</CardTitle>
             <CardTitle className="text-xl font-medium">
-              {totalSponsorsRemaining}{" "}
-              {totalSponsorsRemaining && totalSponsorsRemaining > 1
+              {totalSponsorsLeft}{" "}
+              {totalSponsorsLeft && totalSponsorsLeft > 1
                 ? "spots"
                 : "spot"}{" "}
               left
@@ -83,11 +98,11 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
         <CardContent>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm">Total sponsors</p>
-            <p className="text-sm font-bold">{totalSponsors ?? 0}</p>
+            <p className="text-sm font-bold">{totalPaymentsCompleted ?? 0}</p>
           </div>
         </CardContent>
         <CardFooter>
-          {totalSponsorsRemaining > 0 ? (
+          {totalSponsorsLeft > 0 ? (
             <SponsorshipSelectionDialog eventDetails={eventDetails} />
           ) : (
             <TooltipProvider>

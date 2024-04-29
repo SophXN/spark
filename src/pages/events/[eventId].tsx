@@ -19,13 +19,17 @@ const EventDetails: React.FC = () => {
   const { eventId } = router.query; // Access the dynamic segment
   const [pageLoading, setLoadingPage] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [id, setId] = useState(eventId);
+  const [eventData, setEventData] = useState<HomePageResponse>();
+
+  console.log(eventId, sessionData, eventData);
 
   const {
-    data: eventData,
+    data: responseData,
     isLoading,
     error,
   } = api.events.getEventPageDetails.useQuery(eventId as string, {
-    enabled: !!eventId,
+    enabled: !!eventId && (eventData == null),
   });
 
   React.useEffect(() => {
@@ -35,9 +39,10 @@ const EventDetails: React.FC = () => {
 
     if (!isLoading && status !== "loading") {
       // stop page loading
+      setEventData(responseData as HomePageResponse);
       setLoadingPage(false);
     }
-  }, [sessionData, router, status, isLoading]);
+  }, [sessionData, router, status, isLoading, id]);
 
   if (!eventData) {
     return;
@@ -87,11 +92,11 @@ const EventDetails: React.FC = () => {
               {sessionData?.user.companyId ===
               eventData.requester.squareMerchantId ? (
                 <SupportColumnHostView
-                  eventDetails={eventData as HomePageResponse}
+                  eventDetails={eventData}
                 />
               ) : (
                 <SupportColumnPublicView
-                  eventDetails={eventData as HomePageResponse}
+                  eventDetails={eventData}
                 />
               )}
             </div>
