@@ -49,10 +49,10 @@ export default async function handler(
       });
       const trpc = createCaller(context);
       switch (req.body.data.type) {
-        case req.body.data.type === "order_fulfillment_updated":
+        case "order_fulfillment_updated":
           await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
           break;
-        case req.body.data.type === "payment.updated":
+        case "payment.updated":
           await trpc.sponsors.updatePaymentLinkStatus({
             orderId: paymentOrderId,
             paymentStatus: paymentStatus,
