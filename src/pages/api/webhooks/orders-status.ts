@@ -33,6 +33,7 @@ export default async function handler(
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
+      res.status(200).end();
       if (req.body.data.type === "order_fulfillment_updated") {
         const orderId = req.body.data.id as string;
         const context = await createTRPCContext({
@@ -42,11 +43,10 @@ export default async function handler(
             isBatchCall: false,
             calls: [],
           },
-        }); // replace with the actual path to trpc.ts
+        });
         const trpc = createCaller(context);
         await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
       }
-      res.status(200).end();
       console.info("Request body: " + body);
     } else {
       // Signature is invalid. Return 403 Forbidden.
