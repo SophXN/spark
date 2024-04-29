@@ -5,6 +5,7 @@ import axios from "axios";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { v4 as uuidv4 } from "uuid";
+import { useSession } from "next-auth/react";
 
 export const sponsorsRouter = createTRPCRouter({
   getSponsor: publicProcedure
@@ -29,6 +30,108 @@ export const sponsorsRouter = createTRPCRouter({
       return await ctx.db.sponsor.findMany({
         where: {
           eventRequestId: input,
+        },
+      });
+    }),
+  updateSponsorPaymentStatus: publicProcedure
+    .input(
+      z.object({
+        orderId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data: sessionData } = useSession();
+      const userId = sessionData?.user?.id;
+      if (!userId) {
+        throw new Error("User not found");
+      }
+      const user = await ctx.db.account.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+
+      const accessToken = user?.access_token;
+      if (!accessToken) {
+        throw new Error("User access token not found");
+      }
+      // get the order from square for the payment id
+      const squareOrdersApiUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://connect.squareup.com/v2/orders"
+          : "https://connect.squareupsandbox.com/v2/orders";
+
+      const ordersResponse = await axios.get(
+        `${squareOrdersApiUrl}/${input.orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!ordersResponse.data?.tenders[0]?.payment_id) {
+        throw new Error("Payment ID not found in order");
+      }
+
+      // get the payment from square for the status
+      const squarePaymentDataApiUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://connect.squareup.com/v2/payments"
+          : "https://connect.squareupsandbox.com/v2/payments";
+
+      const paymentsDataResponse = await axios.get(
+        `${squarePaymentDataApiUrl}/${ordersResponse.data?.tenders[0]?.payment_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!paymentsDataResponse.data?.status) {
+        throw new Error("Payment ID not found in order");
+      }
+
+      // update status of payment link ATTEMPTED -> VALIDATED
+      const paymentLink = await ctx.db.paymentLink.findFirst({
+        where: {
+          squareOrderId: input.orderId,
+        },
+      });
+
+      if (!paymentLink) {
+        throw new Error("Payment link not found, cannot update status");
+      }
+
+      await ctx.db.paymentLink.update({
+        where: {
+          id: paymentLink.id,
+        },
+        data: {
+          paymentStatus: "VALIDATED",
+        },
+      });
+
+      // update status of sponsor payment also PENDING -> COMPLETED
+      const sponsorPayment = await ctx.db.sponsorPayments.findFirst({
+        where: {
+          squareOrderId: input.orderId,
+        },
+      });
+
+      if (!sponsorPayment) {
+        throw new Error("Sponsor payment not found, cannot update status");
+      }
+
+      await ctx.db.sponsorPayments.update({
+        where: {
+          id: sponsorPayment.id,
+        },
+        data: {
+          paymentStatus: "COMPLETED",
         },
       });
     }),
@@ -205,6 +308,7 @@ export const sponsorsRouter = createTRPCRouter({
           id: input.sponsorId,
         },
       });
+
       const paymentLink = await ctx.db.paymentLink.findFirst({
         where: {
           squareOrderId: input.paymentLinkOrderId,

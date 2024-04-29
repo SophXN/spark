@@ -1,8 +1,7 @@
-import Cors from "micro-cors";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { type NextApiRequest, type NextApiResponse } from "next";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
 import { WebhooksHelper } from "square";
+import { api } from "~/utils/api";
 
 // The URL where event notifications are sent.
 const NOTIFICATION_URL =
@@ -29,19 +28,22 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
   if (req.method === "POST") {
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
-      // Signature is valid. Return 200 OK.
       res.status(200).end();
+      if (req.body.data.type === "order_fulfillment_updated") {
+        const orderId = req.body.data.id as string;
+        mutation.mutate({ orderId });
+      }
       console.info("Request body: " + body);
     } else {
       // Signature is invalid. Return 403 Forbidden.
       res.status(403).end();
     }
   } else {
-    // Handle any other HTTP method
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }
