@@ -247,7 +247,7 @@ export default function Events() {
                               <SelectContent>
                                 {Object.values(EventType).map((type) => (
                                   <SelectItem key={type} value={type}>
-                                    {type}
+                                    {type.toLocaleLowerCase()}
                                   </SelectItem>
                                 ))}
                               </SelectContent>

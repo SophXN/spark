@@ -25,6 +25,7 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({
   let totalCollaboratorsRemaining = 0;
   const totalSponsorsNeeded = 0;
   const sponsorSpacesLeft = 0;
+  
   const countOfCollaboratorResponses =
     eventDetails.collaboratorsResponses?.length ?? 0;
   const acceptedCollaboratorResponsesCount =
