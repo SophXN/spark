@@ -34,18 +34,30 @@ export default async function handler(
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
       res.status(200).end();
-      if (req.body.data.type === "order_fulfillment_updated") {
-        const orderId = req.body.data.id as string;
-        const context = await createTRPCContext({
-          req,
-          res,
-          info: {
-            isBatchCall: false,
-            calls: [],
-          },
-        });
-        const trpc = createCaller(context);
-        await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
+      const orderId = req.body.data.id as string;
+      const paymentOrderId = req.body.data.object.payment.order_id as string;
+      const paymentStatus = req.body.data.object.payment.status as string;
+      const context = await createTRPCContext({
+        req,
+        res,
+        info: {
+          isBatchCall: false,
+          calls: [],
+        },
+      });
+      const trpc = createCaller(context);
+      switch (req.body.data.type) {
+        case req.body.data.type === "order_fulfillment_updated":
+          await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
+          break;
+        case req.body.data.type === "payment.updated":
+          await trpc.sponsors.updatePaymentLinkStatus({
+            orderId: paymentOrderId,
+            paymentStatus: paymentStatus,
+          }); // technically this is the paymentId
+          break;
+        default:
+          break;
       }
       console.info("Request body: " + body);
     } else {

@@ -37,6 +37,28 @@ export const sponsorsRouter = createTRPCRouter({
         },
       });
     }),
+  updatePaymentLinkStatus: publicProcedure
+    .input(z.object({ orderId: z.string(), paymentStatus: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const paymentLink = await ctx.db.paymentLink.findFirst({
+        where: {
+          squareOrderId: input.orderId,
+        },
+      });
+      if (!paymentLink) {
+        throw new Error("Payment link not found, cannot update status");
+      }
+
+      await ctx.db.paymentLink.update({
+        where: {
+          id: paymentLink.id,
+        },
+        data: {
+          paymentStatus: input.paymentStatus,
+        },
+      });
+    }),
+
   updateSponsorPaymentStatus: publicProcedure
     .input(
       z.object({
