@@ -64,10 +64,10 @@ const EventDetails: React.FC = () => {
         </div>
 
         <div className="flex min-h-full flex-col py-3">
-          <div className="mx-auto flex w-full max-w-7xl flex-wrap items-start gap-x-3">
-            <main className="bg-black-200 flex-grow">
+          <div className="mx-auto flex flex-row flex-wrap w-full max-w-7xl items-start gap-x-3">
+            <main className="bg-black-200 flex-shrink flex-1">
               <h1 className="text-4xl font-extrabold">{eventData.title}</h1>
-              <p className="pt-1 text-sm text-muted-foreground md:max-w-lg">
+              <p className="pt-1 text-sm text-muted-foreground">
                 {eventData.description}
               </p>
               <h2 className="mt-2 scroll-m-20 text-xl font-bold tracking-tight">
@@ -82,7 +82,7 @@ const EventDetails: React.FC = () => {
               </h2>
               <OrganizerCard eventDetails={eventData} />
             </main>
-            <div className="sticky mt-2 w-full lg:mt-0 lg:block lg:w-96">
+            <div className="sticky mt-2 w-full flex-none lg:mt-0 lg:block lg:w-96">
               <h2 className="scroll-m-20 text-xl font-bold tracking-tight">
                 Support needed
               </h2>

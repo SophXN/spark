@@ -177,7 +177,7 @@ const HomePage: React.FC<Props> = () => {
             { sessionData ? (<OnboardingStatus data={onBoardingSteps} />) : (<div></div>) }
             
             <div className="my-3 flex flex-row justify-between">
-              <div className="text-2xl font-semibold">Your Events</div>
+              <div className="text-2xl font-semibold">Your events</div>
               <Button
                 onClick={() => handleCreateEventClick()}
                 size="sm"
