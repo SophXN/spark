@@ -28,7 +28,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
   if (req.method === "POST") {
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
@@ -39,10 +38,11 @@ export default async function handler(
       // Signature is invalid. Return 403 Forbidden.
       res.status(403).end();
     }
-    // if (req.body.data.type === "order_fulfillment_updated") {
-    //   const orderId = req.body.data.id as string;
-    //   mutation.mutate({ orderId });
-    // }
+    const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
+    if (req.body.data.type === "order_fulfillment_updated") {
+      const orderId = req.body.data.id as string;
+      mutation.mutate({ orderId });
+    }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
