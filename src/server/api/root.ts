@@ -21,7 +21,7 @@ export const appRouter = createTRPCRouter({
   company: companyRouter,
   collaboratorResponse: collaboratorResponseRouter,
   merchantLocations: merchantLocationRouter,
-  imageHandler: imageHandlerRouter
+  imageHandler: imageHandlerRouter,
 });
 
 // export type definition of API
