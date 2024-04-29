@@ -33,15 +33,12 @@ export default async function handler(
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
-      res
-        .status(200)
-        .json({ message: `hihihi ${req.body.data.object.payment.status}` });
+      res.status(200).end();
       console.info("Request body: " + body);
 
       const orderId = req.body.data.id as string;
-      const paymentOrderId = req.body.data.data.object.payment
-        .order_id as string;
-      const paymentStatus = req.body.data.data.object.payment.status as string;
+      const paymentOrderId = req.body.data.object.payment.order_id as string;
+      const paymentStatus = req.body.data.object.payment.status as string;
       const context = await createTRPCContext({
         req,
         res,
@@ -51,7 +48,7 @@ export default async function handler(
         },
       });
       const trpc = createCaller(context);
-      switch (req.body.data.type) {
+      switch (req.body.type) {
         case "order_fulfillment_updated":
           await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
           break;
