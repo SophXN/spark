@@ -39,6 +39,7 @@ export default async function handler(
       const orderId = req.body.data.id as string;
       const paymentOrderId = req.body.data.object.payment.order_id as string;
       const paymentStatus = req.body.data.object.payment.status as string;
+
       const context = await createTRPCContext({
         req,
         res,
@@ -54,10 +55,11 @@ export default async function handler(
           break;
         case "payment.updated":
           console.info("Payment status: " + paymentStatus);
-          await trpc.sponsors.updatePaymentLinkStatus({
+          const data = await trpc.sponsors.updatePaymentLinkStatus({
             orderId: paymentOrderId,
             paymentStatus: paymentStatus,
           }); // technically this is the paymentId
+          console.info("Payment link id if successful: " + data);
           break;
         default:
           break;

@@ -45,6 +45,7 @@ export const sponsorsRouter = createTRPCRouter({
           squareOrderId: input.orderId,
         },
       });
+
       if (!paymentLink) {
         throw new Error("Payment link not found, cannot update status");
       }
@@ -57,6 +58,7 @@ export const sponsorsRouter = createTRPCRouter({
           paymentStatus: input.paymentStatus,
         },
       });
+      return paymentLink.id;
     }),
 
   updateSponsorPaymentStatus: publicProcedure
