@@ -95,14 +95,14 @@ export default function SponsorshipSelectionDialog({
               <div key={sponsor.id}>
                 <div
                   className={`relative flex items-center space-x-2 
-                    rounded-lg bg-slate-100 px-6 py-3 border-2 border-white cursor-pointer hover:bg-slate-200 
-                      ${selectedSponsorId === sponsor.id && "border-slate-900"}`}
+                    rounded-lg bg-slate-100 px-6 py-3 border-2 cursor-pointer hover:bg-slate-200 
+                      ${selectedSponsorId === sponsor.id ? "border-slate-900" : "border-white"}`}
                   onClick={() => setSelectedSponsorId(sponsor.id)}
                 >
-                  <div className="flex w-full flex-row items-center justify-between">
+                  <div className="flex w-full flex-row items-center justify-between gap-5">
                     <div className="flex flex-col">
                       {getTierTitle(sponsor.tier)}
-                      <p className="truncate text-sm text-gray-500">
+                      <p className="text-sm text-gray-500">
                         {sponsor.description}
                       </p>
                     </div>
