@@ -7,6 +7,10 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { v4 as uuidv4 } from "uuid";
 import { useSession } from "next-auth/react";
 
+interface TotalSponsorContribution {
+  totalAmount: number | null;
+}
+
 export const sponsorsRouter = createTRPCRouter({
   getSponsor: publicProcedure
     .input(z.string())

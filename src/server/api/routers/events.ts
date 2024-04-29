@@ -115,7 +115,15 @@ export const eventsRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const events = await ctx.db.eventRequest.findMany({
         include: {
-          sponsors: true,
+          sponsors: {
+            include: {
+              paymentLinks: {
+                where: {
+                  paymentStatus: "PENDING",
+                },
+              }
+            }
+          },
           collaborators: true,
           requester: true,
           _count: {
@@ -160,7 +168,15 @@ export const eventsRouter = createTRPCRouter({
           requesterId: input,
         },
         include: {
-          sponsors: true,
+          sponsors: {
+            include: {
+              paymentLinks: {
+                where: {
+                  paymentStatus: "PENDING",
+                },
+              }
+            }
+          },
           collaborators: true,
           requester: true,
           _count: {

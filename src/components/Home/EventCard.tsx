@@ -21,13 +21,19 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
   let sponsorsExists = false;
   let totalCollaboratorsNeeded = 0;
   let collaboratorSpacesLeft = 0;
-  const sponsorSpacesLeft = 0;
+  let totalSponsorSpotsLeft = 0;
   const acceptedCollaboratorResponsesCount =
     eventDetails._count.collaboratorsResponses ?? 0;
+  const collaborators = eventDetails.collaborators;
+  const sponsors = eventDetails.sponsors;
 
-  if (eventDetails.collaborators.length > 0) {
+  let totalSponsorAmountNeeded = 0;
+  let totalAmountLeftToRaise = 0;
+  let totalAmountRaised = 0;
+
+  if (collaborators.length > 0) {
     collaboratorsExist = true;
-    totalCollaboratorsNeeded = eventDetails.collaborators?.reduce(
+    totalCollaboratorsNeeded = collaborators.reduce(
       (acc, collaborator) => {
         return acc + collaborator.collaboratorsRequired;
       },
@@ -40,8 +46,25 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
   // TODO: replace sponsor count below with sponsors that have actually paid, bottom calculation currently
   // doesn't make sense
 
-  if (eventDetails.sponsors.length > 0) {
+  if (sponsors.length > 0) {
     sponsorsExists = true;
+
+    totalSponsorSpotsLeft = sponsors.reduce((accumulator, sponsor) => {
+      return accumulator + sponsor.paymentLinks.length
+    }, 0)
+
+    totalSponsorAmountNeeded = sponsors.reduce((accumulator, sponsor) => {
+      const product = sponsor.sponsorsRequired * sponsor.amountPerSponsor;
+      return accumulator + product;
+    }, 0);
+
+    totalAmountLeftToRaise = sponsors.reduce((accumulator, sponsor) => {
+      if (!sponsor.paymentLinks) return accumulator;
+      const product = sponsor.amountPerSponsor * sponsor.paymentLinks.length
+      return accumulator + product;
+    }, 0)
+
+    totalAmountRaised = totalSponsorAmountNeeded - totalAmountLeftToRaise;
   }
 
   return (
@@ -54,23 +77,31 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           width={500}
           height={500}
         />
-        <div className="py-2">
+        <div className="mt-2">
           {sponsorsExists ? (
-            <Badge className="mr-1" variant="secondary">
-              Sponsor spots · {sponsorSpacesLeft}
-            </Badge>
+            <div className="flex flex-row flex-wrap gap-1">
+              <Badge variant="secondary">
+                Amount raised · ${totalAmountRaised}
+              </Badge>
+              <Badge variant="secondary">
+                {totalSponsorSpotsLeft > 0 && (`Sponsors needed · ${totalSponsorSpotsLeft} more`)}
+                {totalSponsorSpotsLeft == 0 && ("Sponsors filled")}
+              </Badge>
+            </div>
           ) : (
             <div />
           )}
           {collaboratorsExist ? (
             <Badge variant="secondary">
-              Collab spots · {collaboratorSpacesLeft}
+              Collabs needed · {collaboratorSpacesLeft} more
+              {collaboratorSpacesLeft > 0 && (`Collabs needed · ${collaboratorSpacesLeft} more`)}
+              {collaboratorSpacesLeft == 0 && ("Collabs filled")}
             </Badge>
           ) : (
             <div />
           )}
         </div>
-        <CardTitle>{eventDetails.title}</CardTitle>
+        <CardTitle className="mt-2">{eventDetails.title}</CardTitle>
         <CardDescription className="py-1 text-orange-400">
           {formattedDate}
         </CardDescription>

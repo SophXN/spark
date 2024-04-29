@@ -104,7 +104,8 @@ export type HomePageResponse = EventRequest & {
   _count: {
     sponsors: number;
     collaborators: number;
-    collaboratorsResponses: number
+    collaboratorsResponses: number;
+    payees: number
   };
   collaborators: Collaborator[];
   collaboratorsResponses: CollaboratorResponse[];
@@ -173,6 +174,7 @@ export type OnBoardingStepData = {
 
 export interface HomePageMerchantDetails extends Company {
   _count: {
+    payees: number;
     eventRequests: number;
     sponsorships: number;
     collaboratorResponses: number;

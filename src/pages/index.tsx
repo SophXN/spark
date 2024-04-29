@@ -68,10 +68,9 @@ const HomePage: React.FC<Props> = () => {
 
   console.log("home page - company", company);
 
-  // fetches 3 things on the condition that a company exists:
+  // fetches  things on the condition that a company exists:
   // 1. all future events from other merchants
   // 2. Events you are throwing
-  // 3. Onboarding status' on incomplete actions
 
   const [homePageEventData, yourEventsData] = api.useQueries((t) => [
     t.events.getHomePageEvents("", {
@@ -125,7 +124,7 @@ const HomePage: React.FC<Props> = () => {
         updateOnboardingSteps(CurrentStep.createFirstEvent);
       }
 
-      if (company._count.sponsorships > 0) {
+      if (company._count.payees > 0) {
         // has sponsored an event
         updateOnboardingSteps(CurrentStep.sponsorAnEvent);
       }
@@ -193,7 +192,7 @@ const HomePage: React.FC<Props> = () => {
                 <Skeleton className="h-[400px] w-1/2 rounded-md" />
               </div>
             ) : (
-              <div className="hide-scrollbar flex w-full max-w-[1000px] overflow-x-auto whitespace-nowrap">
+              <div className="pb-3 hide-scrollbar flex w-full max-w-[1000px] overflow-x-auto whitespace-nowrap">
                 {(yourEventsData.data ?? []).length > 0 ? (
                   <div>
                     {(yourEventsData.data ?? []).map((event) => (
@@ -218,7 +217,7 @@ const HomePage: React.FC<Props> = () => {
                 )}
               </div>
             )}
-            <div className="my-3 flex flex-row justify-between">
+            <div className="flex flex-row justify-between">
               <div className="text-2xl font-semibold">Future Events</div>
             </div>
             {loadingFutureEventData ? (
@@ -233,7 +232,7 @@ const HomePage: React.FC<Props> = () => {
             ) : (
               <ul
                 role="list"
-                className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2"
+                className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2"
               >
                 {(homePageEventData.data ?? []).map((event) => (
                   <div

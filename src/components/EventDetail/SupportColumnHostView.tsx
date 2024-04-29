@@ -9,6 +9,7 @@ import { Progress } from "../ui/progress";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
 import { type HomePageResponse } from "~/types/types";
+import { api } from "~/utils/api";
 
 interface HostEventData {
   eventDetails: HomePageResponse;
@@ -23,20 +24,27 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({
   let sponsorsExists = false;
   let totalCollaboratorsRequired = 0;
   let totalCollaboratorsRemaining = 0;
-  const totalSponsorsNeeded = 0;
-  const sponsorSpacesLeft = 0;
+  let totalSponsorAmountNeeded = 0;
+
+  const collabResponses = eventDetails.collaboratorsResponses;
+  const collaborators = eventDetails.collaborators;
+  const sponsors = eventDetails.sponsors;
   
-  const countOfCollaboratorResponses =
-    eventDetails.collaboratorsResponses?.length ?? 0;
+  let totalAmountLeftToRaise = 0;
+  let totalAmountRaised = 0;
+  let percentageRaised = 0;
+  
+    const countOfCollaboratorResponses =
+    collabResponses.length ?? 0;
   const acceptedCollaboratorResponsesCount =
-    eventDetails.collaboratorsResponses?.reduce((acc, collaborator) => {
+  collabResponses.reduce((acc, collaborator) => {
       return collaborator.status === "ACCEPTED" ? acc + 1 : acc;
     }, 0) ?? 0;
 
   if (eventDetails.collaborators.length > 0) {
     collaboratorsExist = true;
-    totalCollaboratorsRequired = eventDetails.collaborators
-      ? eventDetails.collaborators?.reduce((acc, collaborator) => {
+    totalCollaboratorsRequired = collaborators
+      ? collaborators.reduce((acc, collaborator) => {
           return acc + collaborator.collaboratorsRequired;
         }, 0)
       : 0;
@@ -46,8 +54,21 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({
 
   // TODO: Logic for sponsors when people start paying for it after Square checkout API is complete
 
-  if (eventDetails.sponsors.length > 0) {
+  if (sponsors.length > 0) {
     sponsorsExists = true;
+    
+    totalSponsorAmountNeeded = sponsors.reduce((accumulator, sponsor) => {
+      const product = sponsor.sponsorsRequired * sponsor.amountPerSponsor;
+      return accumulator + product;
+    }, 0);
+
+    totalAmountLeftToRaise = sponsors.reduce((accumulator, sponsor) => {
+      const product = sponsor.amountPerSponsor * sponsor.paymentLinks.length
+      return accumulator + product;
+    }, 0)
+
+    totalAmountRaised = totalSponsorAmountNeeded - totalAmountLeftToRaise;
+    percentageRaised = (totalAmountRaised / totalSponsorAmountNeeded) * 100;
   }
 
   const manageCollaborators = () => {
@@ -62,13 +83,13 @@ export const SupportColumnHostView: React.FC<HostEventData> = ({
             <CardTitle className="mb-1 text-xl font-bold">Sponsors</CardTitle>
             <Progress
               className="h-1"
-              value={50} // temporary value
+              value={percentageRaised} // temporary value
             ></Progress>
           </CardHeader>
           <CardContent>
             <div className="flex flex-row items-center justify-between">
               <p className="text-sm">Amount raised for event</p>
-              <p className="text-sm font-bold">{1000}</p>
+              <p className="text-sm font-bold">${totalAmountRaised}/${totalSponsorAmountNeeded}</p>
             </div>
           </CardContent>
           <CardFooter>

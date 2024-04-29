@@ -15,6 +15,11 @@ export const companyRouter = createTRPCRouter({
             select: {
               eventRequests: true,
               sponsorships: true,
+              payees: {
+                where: {
+                  paymentStatus: "VALIDATED"
+                }
+              },
               collaboratorResponses: {
                 where: {
                   status: CollaboratorResponseStatus.ACCEPTED,
