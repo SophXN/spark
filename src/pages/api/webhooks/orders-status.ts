@@ -38,11 +38,11 @@ export default async function handler(
       // Signature is invalid. Return 403 Forbidden.
       res.status(403).end();
     }
-    const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
-    if (req.body.data.type === "order_fulfillment_updated") {
-      const orderId = req.body.data.id as string;
-      mutation.mutate({ orderId });
-    }
+    // const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
+    // if (req.body.data.type === "order_fulfillment_updated") {
+    //   const orderId = req.body.data.id as string;
+    //   mutation.mutate({ orderId });
+    // }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
