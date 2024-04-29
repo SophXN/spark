@@ -28,7 +28,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
+  // const mutation = api.sponsors.updateSponsorPaymentStatus.useMutation();
   if (req.method === "POST") {
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
