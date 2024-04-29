@@ -53,6 +53,7 @@ export default async function handler(
           await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
           break;
         case "payment.updated":
+          console.info("Payment status: " + paymentStatus);
           await trpc.sponsors.updatePaymentLinkStatus({
             orderId: paymentOrderId,
             paymentStatus: paymentStatus,
