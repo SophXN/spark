@@ -43,9 +43,6 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
       totalCollaboratorsNeeded - acceptedCollaboratorResponsesCount;
   }
 
-  // TODO: replace sponsor count below with sponsors that have actually paid, bottom calculation currently
-  // doesn't make sense
-
   if (sponsors.length > 0) {
     sponsorsExists = true;
 
@@ -77,9 +74,9 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           width={500}
           height={500}
         />
-        <div className="mt-2">
+        <div className="mt-2 hide-scrollbar flex w-full max-w-[1000px] overflow-x-auto whitespace-nowrap gap-1">
           {sponsorsExists ? (
-            <div className="flex flex-row flex-wrap gap-1">
+            <div className="flex flex-row gap-1">
               <Badge variant="secondary">
                 Amount raised · ${totalAmountRaised}
               </Badge>
@@ -93,7 +90,6 @@ export function EventCard({ eventDetails, yourEvent = false }: EventCardProps) {
           )}
           {collaboratorsExist ? (
             <Badge variant="secondary">
-              Collabs needed · {collaboratorSpacesLeft} more
               {collaboratorSpacesLeft > 0 && (`Collabs needed · ${collaboratorSpacesLeft} more`)}
               {collaboratorSpacesLeft == 0 && ("Collabs filled")}
             </Badge>
