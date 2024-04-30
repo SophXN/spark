@@ -12,11 +12,11 @@ export const updatePaymentLinkStatus = async (
   orderId: string,
   paymentStatus: string,
 ) => {
-  console.log("HI FROM DB: ", orderId, paymentStatus);
   try {
+    console.log("HI FROM DB: ", orderId, paymentStatus);
     // Find the payment link
     const { data: paymentLink, error: findError } = await supabaseAdmin
-      .from("paymentLink")
+      .from("PaymentLink")
       .select("*")
       .eq("squareOrderId", orderId)
       .single();
@@ -32,7 +32,7 @@ export const updatePaymentLinkStatus = async (
 
     // Update the payment link
     const { error: updateError } = await supabaseAdmin
-      .from("paymentLink")
+      .from("PaymentLink")
       .update({ paymentStatus })
       .eq("id", paymentLink.id);
 
