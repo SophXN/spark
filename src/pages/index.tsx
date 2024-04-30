@@ -21,6 +21,7 @@ interface Props {
 
 const HomePage: React.FC<Props> = () => {
   const { data: sessionData, status } = useSession();
+  console.log(sessionData, status);
 
   const renderCompanyCount = useRef(0);
   const renderYourEventsCount = useRef(0);
@@ -172,10 +173,13 @@ const HomePage: React.FC<Props> = () => {
     <div>
       <Navbar />
       <main>
-        <div className="my-4 flex w-full items-start gap-1 px-4 sm:justify-center">
+        <div className="my-3 flex w-full items-start px-4 sm:justify-center">
           <div className="w-full sm:w-[1000px]">
-            { sessionData ? (<OnboardingStatus data={onBoardingSteps} />) : (<div></div>) }
-            
+            {!!company ?
+              (<div className="text-2xl font-semibold">Welcome {company?.name} 👋</div>):
+              (<Skeleton className="h-[40px] w-full rounded-md" />)}
+            {sessionData ? (<OnboardingStatus data={onBoardingSteps} />) : (<div></div>)}
+
             <div className="my-3 flex flex-row justify-between">
               <div className="text-2xl font-semibold">Your events</div>
               <Button
