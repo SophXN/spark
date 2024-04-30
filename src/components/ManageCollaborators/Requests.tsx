@@ -15,6 +15,7 @@ import { CollaboratorResponseStatus } from "@prisma/client";
 import { api } from "~/utils/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { type CollaboratorResponseExtended } from "~/types/types";
+import Image from "next/image";
 
 interface RequestsProps {
   collaboratorResponses: CollaboratorResponseExtended[];
@@ -24,6 +25,7 @@ export const Requests = ({ collaboratorResponses }: RequestsProps) => {
   const collaboratorResponseMutatation =
     api.collaboratorResponse.updateStatusOfCollaboratorResponse.useMutation();
   const queryClient = useQueryClient();
+
   const updateCollaboratorResponseStatusV2 = (
     eventRequestId: string,
     collaboratorResponseId: string,
@@ -50,12 +52,31 @@ export const Requests = ({ collaboratorResponses }: RequestsProps) => {
             <Card className="mt-2">
               <CardHeader>
                 <div className="relative flex items-center space-x-2 rounded-lg">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-12 w-12 rounded-full"
-                      src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      alt=""
-                    />
+                  <div>
+                    {item.responder.profilePicture ? (
+                      <div>
+                        <Image
+                          className="h-12 w-12 object-cover rounded-full"
+                          src={item.responder.profilePicture}
+                          alt="Business Logo"
+                          width="100"
+                          height="100"
+                          layout="fixed"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12">
+                        <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                          <svg
+                            className="h-full w-full text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <a>
