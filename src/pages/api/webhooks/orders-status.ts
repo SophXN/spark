@@ -35,9 +35,6 @@ export default async function handler(
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
       res.status(200).end();
-      console.info(
-        "HIHI" + JSON.stringify(req.body.data.object.payment.order_id),
-      );
 
       const orderId = req.body.data.id as string;
       const paymentOrderId = req.body.data.object.payment.order_id as string;
