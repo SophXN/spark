@@ -12,12 +12,14 @@ export const updatePaymentLinkStatus = async (
   orderId: string,
   paymentStatus: string,
 ) => {
+  console.log("HI FROM DB: ", orderId, paymentStatus);
   // Find the payment link
   const { data: paymentLink, error: findError } = await supabaseAdmin
     .from("paymentLink")
     .select("*")
     .eq("squareOrderId", orderId)
     .single();
+  console.log("paymentLink FROM DB: ", paymentLink);
 
   if (findError) {
     throw new Error(`Failed to find payment link: ${findError.message}`);
