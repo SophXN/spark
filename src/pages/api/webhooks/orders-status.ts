@@ -3,6 +3,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { WebhooksHelper } from "square";
 import { createCaller } from "../../../server/api/root"; // replace with the actual path to root.ts
 import { createTRPCContext } from "~/server/api/trpc";
+import { updatePaymentLinkStatus } from "~/utils/supabase/admin";
 
 // The URL where event notifications are sent.
 const NOTIFICATION_URL =
@@ -57,10 +58,11 @@ export default async function handler(
           break;
         case "payment.updated":
           console.info("Payment status: " + paymentStatus);
-          await trpc.sponsors.updatePaymentLinkStatus({
-            orderId: paymentOrderId,
-            paymentStatus: paymentStatus,
-          }); // technically this is the paymentId
+          await updatePaymentLinkStatus(paymentOrderId, paymentStatus);
+          // await trpc.sponsors.updatePaymentLinkStatus({
+          //   orderId: paymentOrderId,
+          //   paymentStatus: paymentStatus,
+          // }); // technically this is the paymentId
           break;
         default:
           break;
