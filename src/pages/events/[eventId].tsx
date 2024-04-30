@@ -57,7 +57,7 @@ const EventDetails: React.FC = () => {
           <Image
             src={eventData.image}
             alt="Event"
-            className="h-[500px] w-full rounded object-cover"
+            className="h-[300px] sm:h-[500px] w-full rounded object-cover"
             width={1000}
             height={1000}
           />

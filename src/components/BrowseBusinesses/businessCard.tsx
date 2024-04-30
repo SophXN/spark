@@ -34,9 +34,9 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
   const concatenatedTypes = companyData.locations.reduce(
     (accumulator, currentValue) => {
       let newValue = "";
-      if(currentValue.type == BusinessType.PHYSICAL as string) newValue = "Physical"
-      if(currentValue.type == BusinessType.VIRTUAL as string) newValue = "Virtual"
-      if(currentValue.type == BusinessType.MOBILE as string) newValue = "Mobile"
+      if (currentValue.type == BusinessType.PHYSICAL as string) newValue = "Physical"
+      if (currentValue.type == BusinessType.VIRTUAL as string) newValue = "Virtual"
+      if (currentValue.type == BusinessType.MOBILE as string) newValue = "Mobile"
       return accumulator + (accumulator ? ", " : "") + newValue;
     },
     "",
@@ -72,13 +72,13 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
               </div>
             )}
           </div>
-          <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex min-w-0 flex-col">
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold leading-none text-gray-900">
                 {companyData.name}
               </p>
             </div>
-            <div className="mt-0.5 flex flex-row gap-1">
+            <div className="mt-1 flex flex-row gap-1">
               <a href="">
                 <Twitter size={"18"} className="text-slate-700"></Twitter>
               </a>
@@ -135,10 +135,12 @@ export default function BusinessCard({ companyData }: BusinessCardProps) {
           </div>
         </div>
       </div>
-      <Button size={"sm"} className="mt-2 w-full px-1 sm:mt-0 sm:w-auto">
-        <SendIcon size={"17"} className="mr-1" />
-        <span className="text-sm">Invite to Collab</span>
-      </Button>
+      <a href={`mailto:${companyData.email}`}>
+        <Button size={"sm"} className="mt-2 w-full px-1 sm:mt-0 sm:w-auto">
+          <SendIcon size={"17"} className="mr-1" />
+          <span className="text-sm">Invite to Collab</span>
+        </Button>
+      </a>
     </div>
   );
 }
