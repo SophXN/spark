@@ -118,7 +118,7 @@ export const SupportColumnPublicView: React.FC<PublicEventData> = ({
           </div>
           <div className="flex flex-row items-center justify-between mt-2">
             <p className="text-sm">Total amount raised</p>
-            <p className="text-sm font-bold">${totalAmountRaised ?? 0}</p>
+            <p className="text-sm font-bold">${totalAmountRaised ?? 0}/${totalSponsorAmountNeeded}</p>
           </div>
         </CardContent>
         <CardFooter>

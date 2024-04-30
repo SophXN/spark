@@ -99,8 +99,8 @@ export default function RequestCollaborationDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Request to Collaborate</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-2xl w-full text-left sm:text-center">Request to Collaborate</DialogTitle>
+          <DialogDescription className="w-full text-left sm:text-center">
             Pick below how you wish to help the organizer of the event.
           </DialogDescription>
         </DialogHeader>
