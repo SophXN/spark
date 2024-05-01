@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { WebhooksHelper } from "square";
-import { createCaller } from "../../../server/api/root"; // replace with the actual path to root.ts
-import { createTRPCContext } from "~/server/api/trpc";
-import { updatePaymentLinkStatus } from "~/utils/supabase/admin";
+import { db } from "~/server/db";
 
 // The URL where event notifications are sent.
 const NOTIFICATION_URL =
@@ -35,34 +33,30 @@ export default async function handler(
     const signature = req.headers["x-square-hmacsha256-signature"] as string;
     if (isFromSquare(signature, body)) {
       res.status(200).end();
-
-      const orderId = req.body.data.id as string;
+      console.info("Signature is valid");
       const paymentOrderId = req.body.data.object.payment.order_id as string;
       const paymentStatus = req.body.data.object.payment.status as string;
 
-      const context = await createTRPCContext({
-        req,
-        res,
-        info: {
-          isBatchCall: false,
-          calls: [],
-        },
-      });
-      const trpc = createCaller(context);
-      switch (req.body.type) {
-        case "order_fulfillment_updated":
-          await trpc.sponsors.updateSponsorPaymentStatus({ orderId });
-          break;
-        case "payment.updated":
-          console.info("Payment status: " + paymentStatus);
-          await updatePaymentLinkStatus(paymentOrderId, paymentStatus);
-          // await trpc.sponsors.updatePaymentLinkStatus({
-          //   orderId: paymentOrderId,
-          //   paymentStatus: paymentStatus,
-          // }); // technically this is the paymentId
-          break;
-        default:
-          break;
+      if (req.body.type === "payment.updated") {
+        console.info("Payment status: " + paymentStatus);
+        const paymentLink = await db.paymentLink.findFirst({
+          where: {
+            squareOrderId: paymentOrderId,
+          },
+        });
+
+        if (!paymentLink) {
+          throw new Error("Payment link not found, cannot update status");
+        }
+        const updatedLink = await db.paymentLink.update({
+          where: {
+            id: paymentLink.id,
+          },
+          data: {
+            paymentStatus: paymentStatus,
+          },
+        });
+        console.info("Payment link updated: " + updatedLink.id);
       }
     } else {
       // Signature is invalid. Return 403 Forbidden.
@@ -73,6 +67,16 @@ export default async function handler(
   }
 }
 
+// const orderId = req.body.data.id as string;
+// const context = await createTRPCContext({
+//   req,
+//   res,
+//   info: {
+//     isBatchCall: false,
+//     calls: [],
+//   },
+// });
+// const trpc = createCaller(context);
 // if (req.body.data.type === "order_fulfillment_updated") {
 //   // const orderId = req.body.data.id as string;
 //   // mutation.mutate({ orderId });
