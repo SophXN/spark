@@ -36,7 +36,10 @@ export default async function handler(
       console.info("Signature is valid");
       const paymentOrderId = req.body.data.object.payment.order_id as string;
       const paymentStatus = req.body.data.object.payment.status as string;
-
+      console.info(
+        "Payment order ID and status: " + paymentOrderId,
+        paymentStatus,
+      );
       if (req.body.type === "payment.updated") {
         console.info("Payment status: " + paymentStatus);
         const paymentLink = await db.paymentLink.findFirst({
@@ -44,6 +47,7 @@ export default async function handler(
             squareOrderId: paymentOrderId,
           },
         });
+        console.info("Payment link found: " + paymentLink?.id);
 
         if (!paymentLink) {
           throw new Error("Payment link not found, cannot update status");
